@@ -10,7 +10,8 @@ export function Nav() {
   const { user, signOut } = useSession();
   const [open, setOpen] = useState(false);
 
-  const inLibrary = pathname === "/" || pathname.startsWith("/games");
+  const inHome = pathname === "/";
+  const inLibrary = pathname.startsWith("/library") || pathname.startsWith("/games");
   const inHall = pathname.startsWith("/hall-of-fame");
   const inAuth = pathname.startsWith("/auth");
   const close = () => setOpen(false);
@@ -25,12 +26,18 @@ export function Nav() {
           </div>
         </Link>
         <div className="links">
-          <Link href="/" className={inLibrary ? "active" : ""}>
+          <Link href="/" className={inHome ? "active" : ""}>
+            Home
+          </Link>
+          <Link href="/library" className={inLibrary ? "active" : ""}>
             Library
           </Link>
           <Link href="/hall-of-fame" className={inHall ? "active" : ""}>
             Hall of Fame
           </Link>
+          <span className="nav-disabled" aria-disabled="true">
+            About
+          </span>
         </div>
         <div className="spacer"></div>
         <div className="coin-counter">
@@ -67,7 +74,10 @@ export function Nav() {
         <div className="pixel neon-cyan" style={{ fontSize: 11, marginBottom: 16 }}>
           MENU
         </div>
-        <Link href="/" className={inLibrary ? "active" : ""} onClick={close}>
+        <Link href="/" className={inHome ? "active" : ""} onClick={close}>
+          Home
+        </Link>
+        <Link href="/library" className={inLibrary ? "active" : ""} onClick={close}>
           Library
         </Link>
         <Link
@@ -77,6 +87,9 @@ export function Nav() {
         >
           Hall of Fame
         </Link>
+        <span className="nav-disabled" aria-disabled="true">
+          About
+        </span>
         <Link href="/auth" className={inAuth ? "active" : ""} onClick={close}>
           {user ? "Account" : "Sign in"}
         </Link>

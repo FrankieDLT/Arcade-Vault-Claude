@@ -1,5 +1,8 @@
-import { Library } from "@/components/library";
+import type { Metadata } from "next";
+import { Home } from "@/components/home";
 
-export default function Home() {
-  return <Library />;
+export const metadata: Metadata = { title: "Home" };
+
+export default function HomePage() {
+  return <Home />;
 }
