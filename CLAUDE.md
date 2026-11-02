@@ -10,13 +10,6 @@ The repo is currently the untouched Create Next App scaffold (`app/page.tsx` is 
 
 ## Commands
 
-```bash
-npm run dev     # next dev
-npm run build   # next build
-npm run start   # next start
-npm run lint    # eslint (flat config, eslint.config.mjs)
-```
-
 No test runner is configured.
 
 ## Next.js version warning
@@ -32,3 +25,7 @@ Next 16.4.4 / React 19.3 — APIs differ from what you may know. Per `AGENTS.md`
 ## Design reference
 
 `resources/templates/` holds the UI prototype to implement, not app code: `Arcade Vault.html` plus `.jsx` files (`app`, `auth`, `biblioteca`, `data`, `detalle`, `nav`, `reproductor`, `salon`) and `styles.css`. These map to the intended screens: auth, game library, game detail, player, and leaderboard ("salón"). Mock data is in `data.jsx`. Port these into the Next.js `app/` router as TypeScript components.
+
+
+## Skills
+Always use /frontend-design when developing user interfaces.
