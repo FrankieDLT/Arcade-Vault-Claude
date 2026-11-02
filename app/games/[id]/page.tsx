@@ -80,7 +80,7 @@ async function GameDetail({
             <Link href={`/games/${game.id}/play`} className="btn xl pulse">
               ▶ PLAY NOW
             </Link>
-            <Link href="/" className="btn ghost lg">
+            <Link href="/library" className="btn ghost lg">
               BACK TO THE VAULT
             </Link>
           </div>
