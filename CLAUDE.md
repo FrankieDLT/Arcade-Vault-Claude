@@ -29,3 +29,5 @@ Next 16.4.4 / React 19.3 — APIs differ from what you may know. Per `AGENTS.md`
 
 ## Skills
 Always use /frontend-design when developing user interfaces.
+
+When using Playwright, always leave all screen captures taken in the same ".pwScreencaps" folder in the root directory
