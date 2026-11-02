@@ -1,6 +1,6 @@
 # SPEC 01 — MVP visual screens
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** None
 > **Date:** 2026-11-02
 > **Objective:** Port the five screens of the prototype in `references/templates/` (library, game detail, player, auth, hall of fame) to the Next.js App Router as English, TypeScript, visuals-only pages backed by mock data.
