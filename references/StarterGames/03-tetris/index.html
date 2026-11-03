@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tetris</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <h1 class="game-title">TETRIS</h1>
+
+  <div class="wrapper">
+    <div class="game-container">
+      <aside class="panel hold-panel">
+        <div class="panel-section">
+          <span class="label">ON HOLD</span>
+          <canvas id="hold-canvas" width="120" height="120"></canvas>
+        </div>
+      </aside>
+
+      <canvas id="board" width="300" height="600"></canvas>
+
+      <aside class="panel">
+        <div class="panel-section">
+          <span class="label">SCORE</span>
+          <span class="value" id="score">0</span>
+        </div>
+        <div class="panel-section">
+          <span class="label">LINES</span>
+          <span class="value" id="lines">0</span>
+        </div>
+        <div class="panel-section">
+          <span class="label">LEVEL</span>
+          <span class="value" id="level">1</span>
+        </div>
+
+        <div class="panel-section">
+          <span class="label">NEXT</span>
+          <canvas id="next-canvas" width="120" height="120"></canvas>
+        </div>
+
+        <div class="panel-section controls">
+          <span class="label">CONTROLS</span>
+          <ul>
+            <li><kbd>←</kbd><kbd>→</kbd> mover</li>
+            <li><kbd>↑</kbd> rotar</li>
+            <li><kbd>↓</kbd> bajar</li>
+            <li><kbd>Space</kbd> caída</li>
+            <li><kbd>S</kbd> guardar pieza</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
+            <li><kbd>C</kbd> (mantener) caída lenta</li>
+          </ul>
+        </div>
+
+        <label class="panel-section">
+          <span class="label">SKIN</span>
+          <select id="skin-select">
+            <option value="retro">Retro</option>
+            <option value="neon">Neon</option>
+            <option value="pastel">Pastel</option>
+            <option value="pixel">Pixel Art</option>
+          </select>
+        </label>
+
+        <button id="theme-toggle" type="button">Light Theme</button>
+      </aside>
+    </div>
+
+    <div id="pause-menu" class="overlay hidden">
+      <div class="overlay-box pause-box">
+        <p class="menu-title">PAUSA</p>
+        <button id="resume-btn" class="menu-btn" type="button">Continuar</button>
+        <button id="pause-restart-btn" class="menu-btn" type="button">Reiniciar</button>
+        <label class="level-select">
+          <span class="label">NIVEL INICIAL</span>
+          <select id="start-level"></select>
+        </label>
+        <div class="menu-controls">
+          <span class="label">CONTROLES</span>
+          <ul>
+            <li><kbd>←</kbd><kbd>→</kbd> mover</li>
+            <li><kbd>↑</kbd> / <kbd>X</kbd> rotar</li>
+            <li><kbd>↓</kbd> bajar</li>
+            <li><kbd>Space</kbd> caída</li>
+            <li><kbd>S</kbd> guardar pieza</li>
+            <li><kbd>C</kbd> (mantener) caída lenta</li>
+            <li><kbd>P</kbd> / <kbd>Esc</kbd> pausa</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div id="overlay" class="overlay hidden">
+      <div class="overlay-box">
+        <p id="overlay-title">GAME OVER</p>
+        <p id="overlay-score"></p>
+        <form id="name-form" class="hidden" autocomplete="off">
+          <input id="name-input" type="text" maxlength="12" placeholder="Tu nombre" />
+          <button id="name-save" type="submit">Guardar</button>
+        </form>
+        <div id="records">
+          <span class="label">MEJORES PUNTUACIONES</span>
+          <ol id="score-list"></ol>
+          <p id="best-stats"></p>
+          <button id="reset-records" type="button">Borrar récords</button>
+        </div>
+        <button id="restart-btn">Jugar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="game.js"></script>
+</body>
+</html>
