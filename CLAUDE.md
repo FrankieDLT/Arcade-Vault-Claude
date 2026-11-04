@@ -24,6 +24,14 @@ Next 16.4.4 / React 19.3 — APIs differ from what you may know. Per `AGENTS.md`
 - Supabase: the browser client is `getSupabase()` in `lib/supabase/client.ts` (lazy singleton built with `createBrowserClient` from `@supabase/ssr`). Import it from client components only. It throws, naming the variable, when `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is empty. Both live in `.env` (documented in `.env.example`) and are inlined at build time, so restart `npm run dev` after editing. There is no server client, `proxy.ts` or service role key yet.
 - `GET /api/health/supabase` checks the URL and key against the Auth API (`200` ok, `500` missing_env, `503` unreachable, `401` invalid_key). It returns `404` in production.
 
+## Games
+
+- Only `asteroids` is a real game. Every other catalog game still runs the fake simulation (random score timer and a fake arena) inside `components/game-player.tsx`.
+- Engine: `lib/asteroids/` (`constants.ts`, `utils.ts`, `entities.ts`, `engine.ts`). It is framework-free: no `react` or `next` imports, and no module-level game state. `AsteroidsEngine` draws on an 800x600 canvas, scaled by CSS.
+- Engine contract: `new AsteroidsEngine(canvas, { onScore, onLives, onLevel, onGameOver })`, then `start()`, `pause()`, `resume()`, `end()`, `destroy()`. `onScore`, `onLives` and `onLevel` fire only when the value changes (`start()` fires 0, 3, 1). `onGameOver` fires once per run, and the engine then stops its loop and key listeners. The canvas draws only the playfield and power-up timers; score, lives, level and GAME OVER belong to the platform HUD and modal.
+- `components/asteroids-canvas.tsx` is the thin client wrapper: it creates the engine once in an effect and destroys it on cleanup. Props: `paused`, `endSignal` (increment to call `end()`), and the four callbacks.
+- Dispatch: `GamePlayer` checks `gameId === "asteroids"` and renders `<AsteroidsCanvas key={runId} />` instead of `.game-arena`. PLAY AGAIN bumps `runId` to remount the canvas with a fresh engine. There is no game registry yet; add one when a second real game lands.
+
 ## Design reference
 
 `resources/templates/` holds the UI prototype to implement, not app code: `Arcade Vault.html` plus `.jsx` files (`app`, `auth`, `biblioteca`, `data`, `detalle`, `nav`, `reproductor`, `salon`) and `styles.css`. These map to the intended screens: auth, game library, game detail, player, and leaderboard ("salón"). Mock data is in `data.jsx`. Port these into the Next.js `app/` router as TypeScript components.
