@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { useSession } from "@/components/session-provider";
-import { addScore } from "@/lib/storage";
+import { insertScore } from "@/lib/scores-db";
 
 const LEVEL_STEP = 2500;
 
@@ -29,6 +29,8 @@ export function GamePlayer({
   // null until the player edits it, so the session name (loaded after mount) is used.
   const [editedName, setEditedName] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [saveError, setSaveError] = useState(false);
 
   const name = editedName ?? user?.name ?? "GUEST";
   const level = isAsteroids ? engineLevel : 1 + Math.floor(score / LEVEL_STEP);
@@ -56,11 +58,22 @@ export function GamePlayer({
     setPaused(false);
     setOver(false);
     setSaved(false);
+    setSaving(false);
+    setSaveError(false);
   };
 
-  const save = () => {
-    addScore({ game: gameId, score, name, at: Date.now() });
-    setSaved(true);
+  const save = async () => {
+    if (saving) return;
+    setSaving(true);
+    setSaveError(false);
+    try {
+      await insertScore({ gameId, name, score });
+      setSaved(true);
+    } catch {
+      setSaveError(true);
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -176,19 +189,30 @@ export function GamePlayer({
             <div className="final-label">FINAL SCORE</div>
             <div className="final">{score.toLocaleString("en-US")}</div>
             {!saved ? (
-              <div className="input-row">
-                <input
-                  value={name}
-                  onChange={(e) =>
-                    setEditedName(e.target.value.toUpperCase().slice(0, 10))
-                  }
-                  placeholder="YOUR INITIALS"
-                  aria-label="Your name"
-                />
-                <button className="btn yellow" onClick={save}>
-                  SAVE SCORE
-                </button>
-              </div>
+              <>
+                <div className="input-row">
+                  <input
+                    value={name}
+                    onChange={(e) =>
+                      setEditedName(e.target.value.toUpperCase().slice(0, 10))
+                    }
+                    placeholder="YOUR INITIALS"
+                    aria-label="Your name"
+                  />
+                  <button
+                    className="btn yellow"
+                    onClick={save}
+                    disabled={saving}
+                  >
+                    SAVE SCORE
+                  </button>
+                </div>
+                {saveError && (
+                  <p className="toast-error" role="alert">
+                    COULD NOT SAVE SCORE. TRY AGAIN.
+                  </p>
+                )}
+              </>
             ) : (
               <div className="toast-saved">▸ SCORE SAVED_</div>
             )}
