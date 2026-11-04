@@ -1,45 +1,48 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { readScores } from "@/lib/storage";
-import type { SavedScore, ScoreRow } from "@/lib/types";
-
-function formatDate(ms: number): string {
-  const d = new Date(ms);
-  const dd = String(d.getDate()).padStart(2, "0");
-  const mm = String(d.getMonth() + 1).padStart(2, "0");
-  return `${dd}/${mm}/${d.getFullYear()}`;
-}
+import { fetchTopScores } from "@/lib/scores-db";
+import type { ScoreRow } from "@/lib/types";
 
 /**
- * Merges seeded rows with the scores saved in localStorage for `gameId`.
+ * Merges seeded rows with the top scores stored in Supabase for `gameId`.
  * The first render (server and client) returns the seeded rows only;
- * saved scores are merged after mount to avoid hydration mismatches.
+ * database rows are merged after mount to avoid hydration mismatches.
+ * If the fetch fails, the seeded rows are kept.
  */
 export function useMergedScores(
   gameId: string,
   seeded: ScoreRow[],
   count: number,
 ): ScoreRow[] {
-  const [saved, setSaved] = useState<SavedScore[]>([]);
+  // Remote rows are tagged with their game so a response for a previous
+  // game is never merged into the current one.
+  const [remote, setRemote] = useState<{ gameId: string; rows: ScoreRow[] }>({
+    gameId: "",
+    rows: [],
+  });
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setSaved(readScores().filter((s) => s.game === gameId));
-  }, [gameId]);
+    let cancelled = false;
+    fetchTopScores(gameId, count)
+      .then((rows) => {
+        if (!cancelled) setRemote({ gameId, rows });
+      })
+      .catch(() => {
+        // Keep the seeded rows.
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [gameId, count]);
 
   return useMemo(() => {
-    const extra: ScoreRow[] = saved.map((s) => ({
-      rank: 0,
-      name: s.name,
-      score: s.score,
-      date: formatDate(s.at),
-    }));
+    const extra = remote.gameId === gameId ? remote.rows : [];
     return [...seeded, ...extra]
       .sort((a, b) => b.score - a.score)
       .slice(0, count)
       .map((r, i) => ({ ...r, rank: i + 1 }));
-  }, [saved, seeded, count]);
+  }, [remote, gameId, seeded, count]);
 }
 
 export function Leaderboard({
@@ -60,14 +63,19 @@ export function Leaderboard({
         <div
           key={`${r.name}-${r.score}-${i}`}
           className={
-            "lb-row" + (i === 0 ? " top1" : i === 1 ? " top2" : i === 2 ? " top3" : "")
+            "lb-row" +
+            (i === 0 ? " top1" : i === 1 ? " top2" : i === 2 ? " top3" : "")
           }
         >
           <div className="rk">#{String(r.rank).padStart(2, "0")}</div>
           <div className="pl">
             {r.name}
             <div
-              style={{ fontSize: 10, color: "var(--ink-faint)", letterSpacing: "0.1em" }}
+              style={{
+                fontSize: 10,
+                color: "var(--ink-faint)",
+                letterSpacing: "0.1em",
+              }}
             >
               {r.date}
             </div>
