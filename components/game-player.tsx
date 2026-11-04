@@ -2,15 +2,28 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { useSession } from "@/components/session-provider";
 import { addScore } from "@/lib/storage";
 
 const LEVEL_STEP = 2500;
 
-export function GamePlayer({ gameId, title }: { gameId: string; title: string }) {
+export function GamePlayer({
+  gameId,
+  title,
+}: {
+  gameId: string;
+  title: string;
+}) {
   const { user } = useSession();
+  // Games with a real engine are chosen by id; every other game keeps the fake simulation.
+  const isAsteroids = gameId === "asteroids";
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
+  const [engineLevel, setEngineLevel] = useState(1);
+  // runId remounts <AsteroidsCanvas> on PLAY AGAIN; endSignal asks it to end the run.
+  const [runId, setRunId] = useState(0);
+  const [endSignal, setEndSignal] = useState(0);
   const [paused, setPaused] = useState(false);
   const [over, setOver] = useState(false);
   // null until the player edits it, so the session name (loaded after mount) is used.
@@ -18,20 +31,28 @@ export function GamePlayer({ gameId, title }: { gameId: string; title: string })
   const [saved, setSaved] = useState(false);
 
   const name = editedName ?? user?.name ?? "GUEST";
-  const level = 1 + Math.floor(score / LEVEL_STEP);
+  const level = isAsteroids ? engineLevel : 1 + Math.floor(score / LEVEL_STEP);
 
   useEffect(() => {
-    if (over || paused) return;
+    if (isAsteroids || over || paused) return;
     const t = setInterval(
       () => setScore((s) => s + Math.floor(10 + Math.random() * 90)),
       220,
     );
     return () => clearInterval(t);
-  }, [over, paused]);
+  }, [isAsteroids, over, paused]);
+
+  const endRun = () => {
+    if (isAsteroids) setEndSignal((n) => n + 1);
+    else setOver(true);
+  };
 
   const restart = () => {
     setScore(0);
     setLives(3);
+    setEngineLevel(1);
+    setEndSignal(0);
+    setRunId((n) => n + 1);
     setPaused(false);
     setOver(false);
     setSaved(false);
@@ -69,7 +90,7 @@ export function GamePlayer({ gameId, title }: { gameId: string; title: string })
           <button className="btn yellow" onClick={() => setPaused((p) => !p)}>
             {paused ? "RESUME" : "PAUSE"}
           </button>
-          <button className="btn magenta" onClick={() => setOver(true)}>
+          <button className="btn magenta" onClick={endRun}>
             END
           </button>
           <Link href={`/games/${gameId}`} className="btn ghost">
@@ -80,13 +101,28 @@ export function GamePlayer({ gameId, title }: { gameId: string; title: string })
 
       <div className="crt">
         <div className="crt-screen">
-          <div className="game-arena">
-            <div className="grid-floor"></div>
-            <div className="enemy e1"></div>
-            <div className="enemy e2"></div>
-            <div className="enemy e3"></div>
-            <div className="player-ship"></div>
-          </div>
+          {isAsteroids ? (
+            <AsteroidsCanvas
+              key={runId}
+              paused={paused}
+              endSignal={endSignal}
+              onScore={setScore}
+              onLives={setLives}
+              onLevel={setEngineLevel}
+              onGameOver={(finalScore) => {
+                setScore(finalScore);
+                setOver(true);
+              }}
+            />
+          ) : (
+            <div className="game-arena">
+              <div className="grid-floor"></div>
+              <div className="enemy e1"></div>
+              <div className="enemy e2"></div>
+              <div className="enemy e3"></div>
+              <div className="player-ship"></div>
+            </div>
+          )}
           {paused && (
             <div
               className="crt-content"
@@ -117,6 +153,21 @@ export function GamePlayer({ gameId, title }: { gameId: string; title: string })
           <span>LOAD · 1MB</span>
         </div>
       </div>
+
+      {isAsteroids && (
+        <p className="controls-hint">
+          <span>
+            <kbd>←</kbd>
+            <kbd>→</kbd> ROTATE
+          </span>
+          <span>
+            <kbd>↑</kbd> THRUST
+          </span>
+          <span>
+            <kbd>SPACE</kbd> FIRE
+          </span>
+        </p>
+      )}
 
       {over && (
         <div className="modal-bd">
