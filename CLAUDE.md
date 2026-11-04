@@ -21,13 +21,15 @@ Next 16.4.4 / React 19.3 — APIs differ from what you may know. Per `AGENTS.md`
 - `next.config.ts` enables `cacheComponents`, `partialPrefetching`, and `experimental.agentFeedback`. `cacheComponents` changes caching/rendering semantics for the App Router, so check the docs before using data fetching or dynamic APIs.
 - Tailwind v4 is wired through a Turbopack rule (`@tailwindcss/turbopack` on `*.css`), not PostCSS.
 - Path alias: `@/*` maps to the repo root (not `src/`). Routes live in `app/` at the root.
+- Supabase: the browser client is `getSupabase()` in `lib/supabase/client.ts` (lazy singleton built with `createBrowserClient` from `@supabase/ssr`). Import it from client components only. It throws, naming the variable, when `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is empty. Both live in `.env` (documented in `.env.example`) and are inlined at build time, so restart `npm run dev` after editing. There is no server client, `proxy.ts` or service role key yet.
+- `GET /api/health/supabase` checks the URL and key against the Auth API (`200` ok, `500` missing_env, `503` unreachable, `401` invalid_key). It returns `404` in production.
 
 ## Design reference
 
 `resources/templates/` holds the UI prototype to implement, not app code: `Arcade Vault.html` plus `.jsx` files (`app`, `auth`, `biblioteca`, `data`, `detalle`, `nav`, `reproductor`, `salon`) and `styles.css`. These map to the intended screens: auth, game library, game detail, player, and leaderboard ("salón"). Mock data is in `data.jsx`. Port these into the Next.js `app/` router as TypeScript components.
 
-
 ## Skills
+
 Always use /frontend-design when developing user interfaces.
 
 When using Playwright, always leave all screen captures taken in the same ".pwScreencaps" folder in the root directory
