@@ -1,3 +1,4 @@
+import { withBasePath } from "../base-path";
 // Values copied unchanged from the vanilla source (references/StarterGames/04-arkanoid).
 
 export const W = 640;
@@ -63,7 +64,9 @@ export const POINTS_PER_BRICK = 10;
 export const MAX_DT = 1 / 30; // seconds; frame time cap
 export const MAX_SCORE = 10_000_000;
 
-export const SHEET_SRC = "/game-assets/arkanoid/spritesheet-breakout.png";
+export const SHEET_SRC = withBasePath(
+  "/game-assets/arkanoid/spritesheet-breakout.png",
+);
 
 export interface Sprite {
   sx: number;

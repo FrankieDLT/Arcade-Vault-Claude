@@ -1,3 +1,4 @@
+import { withBasePath } from "../base-path";
 // Snake has no source code: every game value below is a design value of SPEC 09.
 // Sprite crops are ported unchanged from references/source-assets/snake-assets/sprites.js.
 
@@ -28,7 +29,7 @@ export const SPRITE_BOX = 36; // px; fruit sprites fit a square box centered in 
 
 export const MAX_SCORE = 10_000_000;
 
-export const SHEET_SRC = "/game-assets/snake/fruits.png";
+export const SHEET_SRC = withBasePath("/game-assets/snake/fruits.png");
 
 export interface FruitSprite {
   x: number;

@@ -1,3 +1,4 @@
+import { withBasePath } from "@/lib/base-path";
 import type { ComponentType } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
@@ -64,7 +65,7 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       { keys: ["C"], label: "SLOW FALL" },
     ],
     stats: { lives: false, lines: true, level: true },
-    music: { src: "/game-assets/tetris/korobeiniki.mp3", volume: 0.2 },
+    music: { src: withBasePath("/game-assets/tetris/korobeiniki.mp3"), volume: 0.2 },
     appearance: {
       skins: [
         { id: "retro", label: "RETRO" },
@@ -93,8 +94,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     },
     sfx: {
       sounds: {
-        bounce: "/game-assets/arkanoid/ball-bounce.mp3",
-        brick: "/game-assets/arkanoid/break-sound.mp3",
+        bounce: withBasePath("/game-assets/arkanoid/ball-bounce.mp3"),
+        brick: withBasePath("/game-assets/arkanoid/break-sound.mp3"),
       },
       volume: 1,
     },

@@ -4,32 +4,33 @@ import { useEffect, useMemo, useState } from "react";
 import { fetchTopScores } from "@/lib/scores-db";
 import type { ScoreRow } from "@/lib/types";
 
+export type ScoresStatus = "loading" | "ready" | "error";
+
 /**
- * Merges seeded rows with the top scores stored in Supabase for `gameId`.
- * The first render (server and client) returns the seeded rows only;
- * database rows are merged after mount to avoid hydration mismatches.
- * If the fetch fails, the seeded rows are kept.
+ * Top scores stored in Supabase for `gameId`. No mock rows: until the fetch
+ * resolves (or if it fails) `rows` is empty and `status` says why.
  */
-export function useMergedScores(
+export function useTopScores(
   gameId: string,
-  seeded: ScoreRow[],
   count: number,
-): ScoreRow[] {
-  // Remote rows are tagged with their game so a response for a previous
-  // game is never merged into the current one.
-  const [remote, setRemote] = useState<{ gameId: string; rows: ScoreRow[] }>({
-    gameId: "",
-    rows: [],
-  });
+): { rows: ScoreRow[]; status: ScoresStatus } {
+  // Results are tagged with their game so a response for a previous game is
+  // never shown for the current one.
+  const [result, setResult] = useState<{
+    gameId: string;
+    count: number;
+    rows: ScoreRow[];
+    failed: boolean;
+  } | null>(null);
 
   useEffect(() => {
     let cancelled = false;
     fetchTopScores(gameId, count)
       .then((rows) => {
-        if (!cancelled) setRemote({ gameId, rows });
+        if (!cancelled) setResult({ gameId, count, rows, failed: false });
       })
       .catch(() => {
-        // Keep the seeded rows.
+        if (!cancelled) setResult({ gameId, count, rows: [], failed: true });
       });
     return () => {
       cancelled = true;
@@ -37,28 +38,41 @@ export function useMergedScores(
   }, [gameId, count]);
 
   return useMemo(() => {
-    const extra = remote.gameId === gameId ? remote.rows : [];
-    return [...seeded, ...extra]
-      .sort((a, b) => b.score - a.score)
-      .slice(0, count)
-      .map((r, i) => ({ ...r, rank: i + 1 }));
-  }, [remote, gameId, seeded, count]);
+    if (!result || result.gameId !== gameId || result.count !== count) {
+      return { rows: [], status: "loading" as const };
+    }
+    return {
+      rows: result.rows.map((r, i) => ({ ...r, rank: i + 1 })),
+      status: result.failed ? ("error" as const) : ("ready" as const),
+    };
+  }, [result, gameId, count]);
+}
+
+export function scoresStatusMessage(status: ScoresStatus): string {
+  return status === "loading"
+    ? "LOADING..."
+    : status === "error"
+      ? "SCORES UNAVAILABLE"
+      : "NO SCORES YET";
 }
 
 export function Leaderboard({
   gameId,
-  seeded,
   count = 10,
 }: {
   gameId: string;
-  seeded: ScoreRow[];
   count?: number;
 }) {
-  const rows = useMergedScores(gameId, seeded, count);
+  const { rows, status } = useTopScores(gameId, count);
 
   return (
     <div className="leaderboard">
       <h3>TOP SCORES</h3>
+      {rows.length === 0 && (
+        <div className="lb-row">
+          <div className="pl">{scoresStatusMessage(status)}</div>
+        </div>
+      )}
       {rows.map((r, i) => (
         <div
           key={`${r.name}-${r.score}-${i}`}

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import { CONTACT_LIMITS, type ContactResponse } from "@/lib/contact";
+import { getSupabase } from "@/lib/supabase/client";
 
 type ErrorCode = Extract<ContactResponse, { ok: false }>["error"];
 
@@ -45,18 +46,24 @@ export function ContactForm() {
 
     setSending(true);
     try {
-      const res = await fetch("/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
-      const data = (await res.json().catch(() => null)) as ContactResponse | null;
+      // Supabase Edge Function `contact` (GitHub Pages has no server routes).
+      const { data, error: fnError } =
+        await getSupabase().functions.invoke<ContactResponse>("contact", {
+          body: form,
+        });
 
-      if (res.ok && data?.ok) {
+      if (!fnError && data?.ok) {
         setSentName(form.name.trim());
         return;
       }
-      setError(ERROR_MESSAGES[data && !data.ok ? data.error : "send_failed"]);
+
+      // On a non-2xx reply the body (our error code) is in `error.context`.
+      let body: ContactResponse | null = data ?? null;
+      const ctx = (fnError as { context?: Response } | null)?.context;
+      if (ctx && typeof ctx.json === "function") {
+        body = (await ctx.json().catch(() => null)) as ContactResponse | null;
+      }
+      setError(ERROR_MESSAGES[body && !body.ok ? body.error : "send_failed"]);
     } catch {
       setError(ERROR_MESSAGES.send_failed);
     } finally {

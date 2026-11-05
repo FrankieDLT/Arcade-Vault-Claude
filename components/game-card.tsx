@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useRef, type MouseEvent } from "react";
+import { BestScore } from "@/components/best-score";
 import type { Game } from "@/lib/types";
 
 export function GameCard({ game }: { game: Game }) {
@@ -23,7 +24,11 @@ export function GameCard({ game }: { game: Game }) {
   };
 
   const btnColor =
-    game.color === "magenta" ? " magenta" : game.color === "yellow" ? " yellow" : "";
+    game.color === "magenta"
+      ? " magenta"
+      : game.color === "yellow"
+        ? " yellow"
+        : "";
 
   return (
     <Link
@@ -43,7 +48,9 @@ export function GameCard({ game }: { game: Game }) {
         <div className="row">
           <div className="score-badge">
             <span>BEST SCORE</span>
-            <b>{game.best.toLocaleString("en-US")}</b>
+            <b>
+              <BestScore gameId={game.id} />
+            </b>
           </div>
           {/* Visual only: the whole card is the link, so no nested anchor. */}
           <span className={"btn" + btnColor}>PLAY</span>
