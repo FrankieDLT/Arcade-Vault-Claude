@@ -66,4 +66,6 @@ The `game-planner` agent (`.claude/agents/game-planner.md`) suggests new games t
 
 The `game-jam` agent (`.claude/agents/game-jam.md`) takes a theme and writes one original game as 3 spec variants (`v1-lean.md`, `v2-standard.md`, `v3-deluxe.md`) plus a `README.md` index in `references/gameJam/<game-id>/` for review. It only writes in that folder; a chosen variant is promoted by copying it to `specs/NN-<id>-game.md`.
 
+The `skin-designer` agent (`.claude/agents/skin-designer.md`) adds skins to ONE real game named in the prompt and edits only that game. It always adds the missing mandatory skins (`retro`, `neon`, `pastel`, `gothic`, `negative`) and proposes 2 fresh skins per run. Fresh skins are built only after the user approves them: run it once (phase A, it proposes), ask the user, then relaunch or continue it with `approved: <ids>` (phase B). Skins must be legible in dark and light where the game has a theme toggle. Its log is `references/skins-log.md`.
+
 When using Playwright, always leave all screen captures taken in the same ".pwScreencaps" folder in the root directory
