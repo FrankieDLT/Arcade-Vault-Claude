@@ -74,4 +74,6 @@ The `game-jam` agent (`.claude/agents/game-jam.md`) takes a theme and writes one
 
 The `skin-designer` agent (`.claude/agents/skin-designer.md`) adds skins to ONE real game named in the prompt and edits only that game. It always adds the missing mandatory skins (`retro`, `neon`, `pastel`, `gothic`, `negative`) and proposes 2 fresh skins per run. Fresh skins are built only after the user approves them: run it once (phase A, it proposes), ask the user, then relaunch or continue it with `approved: <ids>` (phase B). Skins must be legible in dark and light where the game has a theme toggle. Its log is `references/skins-log.md`.
 
+The `mobile-porter` agent (`.claude/agents/mobile-porter.md`) adds spec 10 touch controls and haptics to real games that have no `touch` registry entry (one game id, or all missing ones when no id is given). It picks swipe, pointer drag or pad per game, edits only that game plus new `HAPTIC_PATTERNS` in `lib/haptics.ts`, verifies with Playwright in a touch context, and logs to `references/mobile-port-log.md`.
+
 When using Playwright, always leave all screen captures taken in the same ".pwScreencaps" folder in the root directory
