@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
+import { BestScore } from "@/components/best-score";
 import { Leaderboard } from "@/components/leaderboard";
 import { GAMES } from "@/lib/games";
-import { seededScores } from "@/lib/scores";
 
 export function generateStaticParams() {
   return GAMES.map((g) => ({ id: g.id }));
@@ -35,8 +35,6 @@ async function GameDetail({
   const game = GAMES.find((g) => g.id === id);
   if (!game) notFound();
 
-  const seeded = seededScores(game.id.length * 17 + 3, 10);
-
   return (
     <div className="av-detail fade-in">
       <div>
@@ -61,16 +59,22 @@ async function GameDetail({
               <div className="l">Global best</div>
               <div
                 className="v"
-                style={{ color: "var(--magenta)", textShadow: "0 0 6px rgba(255,0,110,0.5)" }}
+                style={{
+                  color: "var(--magenta)",
+                  textShadow: "0 0 6px rgba(255,0,110,0.5)",
+                }}
               >
-                {game.best.toLocaleString("en-US")}
+                <BestScore gameId={game.id} />
               </div>
             </div>
             <div>
               <div className="l">Difficulty</div>
               <div
                 className="v"
-                style={{ color: "var(--yellow)", textShadow: "0 0 6px rgba(245,255,0,0.5)" }}
+                style={{
+                  color: "var(--yellow)",
+                  textShadow: "0 0 6px rgba(245,255,0,0.5)",
+                }}
               >
                 ★ ★ ★ ☆ ☆
               </div>
@@ -88,7 +92,7 @@ async function GameDetail({
       </div>
 
       <aside>
-        <Leaderboard gameId={game.id} seeded={seeded} count={10} />
+        <Leaderboard gameId={game.id} count={10} />
       </aside>
     </div>
   );

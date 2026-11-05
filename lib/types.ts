@@ -15,8 +15,6 @@ export interface Game {
   cover: string;
   /** Accent for the card's play button */
   color: GameColor;
-  /** Global best score (mock) */
-  best: number;
   /** Formatted plays count, e.g. "12.4K" */
   plays: string;
 }
