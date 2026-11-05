@@ -122,6 +122,17 @@ export const GAMES: Game[] = [
     best: 0,
     plays: "0",
   },
+  {
+    id: "snake",
+    title: "SNAKE",
+    short: "Eat the fruit, grow longer and never touch the wall or yourself.",
+    long: "Steer a hungry snake across the grid and eat the fruit to grow. Golden fruit is worth five times more but vanishes fast. The snake speeds up with every bite, and one wrong turn into a wall or your own tail ends the run.",
+    cat: "ARCADE",
+    cover: "cover-snake-game",
+    color: "yellow",
+    best: 0,
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [
