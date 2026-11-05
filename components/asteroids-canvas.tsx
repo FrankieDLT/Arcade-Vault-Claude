@@ -12,6 +12,8 @@ interface AsteroidsCanvasProps {
   onLives?: (lives: number) => void;
   onLevel?: (level: number) => void;
   onGameOver: (finalScore: number) => void;
+  /** Haptic events from the engine ("split"); the platform vibrates. */
+  onHaptic?: (name: string) => void;
   /** Any string; unknown ids fall back to "retro". */
   skin?: string;
 }
@@ -28,16 +30,23 @@ export function AsteroidsCanvas({
   onLives,
   onLevel,
   onGameOver,
+  onHaptic,
   skin,
 }: AsteroidsCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<AsteroidsEngine | null>(null);
   // Latest callbacks, so the engine is created once and never rebuilt on re-render.
-  const callbacksRef = useRef({ onScore, onLives, onLevel, onGameOver });
+  const callbacksRef = useRef({
+    onScore,
+    onLives,
+    onLevel,
+    onGameOver,
+    onHaptic,
+  });
   const skinRef = useRef(toSkin(skin));
 
   useEffect(() => {
-    callbacksRef.current = { onScore, onLives, onLevel, onGameOver };
+    callbacksRef.current = { onScore, onLives, onLevel, onGameOver, onHaptic };
     skinRef.current = toSkin(skin);
   });
 
@@ -53,6 +62,7 @@ export function AsteroidsCanvas({
         onLives: (l) => callbacksRef.current.onLives?.(l),
         onLevel: (l) => callbacksRef.current.onLevel?.(l),
         onGameOver: (s) => callbacksRef.current.onGameOver(s),
+        onHaptic: (n) => callbacksRef.current.onHaptic?.(n),
       },
       { skin: skinRef.current },
     );

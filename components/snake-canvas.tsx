@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { useSwipeControls } from "@/components/use-swipe-controls";
 import { SnakeEngine, type SnakeSkin } from "@/lib/snake/engine";
 import { H, SKINS, W } from "@/lib/snake/constants";
 
@@ -12,6 +13,8 @@ interface SnakeCanvasProps {
   /** Receives the snake length (the platform HUD shows it in the lines slot). */
   onLines?: (length: number) => void;
   onGameOver: (finalScore: number) => void;
+  /** Haptic events from the engine ("fruit", "bonus"); the platform vibrates. */
+  onHaptic?: (name: string) => void;
   /** Any string; unknown ids fall back to "retro". */
   skin?: string;
 }
@@ -27,17 +30,24 @@ export function SnakeCanvas({
   onScore,
   onLines,
   onGameOver,
+  onHaptic,
   skin,
 }: SnakeCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<SnakeEngine | null>(null);
   // Latest callbacks and skin, so the engine is created once and never rebuilt on re-render.
-  const callbacksRef = useRef({ onScore, onLines, onGameOver });
+  const callbacksRef = useRef({ onScore, onLines, onGameOver, onHaptic });
   const skinRef = useRef(toSkin(skin));
 
   useEffect(() => {
-    callbacksRef.current = { onScore, onLines, onGameOver };
+    callbacksRef.current = { onScore, onLines, onGameOver, onHaptic };
     skinRef.current = toSkin(skin);
+  });
+
+  // Swipes steer the snake; each accepted swipe also asks the platform for a tap haptic.
+  useSwipeControls(canvasRef, {
+    enabled: !paused,
+    onSwipe: () => callbacksRef.current.onHaptic?.("tap"),
   });
 
   // Create, start and destroy the engine. Strict Mode runs this twice in dev
@@ -51,6 +61,7 @@ export function SnakeCanvas({
         onScore: (s) => callbacksRef.current.onScore(s),
         onLength: (l) => callbacksRef.current.onLines?.(l),
         onGameOver: (s) => callbacksRef.current.onGameOver(s),
+        onHaptic: (n) => callbacksRef.current.onHaptic?.(n),
       },
       { skin: skinRef.current },
     );

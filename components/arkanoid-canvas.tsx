@@ -12,6 +12,8 @@ interface ArkanoidCanvasProps {
   onLives?: (lives: number) => void;
   onLevel?: (level: number) => void;
   onSound?: (sound: string) => void;
+  /** Receives "tap" when a finger (touch or pen, not the mouse) touches the canvas. */
+  onHaptic?: (name: string) => void;
   onGameOver: (finalScore: number) => void;
   /** Any string; unknown ids fall back to "retro". */
   skin?: string;
@@ -31,6 +33,7 @@ export function ArkanoidCanvas({
   onLives,
   onLevel,
   onSound,
+  onHaptic,
   onGameOver,
   skin,
   levelRequest,
@@ -43,14 +46,34 @@ export function ArkanoidCanvas({
     onLives,
     onLevel,
     onSound,
+    onHaptic,
     onGameOver,
   });
   const skinRef = useRef(toSkin(skin));
 
   useEffect(() => {
-    callbacksRef.current = { onScore, onLives, onLevel, onSound, onGameOver };
+    callbacksRef.current = {
+      onScore,
+      onLives,
+      onLevel,
+      onSound,
+      onHaptic,
+      onGameOver,
+    };
     skinRef.current = toSkin(skin);
   });
+
+  // A finger on the canvas is the launch tap / drag start: ask the platform for a tap haptic.
+  // The engine is not involved; the mouse never vibrates.
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const onDown = (e: PointerEvent) => {
+      if (e.pointerType !== "mouse") callbacksRef.current.onHaptic?.("tap");
+    };
+    canvas.addEventListener("pointerdown", onDown);
+    return () => canvas.removeEventListener("pointerdown", onDown);
+  }, []);
 
   // Create, start and destroy the engine. Strict Mode runs this twice in dev
   // (mount, cleanup, mount): the cleanup destroys the first engine completely.

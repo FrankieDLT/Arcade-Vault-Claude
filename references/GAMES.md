@@ -16,6 +16,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Description:** Split rocks in zero gravity and survive the field.
 - **Details:** Your ship drifts in open space. Rotate, thrust and fire to break big asteroids into smaller ones before they hit you. Grab power-ups: Bomb, Hyper, Shield, SlowMo and Triple shot.
 - **Controls:** `←` `→` rotate, `↑` thrust, `SPACE` fire.
+- **Touch (below 768px):** pad under the CRT with ◀ ▶ (rotate), THRUST (hold) and FIRE (hold). Rotate and thrust can be held together. Haptic `split` when an asteroid splits.
 - **HUD:** score, lives, level.
 
 ### Tetris
@@ -23,6 +24,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Description:** Stack, rotate and clear lines before the stack hits the top.
 - **Details:** Seven classic pieces fall into a ten-column well. Slide, rotate and drop them to clear lines, stash one piece on hold for later and follow the ghost to aim. Gravity speeds up every 10 lines.
 - **Controls:** `←` `→` move, `↑` or `X` rotate, `↓` soft drop, `SPACE` hard drop, `S` hold, `C` slow fall.
+- **Touch (below 768px):** pad under the CRT with ◀ ▶ ▼ (hold), ⟳ rotate, DROP, HOLD and SLOW (hold). Holding ◀ ▶ moves one cell per press (the engine relies on OS key repeat, which a pad does not send). Haptics: `clear` for 1 to 3 lines, `tetris` for 4.
 - **HUD:** score, lines, level.
 
 ### Arkanoid
@@ -30,6 +32,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Description:** Break the wall, catch the power-ups and keep the ball alive.
 - **Details:** Slide the paddle, bounce the ball and smash a wall of colored bricks. Falling capsules split the ball, add a safety bar or send it into a frenzy. Every level builds a new wall and the ball gets faster.
 - **Controls:** `←` `→` or mouse move the paddle, `SPACE` or click launches the ball.
+- **Touch:** no pad. Drag a finger over the canvas to move the paddle, tap to launch (pointer events; the mouse works the same). Haptic `brick` when a brick breaks.
 - **HUD:** score, lives, level.
 
 ### Snake
@@ -37,7 +40,12 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Description:** Eat the fruit, grow longer and never touch the wall or yourself.
 - **Details:** Steer a hungry snake across the grid and eat the fruit to grow. Golden fruit is worth five times more but vanishes fast. The snake speeds up with every bite, and one wrong turn into a wall or your own tail ends the run.
 - **Controls:** arrow keys or `W` `A` `S` `D` steer.
+- **Touch:** no pad. Swipe on the canvas (24 px or more, dominant axis; one finger path can turn several times). Touch and pen only, a mouse drag does nothing. Haptics: `fruit`, `bonus`.
 - **HUD:** score, length.
+
+## Touch controls and haptics
+
+All four real games are playable on a phone (viewport below 768px). The pad and the touch hint show only below 768px. Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 

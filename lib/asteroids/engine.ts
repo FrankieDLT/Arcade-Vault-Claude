@@ -23,6 +23,7 @@ export interface AsteroidsCallbacks {
   onLives: (lives: number) => void; // called when lives change
   onLevel: (level: number) => void; // called when the level changes
   onGameOver: (finalScore: number) => void; // called once per run when lives reach 0
+  onHaptic?: (name: "split") => void; // an asteroid was split or destroyed
 }
 
 export interface AsteroidsOptions {
@@ -292,6 +293,7 @@ export class AsteroidsEngine {
     this.explode(a.x, a.y, a.size * 5);
     this.maybeDropPowerUp(a);
     newAsteroids.push(...a.split());
+    this.callbacks.onHaptic?.("split");
   }
 
   private detonateBomb(): void {

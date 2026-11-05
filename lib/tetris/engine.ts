@@ -37,6 +37,7 @@ export interface TetrisCallbacks {
   onLines: (lines: number) => void; // called when the cleared-lines total changes
   onLevel: (level: number) => void; // called when the level changes
   onGameOver: (finalScore: number) => void; // called once per run
+  onHaptic?: (name: "clear" | "tetris") => void; // 1-3 lines cleared = "clear", 4 = "tetris"
 }
 
 export interface TetrisOptions {
@@ -398,6 +399,7 @@ export class TetrisEngine {
       this.addScore((LINE_SCORES[cleared] ?? 0) * this.level); // level before the update
       this.level = 1 + Math.floor(this.lines / LINES_PER_LEVEL);
       this.dropInterval = intervalFor(this.level);
+      this.callbacks.onHaptic?.(cleared >= 4 ? "tetris" : "clear");
     }
   }
 
