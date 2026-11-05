@@ -1,6 +1,7 @@
 import type { ComponentType } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
+import { SnakeCanvas } from "@/components/snake-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
 import type { TetrisTheme } from "@/lib/tetris/constants";
 
@@ -29,6 +30,8 @@ export interface GameDefinition {
   controls: { keys: string[]; label: string }[];
   /** HUD stats the engine reports. LIVES and LINES share one HUD slot. */
   stats: { lives: boolean; lines: boolean; level: boolean };
+  /** Label of the lines slot when `stats.lines` is on (default "Lines"). */
+  linesLabel?: string;
   /** Optional background track. Absent = no audio and no mute button. */
   music?: { src: string; volume: number };
   /** Optional SKIN / THEME buttons under the CRT. They only change what the canvas draws. */
@@ -96,6 +99,23 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       volume: 1,
     },
     levelSelect: { min: 1, max: 99 },
+  },
+  snake: {
+    Canvas: SnakeCanvas,
+    controls: [
+      { keys: ["←", "↑", "→", "↓"], label: "STEER" },
+      { keys: ["W", "A", "S", "D"], label: "STEER" },
+    ],
+    stats: { lives: false, lines: true, level: false },
+    linesLabel: "Length",
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+      ],
+      themes: false,
+    },
   },
 };
 

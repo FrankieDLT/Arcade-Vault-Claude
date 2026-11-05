@@ -138,7 +138,7 @@ export function GamePlayer({
           </div>
           {definition?.stats.lines ? (
             <div className="hud-stat lines">
-              <div className="l">Lines</div>
+              <div className="l">{definition.linesLabel ?? "Lines"}</div>
               <div className="v">{lines.toLocaleString("en-US")}</div>
             </div>
           ) : (
@@ -147,10 +147,12 @@ export function GamePlayer({
               <div className="v">{"♥ ".repeat(lives).trim() || "—"}</div>
             </div>
           )}
-          <div className="hud-stat level">
-            <div className="l">Level</div>
-            <div className="v">{String(level).padStart(2, "0")}</div>
-          </div>
+          {definition?.stats.level !== false && (
+            <div className="hud-stat level">
+              <div className="l">Level</div>
+              <div className="v">{String(level).padStart(2, "0")}</div>
+            </div>
+          )}
         </div>
         <div className="hud-actions">
           <button className="btn yellow" onClick={() => setPaused((p) => !p)}>
@@ -301,7 +303,7 @@ export function GamePlayer({
       {definition && (
         <p className="controls-hint">
           {definition.controls.map((c) => (
-            <span key={c.label}>
+            <span key={`${c.label}:${c.keys.join("+")}`}>
               {c.keys.map((k) => (
                 <kbd key={k}>{k}</kbd>
               ))}{" "}
