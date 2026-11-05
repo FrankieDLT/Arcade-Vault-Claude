@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 import { AsteroidsEngine } from "@/lib/asteroids/engine";
-import { H, W } from "@/lib/asteroids/constants";
+import { H, SKINS, W, type AsteroidsSkin } from "@/lib/asteroids/constants";
 
 interface AsteroidsCanvasProps {
   paused: boolean;
@@ -12,7 +12,14 @@ interface AsteroidsCanvasProps {
   onLives?: (lives: number) => void;
   onLevel?: (level: number) => void;
   onGameOver: (finalScore: number) => void;
+  /** Any string; unknown ids fall back to "retro". */
+  skin?: string;
 }
+
+const toSkin = (skin: string | undefined): AsteroidsSkin =>
+  skin !== undefined && Object.hasOwn(SKINS, skin)
+    ? (skin as AsteroidsSkin)
+    : "retro";
 
 export function AsteroidsCanvas({
   paused,
@@ -21,14 +28,17 @@ export function AsteroidsCanvas({
   onLives,
   onLevel,
   onGameOver,
+  skin,
 }: AsteroidsCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<AsteroidsEngine | null>(null);
   // Latest callbacks, so the engine is created once and never rebuilt on re-render.
   const callbacksRef = useRef({ onScore, onLives, onLevel, onGameOver });
+  const skinRef = useRef(toSkin(skin));
 
   useEffect(() => {
     callbacksRef.current = { onScore, onLives, onLevel, onGameOver };
+    skinRef.current = toSkin(skin);
   });
 
   // Create, start and destroy the engine. Strict Mode runs this twice in dev
@@ -36,12 +46,16 @@ export function AsteroidsCanvas({
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const engine = new AsteroidsEngine(canvas, {
-      onScore: (s) => callbacksRef.current.onScore(s),
-      onLives: (l) => callbacksRef.current.onLives?.(l),
-      onLevel: (l) => callbacksRef.current.onLevel?.(l),
-      onGameOver: (s) => callbacksRef.current.onGameOver(s),
-    });
+    const engine = new AsteroidsEngine(
+      canvas,
+      {
+        onScore: (s) => callbacksRef.current.onScore(s),
+        onLives: (l) => callbacksRef.current.onLives?.(l),
+        onLevel: (l) => callbacksRef.current.onLevel?.(l),
+        onGameOver: (s) => callbacksRef.current.onGameOver(s),
+      },
+      { skin: skinRef.current },
+    );
     engineRef.current = engine;
     engine.start();
     return () => {
@@ -60,6 +74,10 @@ export function AsteroidsCanvas({
   useEffect(() => {
     if (endSignal > 0) engineRef.current?.end();
   }, [endSignal]);
+
+  useEffect(() => {
+    engineRef.current?.setSkin(toSkin(skin));
+  }, [skin]);
 
   return (
     <canvas

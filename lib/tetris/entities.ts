@@ -65,6 +65,44 @@ export const BLOCK_DRAWERS: Record<TetrisSkin, BlockDrawer> = {
     roundedRectPath(ctx, px + s * 0.18, py + s * 0.14, s * 0.64, s * 0.18, s * 0.09);
     ctx.fill();
   },
+  gothic(ctx, px, py, s, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(px, py, s, s);
+    ctx.strokeStyle = "rgba(0,0,0,0.55)";
+    ctx.lineWidth = 2;
+    ctx.strokeRect(px + 1, py + 1, s - 2, s - 2);
+    ctx.fillStyle = "rgba(255,255,255,0.18)";
+    ctx.fillRect(px + 3, py + 3, s - 6, 2);
+  },
+  negative(ctx, px, py, s, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(px, py, s, s);
+    ctx.fillStyle = "rgba(0,0,0,0.12)";
+    ctx.fillRect(px, py, s, 4);
+  },
+  woodshop(ctx, px, py, s, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(px, py, s, s);
+    ctx.fillStyle = "rgba(0,0,0,0.14)";
+    for (let y = py + 6; y < py + s - 2; y += 7) ctx.fillRect(px + 2, y, s - 4, 1.5);
+    ctx.strokeStyle = "rgba(0,0,0,0.4)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px + 0.5, py + 0.5, s - 1, s - 1);
+  },
+  "ice-cavern"(ctx, px, py, s, color) {
+    ctx.fillStyle = color;
+    ctx.fillRect(px, py, s, s);
+    ctx.fillStyle = "rgba(255,255,255,0.5)";
+    ctx.beginPath();
+    ctx.moveTo(px, py);
+    ctx.lineTo(px + s * 0.6, py);
+    ctx.lineTo(px, py + s * 0.6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = "rgba(20,60,110,0.45)";
+    ctx.lineWidth = 1;
+    ctx.strokeRect(px + 0.5, py + 0.5, s - 1, s - 1);
+  },
   pixel(ctx, px, py, s, color) {
     ctx.fillStyle = color;
     ctx.fillRect(px, py, s, s);

@@ -7,6 +7,7 @@ import {
   W,
   BIG_VARIANT,
   type PowerUpType,
+  type SkinPalette,
 } from "./constants";
 import { rainbow, rand, randInt, wrap } from "./utils";
 
@@ -36,8 +37,10 @@ export class Bullet {
     if (this.ttl <= 0) this.dead = true;
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
-    ctx.fillStyle = this.rainbow ? rainbow() : "#fff";
+  draw(ctx: CanvasRenderingContext2D, skin: SkinPalette): void {
+    ctx.fillStyle = this.rainbow ? rainbow(skin.rainbowS, skin.rainbowL) : skin.bullet;
+    ctx.shadowColor = ctx.fillStyle;
+    ctx.shadowBlur = skin.glow;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
     ctx.fill();
@@ -100,11 +103,13 @@ export class Asteroid {
     ];
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D, skin: SkinPalette): void {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.rot);
-    ctx.strokeStyle = "#fff";
+    ctx.strokeStyle = skin.rock;
+    ctx.shadowColor = skin.rock;
+    ctx.shadowBlur = skin.glow;
     ctx.lineWidth = 1.5;
     ctx.lineJoin = "round";
     ctx.beginPath();
@@ -198,12 +203,14 @@ export class Ship {
     });
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D, skin: SkinPalette): void {
     if (this.dead) return;
 
     // Shield (blinks during its last second)
     if (this.shield > 0 && (this.shield >= 1 || Math.floor(this.shield * 10) % 2 === 0)) {
-      ctx.strokeStyle = "#4ff";
+      ctx.strokeStyle = skin.shield;
+      ctx.shadowColor = skin.shield;
+      ctx.shadowBlur = skin.glow;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(this.x, this.y, 22, 0, Math.PI * 2);
@@ -216,7 +223,9 @@ export class Ship {
     ctx.save();
     ctx.translate(this.x, this.y);
     ctx.rotate(this.angle);
-    ctx.strokeStyle = this.hyper > 0 ? rainbow() : "#fff";
+    ctx.strokeStyle = this.hyper > 0 ? rainbow(skin.rainbowS, skin.rainbowL) : skin.ship;
+    ctx.shadowColor = ctx.strokeStyle;
+    ctx.shadowBlur = skin.glow;
     ctx.lineWidth = 1.5;
     ctx.lineJoin = "round";
 
@@ -235,7 +244,8 @@ export class Ship {
       ctx.moveTo(-8, -4);
       ctx.lineTo(-8 - rand(6, 14), 0);
       ctx.lineTo(-8, 4);
-      ctx.strokeStyle = "rgba(255, 130, 0, 0.85)";
+      ctx.strokeStyle = skin.flame;
+      ctx.shadowColor = skin.flame;
       ctx.stroke();
     }
 
@@ -271,9 +281,9 @@ export class Particle {
     if (this.ttl <= 0) this.dead = true;
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D, skin: SkinPalette): void {
     const alpha = this.ttl / this.life;
-    ctx.strokeStyle = `rgba(255,255,255,${alpha.toFixed(2)})`;
+    ctx.strokeStyle = `rgba(${skin.particle},${alpha.toFixed(2)})`;
     ctx.lineWidth = 1;
     ctx.beginPath();
     ctx.moveTo(this.x, this.y);
@@ -313,13 +323,15 @@ export class PowerUp {
     if (this.ttl <= 0) this.dead = true;
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D, skin: SkinPalette): void {
     // Blink during the last 2 seconds
     if (this.ttl < 2 && Math.floor(this.ttl * 8) % 2 === 0) return;
     const t = POWERUP_TYPES[this.type];
-    const color = t.color ?? rainbow();
+    const color = skin.powerUp[this.type] ?? rainbow(skin.rainbowS, skin.rainbowL);
     ctx.strokeStyle = color;
     ctx.fillStyle = color;
+    ctx.shadowColor = color;
+    ctx.shadowBlur = skin.glow;
     ctx.lineWidth = 1.5;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);

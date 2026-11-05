@@ -91,7 +91,7 @@ export const FRUIT_SPRITES: Record<FruitName, FruitSprite> = {
 export const FRUIT_NAMES = Object.keys(FRUIT_SPRITES) as FruitName[];
 export const BONUS_FRUIT: FruitName = "pineapple";
 
-export type SnakeSkin = "retro" | "neon" | "pastel";
+export type SnakeSkin = "retro" | "neon" | "pastel" | "gothic" | "negative" | "lcd-brick" | "magma";
 
 export interface SkinPalette {
   boardA: string; // checkerboard cell
@@ -142,5 +142,56 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     fruitFilter: "saturate(0.7) brightness(1.15)",
     fallbackFruit: "#ff9aa8",
     bonusRing: "#f2b705",
+  },
+  gothic: {
+    boardA: "#0d0a0e",
+    boardB: "#150f17",
+    grid: "rgba(168, 168, 176, 0.07)", // tarnished silver
+    body: "#cf2442", // deep crimson
+    head: "#e8e0cc", // bone
+    eye: "#2a0610",
+    glow: 0,
+    fruitFilter: "saturate(0.6) contrast(1.1) brightness(0.95)",
+    fallbackFruit: "#9b4dca", // violet
+    bonusRing: "#b9a4ff", // violet
+  },
+  // Computed inverse of retro, channel by channel (255 - c); fruits use invert(1).
+  negative: {
+    boardA: "#e3c5ed",
+    boardB: "#e8cfef",
+    grid: null,
+    body: "#9a3aae",
+    head: "#741c95",
+    eye: "#f2e0f7",
+    glow: 0,
+    fruitFilter: "invert(1)",
+    fallbackFruit: "#007a7a",
+    bonusRing: "#002bff",
+  },
+  // 90s phone LCD: dark pixels on a green-gray screen.
+  "lcd-brick": {
+    boardA: "#c7d6a0",
+    boardB: "#bccb94",
+    grid: null,
+    body: "#2d3b22",
+    head: "#0f1a0a",
+    eye: "#c7d6a0",
+    glow: 0,
+    fruitFilter: "grayscale(1) sepia(0.6) contrast(1.2)",
+    fallbackFruit: "#0f1a0a",
+    bonusRing: "#0f1a0a",
+  },
+  // Molten rock: glowing orange snake on charred basalt.
+  magma: {
+    boardA: "#1a0d0a",
+    boardB: "#240f08",
+    grid: null,
+    body: "#ff7a1a",
+    head: "#ffd166",
+    eye: "#1a0d0a",
+    glow: 0,
+    fruitFilter: "saturate(1.3) hue-rotate(-10deg)",
+    fallbackFruit: "#ff4d2e",
+    bonusRing: "#7fe7ff",
   },
 };

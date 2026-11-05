@@ -6,10 +6,10 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 
 | Game      | Id          | Category | Accent  | Engine           | Skins                                                  | Extras                                              |
 | --------- | ----------- | -------- | ------- | ---------------- | ------------------------------------------------------ | --------------------------------------------------- |
-| Asteroids | `asteroids` | SHOOTER  | cyan    | `lib/asteroids/` | none                                                   | Power-ups: Bomb, Hyper, Shield, SlowMo, Triple shot |
+| Asteroids | `asteroids` | SHOOTER  | cyan    | `lib/asteroids/` | Retro, Neon, Pastel, Gothic, Negative, Amber CRT, Deep Sea | Power-ups: Bomb, Hyper, Shield, SlowMo, Triple shot |
 | Tetris    | `tetris`    | PUZZLE   | green   | `lib/tetris/`    | Retro, Neon, Pastel, Pixel Art (plus dark/light theme) | Background music, hold piece, ghost piece           |
 | Arkanoid  | `arkanoid`  | ARCADE   | magenta | `lib/arkanoid/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
-| Snake     | `snake`     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel                                    | Golden bonus fruit, 22 fruit sprites                |
+| Snake     | `snake`     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
 
 ### Asteroids
 
