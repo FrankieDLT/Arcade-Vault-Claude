@@ -3,8 +3,10 @@
 import Link from "next/link";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { getGameDefinition } from "@/components/game-registry";
+import { useGamepad } from "@/components/gamepad-provider";
 import { useSession } from "@/components/session-provider";
 import { TouchPad } from "@/components/touch-pad";
+import { useTouchUi } from "@/components/use-touch-ui";
 import type { TetrisTheme } from "@/lib/tetris/constants";
 import { useBackgroundMusic } from "@/components/use-background-music";
 import { useSoundEffects } from "@/components/use-sound-effects";
@@ -17,16 +19,7 @@ import {
 import { insertScore } from "@/lib/scores-db";
 
 const LEVEL_STEP = 2500;
-/** The touch UI (pad, touch hint, haptics) is active below this width. Keep in sync with the CSS media query. */
-const TOUCH_UI_QUERY = "(max-width: 767px)";
 
-// False on the server and during hydration, then the real value: no hydration mismatch.
-function subscribeTouchUi(onChange: () => void) {
-  const mq = window.matchMedia(TOUCH_UI_QUERY);
-  mq.addEventListener("change", onChange);
-  return () => mq.removeEventListener("change", onChange);
-}
-const getTouchUi = () => window.matchMedia(TOUCH_UI_QUERY).matches;
 const getNoTouchUi = () => false;
 const subscribeNever = () => () => {};
 
@@ -59,11 +52,8 @@ export function GamePlayer({
   const [theme, setTheme] = useState<TetrisTheme>("dark");
   // Haptics: in memory only, independent of mute, kept by PLAY AGAIN, reset on reload.
   const [hapticsOn, setHapticsOn] = useState(true);
-  const touchUi = useSyncExternalStore(
-    subscribeTouchUi,
-    getTouchUi,
-    getNoTouchUi,
-  );
+  const touchUi = useTouchUi();
+  const { enabled: padEnabled, skin: padSkin } = useGamepad();
   const vibrateSupported = useSyncExternalStore(
     subscribeNever,
     canVibrate,
@@ -319,9 +309,10 @@ export function GamePlayer({
         </div>
       </div>
 
-      {definition?.touch?.pad && (
+      {definition?.touch?.pad && (touchUi || padEnabled) && (
         <TouchPad
           buttons={definition.touch.pad}
+          skin={padSkin}
           disabled={paused || over}
           onPress={() => fireHaptic("tap")}
         />

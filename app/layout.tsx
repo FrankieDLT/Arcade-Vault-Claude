@@ -1,7 +1,12 @@
 import type { Metadata } from "next";
-import { Press_Start_2P, JetBrains_Mono, Courier_Prime } from "next/font/google";
+import {
+  Press_Start_2P,
+  JetBrains_Mono,
+  Courier_Prime,
+} from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
+import { GamepadProvider } from "@/components/gamepad-provider";
 import { Nav } from "@/components/nav";
 import { SessionProvider } from "@/components/session-provider";
 
@@ -39,9 +44,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="av-noise" />
         <div className="av-app">
           <SessionProvider>
-            <Nav />
-            <main className="av-main">{children}</main>
-            <Footer />
+            <GamepadProvider>
+              <Nav />
+              <main className="av-main">{children}</main>
+              <Footer />
+            </GamepadProvider>
           </SessionProvider>
         </div>
       </body>

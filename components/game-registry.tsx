@@ -5,6 +5,7 @@ import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
 import type { TetrisTheme } from "@/lib/tetris/constants";
+import type { PadSlot } from "@/lib/gamepad";
 
 /** Props every game canvas accepts; a canvas ignores the ones its engine does not have. */
 export interface GameCanvasProps {
@@ -33,7 +34,8 @@ export interface TouchButton {
   label: string;
   /** Key stays down while the finger is down (move, thrust, soft drop, slow fall). Taps fire down then up. */
   hold?: boolean;
-  area: "left" | "right";
+  /** Where the active skin draws this control. */
+  slot: PadSlot;
 }
 
 export interface GameDefinition {
@@ -85,10 +87,11 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     },
     touch: {
       pad: [
-        { code: "ArrowLeft", label: "◀", hold: true, area: "left" },
-        { code: "ArrowRight", label: "▶", hold: true, area: "left" },
-        { code: "ArrowUp", label: "THRUST", hold: true, area: "right" },
-        { code: "Space", label: "FIRE", hold: true, area: "right" },
+        { code: "ArrowLeft", label: "◀", hold: true, slot: "left" },
+        { code: "ArrowRight", label: "▶", hold: true, slot: "right" },
+        { code: "ArrowUp", label: "▲", hold: true, slot: "up" },
+        { code: "ArrowUp", label: "THRUST", hold: true, slot: "b" },
+        { code: "Space", label: "FIRE", hold: true, slot: "a" },
       ],
       hint: [
         { keys: ["◀", "▶"], label: "ROTATE" },
@@ -127,13 +130,14 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     },
     touch: {
       pad: [
-        { code: "ArrowLeft", label: "◀", hold: true, area: "left" },
-        { code: "ArrowRight", label: "▶", hold: true, area: "left" },
-        { code: "ArrowDown", label: "▼", hold: true, area: "left" },
-        { code: "ArrowUp", label: "⟳", area: "right" },
-        { code: "Space", label: "DROP", area: "right" },
-        { code: "KeyS", label: "HOLD", area: "right" },
-        { code: "KeyC", label: "SLOW", hold: true, area: "right" },
+        { code: "ArrowLeft", label: "◀", hold: true, slot: "left" },
+        { code: "ArrowRight", label: "▶", hold: true, slot: "right" },
+        { code: "ArrowDown", label: "▼", hold: true, slot: "down" },
+        { code: "ArrowUp", label: "⟳", slot: "up" },
+        { code: "ArrowUp", label: "⟳", slot: "a" },
+        { code: "Space", label: "DROP", slot: "b" },
+        { code: "KeyS", label: "HOLD", slot: "x" },
+        { code: "KeyC", label: "SLOW", hold: true, slot: "y" },
       ],
       hint: [
         { keys: ["◀", "▶", "▼"], label: "MOVE" },

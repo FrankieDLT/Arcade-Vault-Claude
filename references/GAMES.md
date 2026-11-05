@@ -17,6 +17,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Details:** Your ship drifts in open space. Rotate, thrust and fire to break big asteroids into smaller ones before they hit you. Grab power-ups: Bomb, Hyper, Shield, SlowMo and Triple shot.
 - **Controls:** `←` `→` rotate, `↑` thrust, `SPACE` fire.
 - **Touch (below 768px):** pad under the CRT with ◀ ▶ (rotate), THRUST (hold) and FIRE (hold). Rotate and thrust can be held together. Haptic `split` when an asteroid splits.
+- **Gamepad (GamePad menu, any width):** `left` `right` (hold) rotate, `up` and `b` THRUST (hold), `a` FIRE (hold). `down`, `x` and `y` have no action and are drawn dimmed.
 - **HUD:** score, lives, level.
 
 ### Tetris
@@ -25,6 +26,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Details:** Seven classic pieces fall into a ten-column well. Slide, rotate and drop them to clear lines, stash one piece on hold for later and follow the ghost to aim. Gravity speeds up every 10 lines.
 - **Controls:** `←` `→` move, `↑` or `X` rotate, `↓` soft drop, `SPACE` hard drop, `S` hold, `C` slow fall.
 - **Touch (below 768px):** pad under the CRT with ◀ ▶ ▼ (hold), ⟳ rotate, DROP, HOLD and SLOW (hold). Holding ◀ ▶ moves one cell per press (the engine relies on OS key repeat, which a pad does not send). Haptics: `clear` for 1 to 3 lines, `tetris` for 4.
+- **Gamepad (GamePad menu, any width):** `left` `right` `down` (hold) move, `up` and `a` rotate, `b` DROP, `x` HOLD, `y` SLOW (hold). Skins: Neon (default), Retro, 80s Arcade, Wood.
 - **HUD:** score, lines, level.
 
 ### Arkanoid
@@ -45,7 +47,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 
 ## Touch controls and haptics
 
-All four real games are playable on a phone (viewport below 768px). The pad and the touch hint show only below 768px. Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+All four real games are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris and Asteroids). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 
