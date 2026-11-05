@@ -64,4 +64,6 @@ Always use /frontend-design when developing user interfaces.
 
 The `game-planner` agent (`.claude/agents/game-planner.md`) suggests new games that fit the library; its log of past suggestions is `references/game-suggestions-todo.md`.
 
+The `game-jam` agent (`.claude/agents/game-jam.md`) takes a theme and writes one original game as 3 spec variants (`v1-lean.md`, `v2-standard.md`, `v3-deluxe.md`) plus a `README.md` index in `references/gameJam/<game-id>/` for review. It only writes in that folder; a chosen variant is promoted by copying it to `specs/NN-<id>-game.md`.
+
 When using Playwright, always leave all screen captures taken in the same ".pwScreencaps" folder in the root directory
