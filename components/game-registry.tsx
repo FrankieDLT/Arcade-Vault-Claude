@@ -1,7 +1,8 @@
 import type { ComponentType } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
+import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
-import type { TetrisSkin, TetrisTheme } from "@/lib/tetris/constants";
+import type { TetrisTheme } from "@/lib/tetris/constants";
 
 /** Props every game canvas accepts; a canvas ignores the ones its engine does not have. */
 export interface GameCanvasProps {
@@ -13,8 +14,13 @@ export interface GameCanvasProps {
   onLives?: (lives: number) => void;
   onLevel?: (level: number) => void;
   onLines?: (lines: number) => void;
-  skin?: TetrisSkin;
+  /** Skin id from `appearance.skins`; each canvas narrows it with a guard and falls back to its default. */
+  skin?: string;
   theme?: TetrisTheme;
+  /** Sound events from the engine; the platform plays them. */
+  onSound?: (sound: string) => void;
+  /** A change of `id` asks the engine to jump to `level` (level select in the PAUSED overlay). */
+  levelRequest?: { level: number; id: number };
 }
 
 export interface GameDefinition {
@@ -26,7 +32,11 @@ export interface GameDefinition {
   /** Optional background track. Absent = no audio and no mute button. */
   music?: { src: string; volume: number };
   /** Optional SKIN / THEME buttons under the CRT. They only change what the canvas draws. */
-  appearance?: { skins: { id: TetrisSkin; label: string }[]; themes: boolean };
+  appearance?: { skins: { id: string; label: string }[]; themes: boolean };
+  /** Optional sound effects, played by the platform on engine `onSound` events. */
+  sfx?: { sounds: Record<string, string>; volume: number };
+  /** Optional level selector in the PAUSED overlay. */
+  levelSelect?: { min: number; max: number };
 }
 
 // Games without an entry keep the fake simulation in GamePlayer.
@@ -61,6 +71,31 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       ],
       themes: true,
     },
+  },
+  arkanoid: {
+    Canvas: ArkanoidCanvas,
+    controls: [
+      { keys: ["←", "→"], label: "MOVE" },
+      { keys: ["MOUSE"], label: "PADDLE" },
+      { keys: ["SPACE", "CLICK"], label: "LAUNCH" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "neon", label: "NEON" },
+      ],
+      themes: false,
+    },
+    sfx: {
+      sounds: {
+        bounce: "/game-assets/arkanoid/ball-bounce.mp3",
+        brick: "/game-assets/arkanoid/break-sound.mp3",
+      },
+      volume: 1,
+    },
+    levelSelect: { min: 1, max: 99 },
   },
 };
 
