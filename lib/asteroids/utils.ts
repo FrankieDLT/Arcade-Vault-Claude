@@ -12,4 +12,5 @@ export const rand = (min: number, max: number): number => min + Math.random() * 
 export const randInt = (min: number, max: number): number => Math.floor(rand(min, max + 1));
 
 // Rainbow color that cycles over time.
-export const rainbow = (): string => `hsl(${(performance.now() / 5) % 360}, 100%, 60%)`;
+export const rainbow = (s = 100, l = 60): string =>
+  `hsl(${(performance.now() / 5) % 360}, ${s}%, ${l}%)`;

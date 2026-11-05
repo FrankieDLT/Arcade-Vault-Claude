@@ -7,10 +7,13 @@ import {
   POWERUP_TYPES,
   SHIELD_DURATION,
   SLOW_DURATION,
+  SKINS,
   SLOW_FACTOR,
   TRIPLE_DURATION,
   W,
+  type AsteroidsSkin,
   type PowerUpType,
+  type SkinPalette,
 } from "./constants";
 import { Asteroid, Particle, PowerUp, Ship, type Bullet } from "./entities";
 import { dist, rainbow, rand } from "./utils";
@@ -22,7 +25,11 @@ export interface AsteroidsCallbacks {
   onGameOver: (finalScore: number) => void; // called once per run when lives reach 0
 }
 
-type RunState = "playing" | "dead" | "gameover";
+export interface AsteroidsOptions {
+  skin?: AsteroidsSkin;
+}
+
+type RunState ="playing" | "dead" | "gameover";
 
 const GAME_KEYS = new Set(["Space", "ArrowUp", "ArrowDown", "ArrowLeft", "ArrowRight"]);
 
@@ -61,11 +68,18 @@ export class AsteroidsEngine {
   // Last values sent to the callbacks, so they only fire on change.
   private emitted = { score: NaN, lives: NaN, level: NaN };
 
-  constructor(canvas: HTMLCanvasElement, callbacks: AsteroidsCallbacks) {
+  private skin: SkinPalette = SKINS.retro;
+
+  constructor(
+    canvas: HTMLCanvasElement,
+    callbacks: AsteroidsCallbacks,
+    options: AsteroidsOptions = {},
+  ) {
     const ctx = canvas.getContext("2d");
     if (!ctx) throw new Error("AsteroidsEngine: 2D canvas context is not available");
     this.ctx = ctx;
     this.callbacks = callbacks;
+    this.skin = SKINS[options.skin ?? "retro"] ?? SKINS.retro;
   }
 
   // ── Public API ─────────────────────────────────────────────────────────────
@@ -102,6 +116,13 @@ export class AsteroidsEngine {
     this.state = "gameover";
     this.emitChanges();
     this.finishRun();
+  }
+
+  // Visual only. Redraws at once, also while paused or after game over.
+  setSkin(skin: AsteroidsSkin): void {
+    if (this.destroyed) return;
+    this.skin = SKINS[skin] ?? SKINS.retro;
+    if (this.started) this.draw();
   }
 
   destroy(): void {
@@ -396,17 +417,24 @@ export class AsteroidsEngine {
   // overlay belong to the platform HUD and modal.
   private draw(): void {
     const ctx = this.ctx;
-    ctx.fillStyle = "#000";
+    const skin = this.skin;
+    ctx.fillStyle = skin.bg;
     ctx.fillRect(0, 0, W, H);
 
-    this.particles.forEach((p) => p.draw(ctx));
-    this.asteroids.forEach((a) => a.draw(ctx));
-    this.powerUps.forEach((p) => p.draw(ctx));
-    this.bullets.forEach((b) => b.draw(ctx));
-    this.ship.draw(ctx);
+    // Each group is saved/restored so a skin's glow never leaks to the next one.
+    const group = (fn: () => void): void => {
+      ctx.save();
+      fn();
+      ctx.restore();
+    };
+    group(() => this.particles.forEach((p) => p.draw(ctx, skin)));
+    group(() => this.asteroids.forEach((a) => a.draw(ctx, skin)));
+    group(() => this.powerUps.forEach((p) => p.draw(ctx, skin)));
+    group(() => this.bullets.forEach((b) => b.draw(ctx, skin)));
+    group(() => this.ship.draw(ctx, skin));
 
     if (this.bombFlash > 0) {
-      ctx.fillStyle = `rgba(255,255,255,${((this.bombFlash / 0.25) * 0.5).toFixed(2)})`;
+      ctx.fillStyle = `rgba(${skin.flash},${((this.bombFlash / 0.25) * 0.5).toFixed(2)})`;
       ctx.fillRect(0, 0, W, H);
     }
 
@@ -419,19 +447,19 @@ export class AsteroidsEngine {
     ctx.textBaseline = "alphabetic";
 
     if (this.ship.hyper > 0) {
-      ctx.fillStyle = rainbow();
+      ctx.fillStyle = rainbow(this.skin.rainbowS, this.skin.rainbowL);
       ctx.textAlign = "left";
       ctx.fillText(`HYPERMODE ${this.ship.hyper.toFixed(1)}s`, 14, 26);
     }
 
     if (this.tripleTimer > 0) {
-      ctx.fillStyle = "#0ff";
+      ctx.fillStyle = this.skin.tripleText;
       ctx.textAlign = "left";
       ctx.fillText(`TRIPLE  ${Math.ceil(this.tripleTimer)}s`, 14, 46);
     }
 
     if (this.slowTimer > 0) {
-      ctx.fillStyle = "#fff";
+      ctx.fillStyle = this.skin.slowText;
       ctx.textAlign = "center";
       ctx.fillText(`SLOWMO ${this.slowTimer.toFixed(1)}s`, W / 2, 26);
     }

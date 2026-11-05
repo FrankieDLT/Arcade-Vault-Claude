@@ -14,7 +14,6 @@ import {
   LABEL_LETTER_SPACING,
   LINES_PER_LEVEL,
   LINE_SCORES,
-  NEON_BOARD,
   NEXT_BOX,
   NEXT_LABEL_Y,
   PIECE_TYPES,
@@ -22,7 +21,7 @@ import {
   SIDE_X,
   SLOW_FACTOR,
   SOFT_DROP_POINTS,
-  THEME_COLORS,
+  getThemeColors,
   W,
   type Shape,
   type TetrisSkin,
@@ -428,9 +427,9 @@ export class TetrisEngine {
 
   private draw(): void {
     const { ctx, skin } = this;
-    const colors = THEME_COLORS[this.theme];
-    const boardFill = skin === "neon" ? NEON_BOARD.boardFill : colors.boardFill;
-    const grid = skin === "neon" ? NEON_BOARD.grid : colors.grid;
+    const colors = getThemeColors(skin, this.theme);
+    const boardFill = colors.boardFill;
+    const grid = colors.grid;
 
     ctx.clearRect(0, 0, W, H);
     ctx.fillStyle = colors.background;
@@ -493,7 +492,7 @@ export class TetrisEngine {
     piece: Piece | null,
   ): void {
     const { ctx } = this;
-    const colors = THEME_COLORS[this.theme];
+    const colors = getThemeColors(this.skin, this.theme);
     ctx.fillStyle = fill;
     ctx.fillRect(box.x, box.y, box.w, box.h);
     ctx.strokeStyle = colors.border;
