@@ -9,8 +9,8 @@ interface AsteroidsCanvasProps {
   /** Increment to end the run immediately (0 = not requested). */
   endSignal: number;
   onScore: (score: number) => void;
-  onLives: (lives: number) => void;
-  onLevel: (level: number) => void;
+  onLives?: (lives: number) => void;
+  onLevel?: (level: number) => void;
   onGameOver: (finalScore: number) => void;
 }
 
@@ -38,8 +38,8 @@ export function AsteroidsCanvas({
     if (!canvas) return;
     const engine = new AsteroidsEngine(canvas, {
       onScore: (s) => callbacksRef.current.onScore(s),
-      onLives: (l) => callbacksRef.current.onLives(l),
-      onLevel: (l) => callbacksRef.current.onLevel(l),
+      onLives: (l) => callbacksRef.current.onLives?.(l),
+      onLevel: (l) => callbacksRef.current.onLevel?.(l),
       onGameOver: (s) => callbacksRef.current.onGameOver(s),
     });
     engineRef.current = engine;

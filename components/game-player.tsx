@@ -2,8 +2,10 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { AsteroidsCanvas } from "@/components/asteroids-canvas";
+import { getGameDefinition } from "@/components/game-registry";
 import { useSession } from "@/components/session-provider";
+import type { TetrisSkin, TetrisTheme } from "@/lib/tetris/constants";
+import { useBackgroundMusic } from "@/components/use-background-music";
 import { insertScore } from "@/lib/scores-db";
 
 const LEVEL_STEP = 2500;
@@ -16,16 +18,26 @@ export function GamePlayer({
   title: string;
 }) {
   const { user } = useSession();
-  // Games with a real engine are chosen by id; every other game keeps the fake simulation.
-  const isAsteroids = gameId === "asteroids";
+  // Games with a real engine are in the registry; every other game keeps the fake simulation.
+  const definition = getGameDefinition(gameId);
+  const Canvas = definition?.Canvas;
   const [score, setScore] = useState(0);
   const [lives, setLives] = useState(3);
+  const [lines, setLines] = useState(0);
   const [engineLevel, setEngineLevel] = useState(1);
-  // runId remounts <AsteroidsCanvas> on PLAY AGAIN; endSignal asks it to end the run.
+  // runId remounts the canvas on PLAY AGAIN; endSignal asks it to end the run.
   const [runId, setRunId] = useState(0);
   const [endSignal, setEndSignal] = useState(0);
   const [paused, setPaused] = useState(false);
   const [over, setOver] = useState(false);
+  // In memory only: resets on reload, kept by PLAY AGAIN.
+  const [muted, setMuted] = useState(false);
+  // Canvas look: in memory only, kept by PLAY AGAIN, reset on reload.
+  const [skin, setSkin] = useState<TetrisSkin>("retro");
+  const [theme, setTheme] = useState<TetrisTheme>("dark");
+  const appearance = definition?.appearance;
+  const skinLabel =
+    appearance?.skins.find((s) => s.id === skin)?.label ?? skin.toUpperCase();
   // null until the player edits it, so the session name (loaded after mount) is used.
   const [editedName, setEditedName] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
@@ -33,25 +45,34 @@ export function GamePlayer({
   const [saveError, setSaveError] = useState(false);
 
   const name = editedName ?? user?.name ?? "GUEST";
-  const level = isAsteroids ? engineLevel : 1 + Math.floor(score / LEVEL_STEP);
+  const level = definition?.stats.level
+    ? engineLevel
+    : 1 + Math.floor(score / LEVEL_STEP);
+
+  useBackgroundMusic(definition?.music, {
+    active: !!definition?.music && !paused && !over,
+    muted,
+    restartKey: runId,
+  });
 
   useEffect(() => {
-    if (isAsteroids || over || paused) return;
+    if (definition || over || paused) return;
     const t = setInterval(
       () => setScore((s) => s + Math.floor(10 + Math.random() * 90)),
       220,
     );
     return () => clearInterval(t);
-  }, [isAsteroids, over, paused]);
+  }, [definition, over, paused]);
 
   const endRun = () => {
-    if (isAsteroids) setEndSignal((n) => n + 1);
+    if (definition) setEndSignal((n) => n + 1);
     else setOver(true);
   };
 
   const restart = () => {
     setScore(0);
     setLives(3);
+    setLines(0);
     setEngineLevel(1);
     setEndSignal(0);
     setRunId((n) => n + 1);
@@ -90,10 +111,17 @@ export function GamePlayer({
             <div className="l">Score</div>
             <div className="v">{score.toLocaleString("en-US")}</div>
           </div>
-          <div className="hud-stat lives">
-            <div className="l">Lives</div>
-            <div className="v">{"♥ ".repeat(lives).trim() || "—"}</div>
-          </div>
+          {definition?.stats.lines ? (
+            <div className="hud-stat lines">
+              <div className="l">Lines</div>
+              <div className="v">{lines.toLocaleString("en-US")}</div>
+            </div>
+          ) : (
+            <div className="hud-stat lives">
+              <div className="l">Lives</div>
+              <div className="v">{"♥ ".repeat(lives).trim() || "—"}</div>
+            </div>
+          )}
           <div className="hud-stat level">
             <div className="l">Level</div>
             <div className="v">{String(level).padStart(2, "0")}</div>
@@ -106,6 +134,19 @@ export function GamePlayer({
           <button className="btn magenta" onClick={endRun}>
             END
           </button>
+          {definition?.music && (
+            <button
+              className="btn"
+              aria-pressed={muted}
+              onClick={(e) => {
+                setMuted((m) => !m);
+                // Keep Space (hard drop) from re-clicking the button.
+                e.currentTarget.blur();
+              }}
+            >
+              {muted ? "MUSIC OFF" : "MUSIC ON"}
+            </button>
+          )}
           <Link href={`/games/${gameId}`} className="btn ghost">
             EXIT
           </Link>
@@ -114,14 +155,17 @@ export function GamePlayer({
 
       <div className="crt">
         <div className="crt-screen">
-          {isAsteroids ? (
-            <AsteroidsCanvas
+          {Canvas && definition ? (
+            <Canvas
               key={runId}
               paused={paused}
               endSignal={endSignal}
               onScore={setScore}
-              onLives={setLives}
-              onLevel={setEngineLevel}
+              onLives={definition.stats.lives ? setLives : undefined}
+              onLines={definition.stats.lines ? setLines : undefined}
+              onLevel={definition.stats.level ? setEngineLevel : undefined}
+              skin={appearance ? skin : undefined}
+              theme={appearance?.themes ? theme : undefined}
               onGameOver={(finalScore) => {
                 setScore(finalScore);
                 setOver(true);
@@ -167,18 +211,45 @@ export function GamePlayer({
         </div>
       </div>
 
-      {isAsteroids && (
+      {appearance && (
+        <div className="appearance-row">
+          {appearance.skins.length > 1 && (
+            <button
+              className="btn ghost"
+              onClick={(e) => {
+                const i = appearance.skins.findIndex((s) => s.id === skin);
+                setSkin(appearance.skins[(i + 1) % appearance.skins.length].id);
+                // Keep Space (hard drop) from re-clicking the button.
+                e.currentTarget.blur();
+              }}
+            >
+              SKIN: {skinLabel}
+            </button>
+          )}
+          {appearance.themes && (
+            <button
+              className="btn ghost"
+              onClick={(e) => {
+                setTheme((t) => (t === "dark" ? "light" : "dark"));
+                e.currentTarget.blur();
+              }}
+            >
+              THEME: {theme.toUpperCase()}
+            </button>
+          )}
+        </div>
+      )}
+
+      {definition && (
         <p className="controls-hint">
-          <span>
-            <kbd>←</kbd>
-            <kbd>→</kbd> ROTATE
-          </span>
-          <span>
-            <kbd>↑</kbd> THRUST
-          </span>
-          <span>
-            <kbd>SPACE</kbd> FIRE
-          </span>
+          {definition.controls.map((c) => (
+            <span key={c.label}>
+              {c.keys.map((k) => (
+                <kbd key={k}>{k}</kbd>
+              ))}{" "}
+              {c.label}
+            </span>
+          ))}
         </p>
       )}
 
