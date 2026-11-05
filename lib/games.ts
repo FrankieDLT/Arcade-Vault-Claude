@@ -100,6 +100,17 @@ export const GAMES: Game[] = [
     best: 0,
     plays: "0",
   },
+  {
+    id: "tetris",
+    title: "TETRIS",
+    short: "Stack, rotate and clear lines before the stack hits the top.",
+    long: "Seven classic pieces fall into a ten-column well. Slide, rotate and drop them to clear lines, stash one piece on hold for later and follow the ghost to aim. Gravity speeds up every 10 lines.",
+    cat: "PUZZLE",
+    cover: "cover-tetris",
+    color: "green",
+    best: 0,
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [
