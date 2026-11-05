@@ -6,11 +6,21 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Arcade Vault: an online platform to play games and compete for the highest score. The project follows spec-driven development (`/spec` and `/spec-impl`, skills from `Klerith/fernando-skills`, installed with `npx skills@latest add Klerith/fernando-skills`). The README is written in Spanish.
 
-The repo is currently the untouched Create Next App scaffold (`app/page.tsx` is the default starter page). No game, auth, or scoring code exists yet.
+Specs live in `specs/` (01 to 09, one per feature; the `add-game` skill writes game specs, `/spec-impl` implements them).
+
+## App state
+
+All UI text is English. Routes (App Router, `app/`):
+
+- `/` home (`components/home.tsx`, data in `lib/home.ts`), `/library`, `/games/[id]` (detail + leaderboard), `/games/[id]/play` (`GamePlayer`), `/hall-of-fame`, `/auth`, `/about` (About + contact form), `not-found.tsx`.
+- `POST /api/contact` (`app/api/contact/route.ts`): validates with `lib/contact.ts`, honeypot field `website` (filled = fake success), in-memory rate limit of 3 per 10 min per IP (`lib/rate-limit.ts`, best-effort, per instance), sends through Resend (sandbox sender) to `CONTACT_TO_EMAIL`. Needs `RESEND_API_KEY` and `CONTACT_TO_EMAIL` in `.env` (server-only, documented in `.env.example`). Errors: `invalid` 400, `rate_limited` 429, `send_failed`.
+- Auth is still a mock: `components/session-provider.tsx` keeps a name-only `SessionUser` in `localStorage` (`av_user`, via `lib/storage.ts`, with an in-memory fallback). Supabase Auth is not used.
+- Seeded mock leaderboard rows come from `seededScores` in `lib/scores.ts` (deterministic, so server and client match).
+- Catalog: `GAMES` in `lib/games.ts` (12 entries). The full list of games, which are implemented and which are catalog-only, is in `references/GAMES.md`.
 
 ## Commands
 
-No test runner is configured.
+`npm run dev`, `npm run build`, `npm start`, `npm run lint` (eslint). Prettier is configured (`.prettierrc.json`). No test runner is configured.
 
 ## Next.js version warning
 
@@ -23,13 +33,19 @@ Next 16.4.4 / React 19.3 — APIs differ from what you may know. Per `AGENTS.md`
 - Path alias: `@/*` maps to the repo root (not `src/`). Routes live in `app/` at the root.
 - Supabase: the browser client is `getSupabase()` in `lib/supabase/client.ts` (lazy singleton built with `createBrowserClient` from `@supabase/ssr`). Import it from client components only. It throws, naming the variable, when `NEXT_PUBLIC_SUPABASE_URL` or `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` is empty. Both live in `.env` (documented in `.env.example`) and are inlined at build time, so restart `npm run dev` after editing. There is no server client, `proxy.ts` or service role key yet. `getSupabase()` returns `SupabaseClient<Database>`; the types in `lib/supabase/database.types.ts` are generated (MCP `generate_typescript_types`), never edited by hand.
 - Database: tables `games` (seeded with the 9 original catalog games; `tetris`, `arkanoid` and `snake` were added by the `add_tetris_game`, `add_arkanoid_game` and `add_snake_game` migrations, so 12 rows) and `scores` (`game_id` FK to `games`, `name` 1-10 chars, `score` 0-10,000,000). RLS is on: public select on both, anonymous insert on `scores`, no update/delete. The schema lives in `supabase/migrations/` (file name = applied version); apply new migrations with MCP `apply_migration` and regenerate the types.
+<<<<<<< Updated upstream
 - Catalog sync: `GAMES` in `lib/games.ts` is still the UI source and the `games` table is a manual copy. A new game needs a migration that inserts its `games` row, otherwise its score insert fails on the foreign key. `asteroids`, `tetris`, `arkanoid` and `snake` all follow this (the last three via `supabase/migrations/20261105002355_add_tetris_game.sql`, `supabase/migrations/20261105012449_add_arkanoid_game.sql` and `supabase/migrations/20261105020551_add_snake_game.sql`; the snake file carries the version `apply_migration` assigned, not the one the spec proposed). Keep every field of the row identical to the `GAMES` entry, including `cover`.
 - Score flow: `lib/scores-db.ts` has `fetchTopScores`, `fetchLatestScores`, `fetchTopScoresSince` and `insertScore` (client only). SAVE SCORE in `components/game-player.tsx` calls `insertScore` (anonymous, free-text name). There are no mock scores: `useTopScores` in `components/leaderboard.tsx` (used by `Leaderboard` and `HallOfFame`) returns only Supabase rows plus a `status` (`loading` / `ready` / `error`), `BestScore` (`components/best-score.tsx`) shows the top score per game on cards and the detail page (`—` when none), and `LiveActivity` (`components/home/live-activity.tsx`) feeds the home LATEST SCORES and TOP PLAYERS · TODAY. `lib/storage.ts` (`av_scores`) is no longer called for scores.
 - Deployment: `.github/workflows/deploy-pages.yml` builds on push to `master` and publishes `out/` to https://frankiedlt.github.io/Arcade-Vault-Claude/ with `NEXT_PUBLIC_BASE_PATH=/Arcade-Vault-Claude` and the repo secrets `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`. Pages must use source "GitHub Actions" (not "Deploy from a branch", which serves the README). `next/link` adds the basePath itself; raw URL strings (audio, images) must go through `withBasePath()` from `lib/base-path.ts`. To test locally: build with `NEXT_PUBLIC_BASE_PATH=/Arcade-Vault-Claude` and serve `out/` under that folder. Contact form: the client calls the Supabase Edge Function `contact` (`supabase/functions/contact/index.ts`, `verify_jwt: false`, CORS limited to the Pages origin and localhost:3000) through `getSupabase().functions.invoke`. Its secrets `RESEND_API_KEY` and `CONTACT_TO_EMAIL` are set in the Supabase Dashboard. Next prefetch requests for `__next.*.txt` log harmless 404s on static hosts.
+=======
+- Catalog sync: `GAMES` in `lib/games.ts` is still the UI source and the `games` table is a manual copy. A new game needs a migration that inserts its `games` row, otherwise its score insert fails on the foreign key. Every implemented game in `references/GAMES.md` follows this, with its migration in `supabase/migrations/` (the file name carries the version `apply_migration` assigned, not necessarily the one the spec proposed). Keep every field of the row identical to the `GAMES` entry, including `cover`.
+- Score flow: `lib/scores-db.ts` has `fetchTopScores` and `insertScore` (client only). SAVE SCORE in `components/game-player.tsx` calls `insertScore` (anonymous, free-text name). `useMergedScores` in `components/leaderboard.tsx` fetches after mount and merges the rows with the seeded mock rows; if the fetch fails it keeps the seeded rows. `lib/storage.ts` (`av_scores`) is no longer called for scores.
+- `GET /api/health/supabase` checks the URL and key against the Auth API (`200` ok, `500` missing_env, `503` unreachable, `401` invalid_key). It returns `404` in production.
+>>>>>>> Stashed changes
 
 ## Games
 
-- `asteroids`, `tetris`, `arkanoid` and `snake` are real games. Every other catalog game (including the placeholder `drop`) still runs the fake simulation (random score timer and a fake arena) inside `components/game-player.tsx`.
+- The implemented (real) games are listed in `references/GAMES.md`; keep that file up to date when a game is added. Every other catalog game still runs the fake simulation (random score timer and a fake arena) inside `components/game-player.tsx`.
 - Registry: `components/game-registry.tsx` maps a `gameId` to a `GameDefinition` (`Canvas`, `controls` for the hint under the CRT, `stats` = which of lives / lines / level the HUD shows, optional `music`, optional `appearance`, optional `sfx`, optional `levelSelect`, optional `linesLabel`). `getGameDefinition(gameId)` returns `undefined` for fake games. `GamePlayer` renders `<Canvas key={runId} />` from it instead of `.game-arena`, passes only the callbacks of the stats the definition uses (`GameCanvasProps`: `paused`, `endSignal`, `onScore`, `onGameOver`, optional `onLives`, `onLevel`, `onLines`, `skin` (a string id), `theme`, `onSound`, `levelRequest`), and shows LINES or LIVES in the same HUD slot (`linesLabel` replaces the `Lines` label, e.g. `Length`; the Level slot is hidden only when `stats.level === false`). PLAY AGAIN bumps `runId` to remount the canvas with a fresh engine. A new real game = an engine under `lib/<game>/`, a canvas wrapper, a registry entry and a `games` migration.
 - Asteroids engine: `lib/asteroids/` (`constants.ts`, `utils.ts`, `entities.ts`, `engine.ts`). It is framework-free: no `react` or `next` imports, and no module-level game state. `AsteroidsEngine` draws on an 800x600 canvas, scaled by CSS.
 - Engine contract: `new AsteroidsEngine(canvas, { onScore, onLives, onLevel, onGameOver })`, then `start()`, `pause()`, `resume()`, `end()`, `destroy()`. `onScore`, `onLives` and `onLevel` fire only when the value changes (`start()` fires 0, 3, 1). `onGameOver` fires once per run, and the engine then stops its loop and key listeners. The canvas draws only the playfield and power-up timers; score, lives, level and GAME OVER belong to the platform HUD and modal.
@@ -47,7 +63,7 @@ Next 16.4.4 / React 19.3 — APIs differ from what you may know. Per `AGENTS.md`
 
 ## Design reference
 
-`resources/templates/` holds the UI prototype to implement, not app code: `Arcade Vault.html` plus `.jsx` files (`app`, `auth`, `biblioteca`, `data`, `detalle`, `nav`, `reproductor`, `salon`) and `styles.css`. These map to the intended screens: auth, game library, game detail, player, and leaderboard ("salón"). Mock data is in `data.jsx`. Port these into the Next.js `app/` router as TypeScript components.
+`references/templates/` holds the UI prototype that was ported, not app code: `Arcade Vault.html` plus `.jsx` files (`app`, `auth`, `biblioteca`, `data`, `detalle`, `nav`, `reproductor`, `salon`), `styles.css`, and `home-about/` (home and About prototypes). Mock data is in `data.jsx`. `references/StarterGames/` holds the vanilla-JS sources of asteroids, tetris and arkanoid; `references/source-assets/snake-assets` holds the snake art sources. `resources/` holds only a raw copy of the Tetris music (the served file is in `public/game-assets/tetris/`).
 
 ## Skills
 
