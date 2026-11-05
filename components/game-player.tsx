@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getGameDefinition } from "@/components/game-registry";
 import { useSession } from "@/components/session-provider";
-import type { TetrisSkin, TetrisTheme } from "@/lib/tetris/constants";
+import type { TetrisTheme } from "@/lib/tetris/constants";
 import { useBackgroundMusic } from "@/components/use-background-music";
+import { useSoundEffects } from "@/components/use-sound-effects";
 import { insertScore } from "@/lib/scores-db";
 
 const LEVEL_STEP = 2500;
@@ -33,9 +34,16 @@ export function GamePlayer({
   // In memory only: resets on reload, kept by PLAY AGAIN.
   const [muted, setMuted] = useState(false);
   // Canvas look: in memory only, kept by PLAY AGAIN, reset on reload.
-  const [skin, setSkin] = useState<TetrisSkin>("retro");
+  const [skin, setSkin] = useState<string>(
+    definition?.appearance?.skins[0]?.id ?? "retro",
+  );
   const [theme, setTheme] = useState<TetrisTheme>("dark");
+  // Level select (PAUSED overlay): a new `id` asks the engine to jump to `level`.
+  const [levelRequest, setLevelRequest] = useState<
+    { level: number; id: number } | undefined
+  >(undefined);
   const appearance = definition?.appearance;
+  const levelSelect = definition?.levelSelect;
   const skinLabel =
     appearance?.skins.find((s) => s.id === skin)?.label ?? skin.toUpperCase();
   // null until the player edits it, so the session name (loaded after mount) is used.
@@ -54,6 +62,22 @@ export function GamePlayer({
     muted,
     restartKey: runId,
   });
+
+  const playSound = useSoundEffects(definition?.sfx, { muted });
+
+  const changeLevel = (
+    delta: number,
+    e: React.MouseEvent<HTMLButtonElement>,
+  ) => {
+    if (!levelSelect) return;
+    const next = Math.min(
+      levelSelect.max,
+      Math.max(levelSelect.min, engineLevel + delta),
+    );
+    setLevelRequest((prev) => ({ level: next, id: (prev?.id ?? 0) + 1 }));
+    // Keep Space (launch) from re-clicking the button.
+    e.currentTarget.blur();
+  };
 
   useEffect(() => {
     if (definition || over || paused) return;
@@ -74,6 +98,7 @@ export function GamePlayer({
     setLives(3);
     setLines(0);
     setEngineLevel(1);
+    setLevelRequest(undefined);
     setEndSignal(0);
     setRunId((n) => n + 1);
     setPaused(false);
@@ -134,17 +159,17 @@ export function GamePlayer({
           <button className="btn magenta" onClick={endRun}>
             END
           </button>
-          {definition?.music && (
+          {(definition?.music || definition?.sfx) && (
             <button
               className="btn"
               aria-pressed={muted}
               onClick={(e) => {
                 setMuted((m) => !m);
-                // Keep Space (hard drop) from re-clicking the button.
+                // Keep Space (hard drop, launch) from re-clicking the button.
                 e.currentTarget.blur();
               }}
             >
-              {muted ? "MUSIC OFF" : "MUSIC ON"}
+              {definition.music ? "MUSIC" : "SOUND"} {muted ? "OFF" : "ON"}
             </button>
           )}
           <Link href={`/games/${gameId}`} className="btn ghost">
@@ -166,6 +191,8 @@ export function GamePlayer({
               onLevel={definition.stats.level ? setEngineLevel : undefined}
               skin={appearance ? skin : undefined}
               theme={appearance?.themes ? theme : undefined}
+              onSound={definition.sfx ? playSound : undefined}
+              levelRequest={levelSelect ? levelRequest : undefined}
               onGameOver={(finalScore) => {
                 setScore(finalScore);
                 setOver(true);
@@ -200,6 +227,37 @@ export function GamePlayer({
                 >
                   PRESS RESUME TO CONTINUE
                 </div>
+                {levelSelect && (
+                  <div className="level-select">
+                    <div className="ls-row">
+                      <button
+                        className="btn ghost"
+                        aria-label="Previous level"
+                        disabled={engineLevel <= levelSelect.min}
+                        onClick={(e) => changeLevel(-1, e)}
+                      >
+                        −
+                      </button>
+                      <div>
+                        <div className="ls-label">LEVEL</div>
+                        <div className="ls-value" aria-live="polite">
+                          {String(engineLevel).padStart(2, "0")}
+                        </div>
+                      </div>
+                      <button
+                        className="btn ghost"
+                        aria-label="Next level"
+                        disabled={engineLevel >= levelSelect.max}
+                        onClick={(e) => changeLevel(1, e)}
+                      >
+                        +
+                      </button>
+                    </div>
+                    <p className="ls-note">
+                      CHANGING LEVEL RESTARTS THE WALL (SCORE AND LIVES KEPT)
+                    </p>
+                  </div>
+                )}
               </div>
             </div>
           )}

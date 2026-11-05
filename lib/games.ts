@@ -111,6 +111,17 @@ export const GAMES: Game[] = [
     best: 0,
     plays: "0",
   },
+  {
+    id: "arkanoid",
+    title: "ARKANOID",
+    short: "Break the wall, catch the power-ups and keep the ball alive.",
+    long: "Slide the paddle, bounce the ball and smash a wall of colored bricks. Falling capsules split the ball, add a safety bar or send it into a frenzy. Every level builds a new wall and the ball gets faster.",
+    cat: "ARCADE",
+    cover: "cover-arkanoid",
+    color: "magenta",
+    best: 0,
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [

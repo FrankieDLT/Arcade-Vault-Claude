@@ -6,7 +6,7 @@ import {
   type TetrisSkin,
   type TetrisTheme,
 } from "@/lib/tetris/engine";
-import { H, W } from "@/lib/tetris/constants";
+import { H, SKIN_COLORS, W } from "@/lib/tetris/constants";
 
 interface TetrisCanvasProps {
   paused: boolean;
@@ -16,11 +16,16 @@ interface TetrisCanvasProps {
   onLines?: (lines: number) => void;
   onLevel?: (level: number) => void;
   onGameOver: (finalScore: number) => void;
-  /** Block style; later changes apply live, without restarting the run. */
-  skin?: TetrisSkin;
+  /** Block style id; unknown ids are ignored. Later changes apply live, without restarting the run. */
+  skin?: string;
   /** Canvas colors; later changes apply live, without restarting the run. */
   theme?: TetrisTheme;
 }
+
+const toSkin = (skin: string | undefined): TetrisSkin | undefined =>
+  skin !== undefined && Object.hasOwn(SKIN_COLORS, skin)
+    ? (skin as TetrisSkin)
+    : undefined;
 
 export function TetrisCanvas({
   paused,
@@ -36,11 +41,11 @@ export function TetrisCanvas({
   const engineRef = useRef<TetrisEngine | null>(null);
   // Latest callbacks and appearance, so the engine is created once and never rebuilt on re-render.
   const callbacksRef = useRef({ onScore, onLines, onLevel, onGameOver });
-  const appearanceRef = useRef({ skin, theme });
+  const appearanceRef = useRef({ skin: toSkin(skin), theme });
 
   useEffect(() => {
     callbacksRef.current = { onScore, onLines, onLevel, onGameOver };
-    appearanceRef.current = { skin, theme };
+    appearanceRef.current = { skin: toSkin(skin), theme };
   });
 
   // Create, start and destroy the engine. Strict Mode runs this twice in dev
@@ -78,7 +83,8 @@ export function TetrisCanvas({
   }, [endSignal]);
 
   useEffect(() => {
-    if (skin) engineRef.current?.setSkin(skin);
+    const next = toSkin(skin);
+    if (next) engineRef.current?.setSkin(next);
   }, [skin]);
 
   useEffect(() => {
