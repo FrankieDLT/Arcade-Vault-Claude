@@ -1,15 +1,34 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useSyncExternalStore } from "react";
 import { getGameDefinition } from "@/components/game-registry";
 import { useSession } from "@/components/session-provider";
+import { TouchPad } from "@/components/touch-pad";
 import type { TetrisTheme } from "@/lib/tetris/constants";
 import { useBackgroundMusic } from "@/components/use-background-music";
 import { useSoundEffects } from "@/components/use-sound-effects";
+import {
+  canVibrate,
+  haptic,
+  HAPTIC_PATTERNS,
+  type HapticKind,
+} from "@/lib/haptics";
 import { insertScore } from "@/lib/scores-db";
 
 const LEVEL_STEP = 2500;
+/** The touch UI (pad, touch hint, haptics) is active below this width. Keep in sync with the CSS media query. */
+const TOUCH_UI_QUERY = "(max-width: 767px)";
+
+// False on the server and during hydration, then the real value: no hydration mismatch.
+function subscribeTouchUi(onChange: () => void) {
+  const mq = window.matchMedia(TOUCH_UI_QUERY);
+  mq.addEventListener("change", onChange);
+  return () => mq.removeEventListener("change", onChange);
+}
+const getTouchUi = () => window.matchMedia(TOUCH_UI_QUERY).matches;
+const getNoTouchUi = () => false;
+const subscribeNever = () => () => {};
 
 export function GamePlayer({
   gameId,
@@ -38,6 +57,22 @@ export function GamePlayer({
     definition?.appearance?.skins[0]?.id ?? "retro",
   );
   const [theme, setTheme] = useState<TetrisTheme>("dark");
+  // Haptics: in memory only, independent of mute, kept by PLAY AGAIN, reset on reload.
+  const [hapticsOn, setHapticsOn] = useState(true);
+  const touchUi = useSyncExternalStore(
+    subscribeTouchUi,
+    getTouchUi,
+    getNoTouchUi,
+  );
+  const vibrateSupported = useSyncExternalStore(
+    subscribeNever,
+    canVibrate,
+    getNoTouchUi,
+  );
+  const showHapticsToggle = !!definition && touchUi && vibrateSupported;
+  const fireHaptic = (kind: HapticKind) => {
+    if (showHapticsToggle && hapticsOn) haptic(kind);
+  };
   // Level select (PAUSED overlay): a new `id` asks the engine to jump to `level`.
   const [levelRequest, setLevelRequest] = useState<
     { level: number; id: number } | undefined
@@ -193,11 +228,24 @@ export function GamePlayer({
               onLevel={definition.stats.level ? setEngineLevel : undefined}
               skin={appearance ? skin : undefined}
               theme={appearance?.themes ? theme : undefined}
-              onSound={definition.sfx ? playSound : undefined}
+              onSound={
+                definition.sfx
+                  ? (sound) => {
+                      playSound(sound);
+                      // Arkanoid: a broken brick also vibrates; bounces do not.
+                      if (sound === "brick") fireHaptic("brick");
+                    }
+                  : undefined
+              }
+              onHaptic={(name) => {
+                if (Object.hasOwn(HAPTIC_PATTERNS, name))
+                  fireHaptic(name as HapticKind);
+              }}
               levelRequest={levelSelect ? levelRequest : undefined}
               onGameOver={(finalScore) => {
                 setScore(finalScore);
                 setOver(true);
+                fireHaptic("gameover");
               }}
             />
           ) : (
@@ -271,9 +319,17 @@ export function GamePlayer({
         </div>
       </div>
 
-      {appearance && (
+      {definition?.touch?.pad && (
+        <TouchPad
+          buttons={definition.touch.pad}
+          disabled={paused || over}
+          onPress={() => fireHaptic("tap")}
+        />
+      )}
+
+      {(appearance || showHapticsToggle) && (
         <div className="appearance-row">
-          {appearance.skins.length > 1 && (
+          {appearance && appearance.skins.length > 1 && (
             <button
               className="btn ghost"
               onClick={(e) => {
@@ -286,7 +342,7 @@ export function GamePlayer({
               SKIN: {skinLabel}
             </button>
           )}
-          {appearance.themes && (
+          {appearance?.themes && (
             <button
               className="btn ghost"
               onClick={(e) => {
@@ -297,20 +353,48 @@ export function GamePlayer({
               THEME: {theme.toUpperCase()}
             </button>
           )}
+          {showHapticsToggle && (
+            <button
+              className="btn ghost"
+              aria-pressed={hapticsOn}
+              onClick={(e) => {
+                setHapticsOn((h) => !h);
+                e.currentTarget.blur();
+              }}
+            >
+              HAPTICS {hapticsOn ? "ON" : "OFF"}
+            </button>
+          )}
         </div>
       )}
 
       {definition && (
-        <p className="controls-hint">
-          {definition.controls.map((c) => (
-            <span key={`${c.label}:${c.keys.join("+")}`}>
-              {c.keys.map((k) => (
-                <kbd key={k}>{k}</kbd>
-              ))}{" "}
-              {c.label}
-            </span>
-          ))}
-        </p>
+        <>
+          <p
+            className={`controls-hint${definition.touch ? " controls-hint-keys" : ""}`}
+          >
+            {definition.controls.map((c) => (
+              <span key={`${c.label}:${c.keys.join("+")}`}>
+                {c.keys.map((k) => (
+                  <kbd key={k}>{k}</kbd>
+                ))}{" "}
+                {c.label}
+              </span>
+            ))}
+          </p>
+          {definition.touch && (
+            <p className="controls-hint controls-hint-touch">
+              {definition.touch.hint.map((c) => (
+                <span key={`${c.label}:${c.keys.join("+")}`}>
+                  {c.keys.map((k) => (
+                    <kbd key={k}>{k}</kbd>
+                  ))}{" "}
+                  {c.label}
+                </span>
+              ))}
+            </p>
+          )}
+        </>
       )}
 
       {over && (

@@ -268,8 +268,8 @@ export class ArkanoidEngine {
     window.addEventListener("keyup", this.onKeyUp);
     window.addEventListener("blur", this.clearKeys);
     document.addEventListener("visibilitychange", this.onVisibility);
-    this.canvas.addEventListener("mousemove", this.onMouseMove);
-    this.canvas.addEventListener("mousedown", this.onMouseDown);
+    this.canvas.addEventListener("pointermove", this.onPointerMove);
+    this.canvas.addEventListener("pointerdown", this.onPointerDown);
   }
 
   private detachListeners(): void {
@@ -279,8 +279,8 @@ export class ArkanoidEngine {
     window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("blur", this.clearKeys);
     document.removeEventListener("visibilitychange", this.onVisibility);
-    this.canvas.removeEventListener("mousemove", this.onMouseMove);
-    this.canvas.removeEventListener("mousedown", this.onMouseDown);
+    this.canvas.removeEventListener("pointermove", this.onPointerMove);
+    this.canvas.removeEventListener("pointerdown", this.onPointerDown);
   }
 
   private onKeyDown = (e: KeyboardEvent): void => {
@@ -315,14 +315,15 @@ export class ArkanoidEngine {
     }
   };
 
-  private onMouseMove = (e: MouseEvent): void => {
+  // Pointer events cover mouse, touch and pen; a touch drag moves the paddle, a tap launches.
+  private onPointerMove = (e: PointerEvent): void => {
     if (this.paused || this.finished) return;
     const rect = this.canvas.getBoundingClientRect();
     if (rect.width === 0) return;
     this.mouseX = (e.clientX - rect.left) * (W / rect.width);
   };
 
-  private onMouseDown = (): void => {
+  private onPointerDown = (): void => {
     if (this.paused || this.finished) return;
     this.launchBall();
   };

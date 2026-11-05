@@ -37,6 +37,7 @@ export interface SnakeCallbacks {
   onScore: (score: number) => void; // called when the score changes
   onLength: (length: number) => void; // called when the snake length changes
   onGameOver: (finalScore: number) => void; // called once per run
+  onHaptic?: (name: "fruit" | "bonus") => void; // regular fruit eaten / golden fruit eaten
 }
 
 export interface SnakeOptions {
@@ -228,10 +229,12 @@ export class SnakeEngine {
       this.addScore(BONUS_POINTS);
       this.fruitsEaten++;
       this.bonus = null;
+      this.callbacks.onHaptic?.("bonus");
     }
     if (eatsFruit) {
       this.addScore(FRUIT_POINTS);
       this.fruitsEaten++;
+      this.callbacks.onHaptic?.("fruit");
       if (!this.spawnFruit()) {
         this.finishRun(); // no free cell left: the board is full
         return;

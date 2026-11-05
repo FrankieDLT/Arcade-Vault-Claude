@@ -16,6 +16,8 @@ interface TetrisCanvasProps {
   onLines?: (lines: number) => void;
   onLevel?: (level: number) => void;
   onGameOver: (finalScore: number) => void;
+  /** Haptic events from the engine ("clear", "tetris"); the platform vibrates. */
+  onHaptic?: (name: string) => void;
   /** Block style id; unknown ids are ignored. Later changes apply live, without restarting the run. */
   skin?: string;
   /** Canvas colors; later changes apply live, without restarting the run. */
@@ -34,17 +36,24 @@ export function TetrisCanvas({
   onLines,
   onLevel,
   onGameOver,
+  onHaptic,
   skin,
   theme,
 }: TetrisCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const engineRef = useRef<TetrisEngine | null>(null);
   // Latest callbacks and appearance, so the engine is created once and never rebuilt on re-render.
-  const callbacksRef = useRef({ onScore, onLines, onLevel, onGameOver });
+  const callbacksRef = useRef({
+    onScore,
+    onLines,
+    onLevel,
+    onGameOver,
+    onHaptic,
+  });
   const appearanceRef = useRef({ skin: toSkin(skin), theme });
 
   useEffect(() => {
-    callbacksRef.current = { onScore, onLines, onLevel, onGameOver };
+    callbacksRef.current = { onScore, onLines, onLevel, onGameOver, onHaptic };
     appearanceRef.current = { skin: toSkin(skin), theme };
   });
 
@@ -60,6 +69,7 @@ export function TetrisCanvas({
         onLines: (l) => callbacksRef.current.onLines?.(l),
         onLevel: (l) => callbacksRef.current.onLevel?.(l),
         onGameOver: (s) => callbacksRef.current.onGameOver(s),
+        onHaptic: (n) => callbacksRef.current.onHaptic?.(n),
       },
       appearanceRef.current,
     );

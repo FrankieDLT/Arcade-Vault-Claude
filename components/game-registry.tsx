@@ -21,8 +21,19 @@ export interface GameCanvasProps {
   theme?: TetrisTheme;
   /** Sound events from the engine; the platform plays them. */
   onSound?: (sound: string) => void;
+  /** Haptic events from the engine ("clear", "tetris", "split", "fruit", "bonus"); the platform vibrates. */
+  onHaptic?: (name: string) => void;
   /** A change of `id` asks the engine to jump to `level` (level select in the PAUSED overlay). */
   levelRequest?: { level: number; id: number };
+}
+
+export interface TouchButton {
+  /** KeyboardEvent.code the engine already reads, e.g. "ArrowLeft", "Space", "KeyS". */
+  code: string;
+  label: string;
+  /** Key stays down while the finger is down (move, thrust, soft drop, slow fall). Taps fire down then up. */
+  hold?: boolean;
+  area: "left" | "right";
 }
 
 export interface GameDefinition {
@@ -41,6 +52,13 @@ export interface GameDefinition {
   sfx?: { sounds: Record<string, string>; volume: number };
   /** Optional level selector in the PAUSED overlay. */
   levelSelect?: { min: number; max: number };
+  /** Optional touch controls (phones). The pad and the hint show below 768px only. */
+  touch?: {
+    pad?: TouchButton[];
+    swipe?: boolean;
+    /** Replaces `controls` in the hint under the CRT on viewports below 768px. */
+    hint: { keys: string[]; label: string }[];
+  };
 }
 
 // Games without an entry keep the fake simulation in GamePlayer.
@@ -64,6 +82,19 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { id: "deep-sea", label: "DEEP SEA" },
       ],
       themes: false,
+    },
+    touch: {
+      pad: [
+        { code: "ArrowLeft", label: "◀", hold: true, area: "left" },
+        { code: "ArrowRight", label: "▶", hold: true, area: "left" },
+        { code: "ArrowUp", label: "THRUST", hold: true, area: "right" },
+        { code: "Space", label: "FIRE", hold: true, area: "right" },
+      ],
+      hint: [
+        { keys: ["◀", "▶"], label: "ROTATE" },
+        { keys: ["THRUST"], label: "HOLD TO FLY" },
+        { keys: ["FIRE"], label: "SHOOT" },
+      ],
     },
   },
   tetris: {
@@ -94,6 +125,22 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       ],
       themes: true,
     },
+    touch: {
+      pad: [
+        { code: "ArrowLeft", label: "◀", hold: true, area: "left" },
+        { code: "ArrowRight", label: "▶", hold: true, area: "left" },
+        { code: "ArrowDown", label: "▼", hold: true, area: "left" },
+        { code: "ArrowUp", label: "⟳", area: "right" },
+        { code: "Space", label: "DROP", area: "right" },
+        { code: "KeyS", label: "HOLD", area: "right" },
+        { code: "KeyC", label: "SLOW", hold: true, area: "right" },
+      ],
+      hint: [
+        { keys: ["◀", "▶", "▼"], label: "MOVE" },
+        { keys: ["⟳"], label: "ROTATE" },
+        { keys: ["DROP"], label: "HARD DROP" },
+      ],
+    },
   },
   arkanoid: {
     Canvas: ArkanoidCanvas,
@@ -119,6 +166,12 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       volume: 1,
     },
     levelSelect: { min: 1, max: 99 },
+    touch: {
+      hint: [
+        { keys: ["DRAG"], label: "MOVE" },
+        { keys: ["TAP"], label: "LAUNCH" },
+      ],
+    },
   },
   snake: {
     Canvas: SnakeCanvas,
@@ -139,6 +192,10 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { id: "magma", label: "MAGMA" },
       ],
       themes: false,
+    },
+    touch: {
+      swipe: true,
+      hint: [{ keys: ["SWIPE"], label: "STEER" }],
     },
   },
 };
