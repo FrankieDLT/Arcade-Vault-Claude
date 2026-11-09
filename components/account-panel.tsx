@@ -58,7 +58,7 @@ function AccountForms({ user }: { user: SessionUser }) {
         disabled
       />
       <UsernameForm user={user} />
-      {user.hasPassword && <PasswordForm />}
+      <PasswordForm hasPassword={user.hasPassword} />
     </>
   );
 }
@@ -130,7 +130,7 @@ function UsernameForm({ user }: { user: SessionUser }) {
   );
 }
 
-function PasswordForm() {
+function PasswordForm({ hasPassword }: { hasPassword: boolean }) {
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
   const [errors, setErrors] = useState<{ password?: string; confirm?: string }>(
@@ -175,7 +175,7 @@ function PasswordForm() {
     <form onSubmit={submit} noValidate className="account-section">
       <Field
         id="account-password"
-        label="New password"
+        label={hasPassword ? "New password" : "Set a password"}
         type="password"
         value={password}
         onChange={(v) => {
@@ -210,7 +210,7 @@ function PasswordForm() {
         </div>
       )}
       <button className="btn" type="submit" disabled={busy}>
-        {busy ? "SAVING…" : "CHANGE PASSWORD"}
+        {busy ? "SAVING…" : hasPassword ? "CHANGE PASSWORD" : "SET PASSWORD"}
       </button>
     </form>
   );

@@ -134,6 +134,11 @@ export function AuthForm() {
         });
         if (error) {
           setFormError(authErrorMessage(error));
+        } else if (!data.session && data.user?.identities?.length === 0) {
+          // Confirmation on: Supabase hides repeated signups (fake user, no email).
+          setFormError(
+            "An account with this email already exists. Sign in, or use Google / GitHub.",
+          );
         } else if (!data.session) {
           // Email confirmation is on in the Dashboard: no session yet.
           setInfo("Account created. Check your email to confirm it.");
