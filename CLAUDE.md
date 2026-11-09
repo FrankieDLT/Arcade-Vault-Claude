@@ -84,6 +84,8 @@ The `skin-designer` agent (`.claude/agents/skin-designer.md`) adds skins to ONE 
 
 The `mobile-porter` agent (`.claude/agents/mobile-porter.md`) adds spec 10 touch controls and haptics to real games that have no `touch` registry entry (one game id, or all missing ones when no id is given). It picks swipe, pointer drag or pad per game, edits only that game plus new `HAPTIC_PATTERNS` in `lib/haptics.ts`, verifies with Playwright in a touch context, and logs to `references/mobile-port-log.md`.
 
+The `game-perf-booster` agent (`.claude/agents/game-perf-booster.md`) measures ONE real game's frame time with the spec 12 method (`references/perf/measure-fps.md`) and fixes only that game's engine when the numbers miss 16.7 ms. Shared causes (CSS layers, `GamePlayer`) are reported, not edited. It checks skin independence (frozen-clock canvas hashes, per-skin frame time) and logs to `references/perf/perf-log.md`.
+
 The `/full-game-impl <spec>` skill (`.claude/skills/full-game-impl/SKILL.md`) is the whole pipeline for a new real game: it follows the `/spec-impl` flow for the given spec, then runs the `mobile-porter` agent, then the `skin-designer` agent (phase A, user picks fresh skins, phase B), one after the other.
 
 When using Playwright, always leave all screen captures taken in the same ".pwScreencaps" folder in the root directory
