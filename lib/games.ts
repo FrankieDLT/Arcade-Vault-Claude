@@ -121,6 +121,16 @@ export const GAMES: Game[] = [
     color: "yellow",
     plays: "0",
   },
+  {
+    id: "glowmaw",
+    title: "GLOWMAW",
+    short: "Gulp the glowing motes and outswim the jelly drifters.",
+    long: "Guide Glowmaw, a luminous orb with a big hungry mouth, through a coral maze and gulp every glowing mote. Jelly drifters hunt you down the corridors, but a pearl leaves them dazed and good to eat. Clear the reef to dive into a faster one.",
+    cat: "ARCADE",
+    cover: "cover-glowmaw",
+    color: "cyan",
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [

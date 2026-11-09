@@ -1,6 +1,6 @@
 # SPEC NN — Glowmaw game (v2 standard)
 
-> **Status:** Draft
+> **Status:** Approved
 > **Depends on:** SPEC 05, SPEC 06, SPEC 07, SPEC 08, SPEC 09
 > **Theme:** Pac-man (a character that opens and closes its mouth eating pellets in a simple maze while ghosts chase it)
 > **Variant:** v2 standard (core loop plus the gulp-streak twist, a fourth drifter, extra lives, skins and level select), effort M

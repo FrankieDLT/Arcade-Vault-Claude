@@ -12,7 +12,9 @@ export type HapticKind =
   | "tetris"
   | "split"
   | "fruit"
-  | "bonus";
+  | "bonus"
+  | "pearl"
+  | "death";
 
 /** Vibration patterns in ms (a number = one pulse; an array alternates vibrate / pause). */
 export const HAPTIC_PATTERNS: Record<HapticKind, number | number[]> = {
@@ -24,6 +26,8 @@ export const HAPTIC_PATTERNS: Record<HapticKind, number | number[]> = {
   split: 20,
   fruit: 15,
   bonus: [20, 30, 40],
+  pearl: 20,
+  death: [30, 40, 30],
 };
 
 /** True when the browser can vibrate. Safe on the server (returns false). */

@@ -539,6 +539,19 @@ a { color: inherit; text-decoration: none; }
   text-shadow: 0 0 6px var(--cyan);
 }
 
+/* The moment Glowmaw is about: a glowing orb mid-gulp in a coral corridor, a streak ring around it, a trail of motes ending in a pearl, and jelly drifters closing in from behind */
+.cover-glowmaw {
+  background:
+    radial-gradient(ellipse at 60% 50%, rgba(0,245,255,0.16), transparent 62%),
+    #020a14;
+}
+.cover-glowmaw::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'%3E%3Crect width='400' height='300' fill='%23020a14'/%3E%3Cg fill='%230b3a44' stroke='%2300f5ff' stroke-opacity='0.7' stroke-width='2'%3E%3Crect x='-10' y='-10' width='420' height='108' rx='16'/%3E%3Crect x='-10' y='202' width='420' height='108' rx='16'/%3E%3C/g%3E%3Cg opacity='0.55' transform='translate(-72 0)'%3E%3Cpath d='M65 178V165A30 30 0 0 1 125 165V178Q117 170 109 178Q101 170 93 178Q85 170 77 178Q71 172 65 178Z' fill='%2300ff88'/%3E%3Ccircle cx='85' cy='152' r='5' fill='%23fff'/%3E%3Ccircle cx='105' cy='152' r='5' fill='%23fff'/%3E%3Ccircle cx='87' cy='152' r='2.5' fill='%23020a14'/%3E%3Ccircle cx='107' cy='152' r='2.5' fill='%23020a14'/%3E%3C/g%3E%3Cpath d='M65 178V165A30 30 0 0 1 125 165V178Q117 170 109 178Q101 170 93 178Q85 170 77 178Q71 172 65 178Z' fill='%23ff006e'/%3E%3Ccircle cx='85' cy='152' r='5' fill='%23fff'/%3E%3Ccircle cx='105' cy='152' r='5' fill='%23fff'/%3E%3Ccircle cx='87' cy='152' r='2.5' fill='%23020a14'/%3E%3Ccircle cx='107' cy='152' r='2.5' fill='%23020a14'/%3E%3Cg fill='%23c8fbff'%3E%3Ccircle cx='300' cy='150' r='4'/%3E%3Ccircle cx='324' cy='150' r='4'/%3E%3Ccircle cx='348' cy='150' r='4'/%3E%3C/g%3E%3Ccircle cx='376' cy='150' r='9' fill='%23fff'/%3E%3Ccircle cx='230' cy='150' r='60' fill='%2300f5ff' fill-opacity='0.12'/%3E%3Ccircle cx='230' cy='150' r='47' fill='none' stroke='%2300f5ff' stroke-width='3' stroke-linecap='round' stroke-dasharray='170 300' transform='rotate(-90 230 150)'/%3E%3Cpath d='M230 150L259.1 125.5A38 38 0 1 0 259.1 174.5Z' fill='%23b8fbff'/%3E%3Ccircle cx='232' cy='128' r='4' fill='%23020a14'/%3E%3C/svg%3E") center/cover no-repeat;
+  filter: drop-shadow(0 0 6px rgba(0,245,255,0.55));
+}
+
 .cover-invaders { background: linear-gradient(180deg,#001a3a,#0a0a18); }
 .cover-invaders::after {
   content: "";
@@ -817,6 +830,14 @@ a { color: inherit; text-decoration: none; }
   width: 100%; height: 100%;
   background: #000;
   touch-action: none; /* swipes steer the snake, they must not scroll the page */
+}
+
+.glowmaw-canvas {
+  position: absolute; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  background: #000;
+  touch-action: none; /* keys steer Glowmaw; a touch must not scroll the page */
 }
 
 /* 440x600 playfield: not 4:3, so keep its ratio and letterbox inside the CRT */
