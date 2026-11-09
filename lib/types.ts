@@ -27,9 +27,16 @@ export interface ScoreRow {
   date: string;
 }
 
+export type AuthProvider = "email" | "google" | "github";
+
 export interface SessionUser {
-  /** Uppercase, max 10 chars */
+  /** Uppercase, 1-10 chars. From user_metadata.username, else derived. */
   name: string;
+  email: string | null;
+  /** Provider of the sign in that built this session. */
+  provider: AuthProvider;
+  /** True when the account has an email + password identity (can change password). */
+  hasPassword: boolean;
 }
 
 export interface SavedScore {

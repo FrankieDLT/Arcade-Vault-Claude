@@ -177,6 +177,7 @@ body:has(.crt-screen) .av-bg::before {
 .av-nav .coin-counter { display: flex; align-items: center; gap: 8px; font-family: var(--pixel); font-size: 9px; color: var(--yellow); }
 .av-nav .coin-counter .coin { width: 14px; height: 14px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fff8b0, #f5ff00 60%, #b0b800); box-shadow: 0 0 8px var(--yellow); }
 .av-nav .auth-btn { margin-left: 16px; }
+.av-nav .auth-btn + .nav-signout { margin-left: 8px; }
 .av-nav .hamburger { display: none; }
 
 /* GamePad menu (play pages of games with an on-screen pad) */
@@ -230,7 +231,7 @@ body:has(.crt-screen) .av-bg::before {
   .gp-menu-panel { right: 12px; }
   /* the extra button needs room: tighter bar, no wrapping */
   .av-nav { gap: 8px; }
-  .av-nav .auth-btn { margin-left: 0; white-space: nowrap; padding-left: 10px; padding-right: 10px; font-size: 8px; }
+  .av-nav .auth-btn { margin-left: 0; white-space: nowrap; padding-left: 10px; padding-right: 10px; font-size: 8px; max-width: 120px; overflow: hidden; text-overflow: ellipsis; }
   .av-nav .hamburger { padding-left: 12px; padding-right: 12px; }
   .gp-menu-btn { padding-left: 9px; padding-right: 9px; }
 }
@@ -238,6 +239,7 @@ body:has(.crt-screen) .av-bg::before {
 @media (max-width: 840px) {
   .av-nav { padding: 12px 16px; }
   .av-nav .links { display: none; }
+  .av-nav .nav-signout { display: none; } /* the mobile panel has Sign out */
   .av-nav .coin-counter { display: none; }
   .av-nav .hamburger { display: inline-flex; }
 }
@@ -263,6 +265,18 @@ body:has(.crt-screen) .av-bg::before {
   border-bottom: 1px dashed var(--line-2);
 }
 .av-mobile-panel a.active { color: var(--cyan); }
+.av-mobile-panel .av-mobile-signout {
+  padding: 14px 12px;
+  font-family: var(--pixel);
+  font-size: 11px;
+  text-align: left;
+  color: var(--ink-dim);
+  background: none;
+  border: 0;
+  border-bottom: 1px dashed var(--line-2);
+  cursor: pointer;
+}
+.av-mobile-panel .av-mobile-signout:hover { color: var(--magenta); }
 .av-mobile-backdrop {
   position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 55;
   opacity: 0; pointer-events: none; transition: opacity 180ms;
@@ -1349,6 +1363,8 @@ body:has(.crt-screen) .av-bg::before {
   text-shadow: 0 0 8px var(--magenta);
   margin: 0 0 6px;
 }
+.signin-prompt { margin: 22px 0 4px; display: flex; flex-direction: column; align-items: center; gap: 10px; }
+.signin-prompt .toast-error { margin: 0; }
 .toast-saved {
   font-family: var(--pixel);
   font-size: 11px;
@@ -1412,6 +1428,23 @@ body:has(.crt-screen) .av-bg::before {
   transition: border-color 140ms, box-shadow 140ms;
 }
 .field input:focus { border-color: var(--cyan); box-shadow: 0 0 12px rgba(0,245,255,0.35); }
+.field input[aria-invalid="true"] { border-color: var(--magenta); }
+.account-section { margin-top: 22px; padding-top: 18px; border-top: 1px dashed var(--line-2); }
+.account-card form + form { margin-top: 22px; }
+.field input:disabled { opacity: 0.7; cursor: not-allowed; }
+.forgot-link { display: inline-block; margin: -4px 0 10px; font-family: var(--mono); font-size: 11px; color: var(--ink-dim); text-decoration: underline; text-underline-offset: 3px; }
+.forgot-link:hover, .forgot-link:focus-visible { color: var(--cyan); }
+.auth-back { display: block; margin-top: 14px; text-align: center; font-family: var(--mono); font-size: 11px; color: var(--ink-dim); text-decoration: underline; text-underline-offset: 3px; }
+.auth-back:hover, .auth-back:focus-visible { color: var(--cyan); }
+.field-error { font-family: var(--mono); font-size: 11px; line-height: 1.4; color: var(--magenta); }
+.form-alert, .form-info {
+  margin: 4px 0 8px; padding: 10px 12px;
+  font-family: var(--mono); font-size: 12px; line-height: 1.45;
+  border: 1px solid;
+}
+.form-alert { color: var(--magenta); border-color: var(--magenta); background: rgba(255,0,110,0.07); }
+.form-info { color: var(--green); border-color: var(--green); background: rgba(0,255,136,0.06); }
+.auth-card .btn:disabled { opacity: 0.6; cursor: progress; }
 .auth-divider {
   display: flex; align-items: center; gap: 12px;
   margin: 16px 0;

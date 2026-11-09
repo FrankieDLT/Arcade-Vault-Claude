@@ -74,18 +74,64 @@ export async function fetchTopScoresSince(
   return data.map(toRecent);
 }
 
+/**
+ * Why a save failed (SPEC 13):
+ * - `banned`: the account is banned from saving scores (profiles.banned).
+ * - `signin`: no valid session (guest or expired).
+ * - `other`: anything else (network, validation, server).
+ */
+export type ScoreSaveFailure = "banned" | "signin" | "other";
+
+export class ScoreSaveError extends Error {
+  readonly kind: ScoreSaveFailure;
+
+  constructor(kind: ScoreSaveFailure) {
+    super(kind);
+    this.name = "ScoreSaveError";
+    this.kind = kind;
+  }
+}
+
+// Postgres insufficient_privilege: what a row level security policy returns.
+const RLS_VIOLATION = "42501";
+
+/** Reads the caller's own ban flag. Never cached: a ban or unban applies at once. */
+async function isCallerBanned(
+  supabase: ReturnType<typeof getSupabase>,
+): Promise<boolean> {
+  try {
+    const { data: session } = await supabase.auth.getSession();
+    const uid = session.session?.user.id;
+    if (!uid) return false;
+    const { data } = await supabase
+      .from("profiles")
+      .select("banned")
+      .eq("id", uid)
+      .maybeSingle();
+    return data?.banned === true;
+  } catch {
+    return false;
+  }
+}
+
 export async function insertScore(input: {
   gameId: string;
   name: string;
   score: number;
 }): Promise<void> {
-  const { error } = await getSupabase()
-    .from("scores")
-    .insert({
-      game_id: input.gameId,
-      name: input.name.trim().slice(0, 10),
-      score: input.score,
-    });
+  const supabase = getSupabase();
+  // user_id is filled by the column default auth.uid().
+  const { error } = await supabase.from("scores").insert({
+    game_id: input.gameId,
+    name: input.name.trim().slice(0, 10),
+    score: input.score,
+  });
 
-  if (error) throw error;
+  if (!error) return;
+  if (error.code === RLS_VIOLATION) {
+    throw new ScoreSaveError(
+      (await isCallerBanned(supabase)) ? "banned" : "signin",
+    );
+  }
+  throw new ScoreSaveError("other");
 }
