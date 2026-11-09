@@ -6,6 +6,7 @@ import { useState } from "react";
 import { GamepadMenu } from "@/components/gamepad-menu";
 import { getGameDefinition } from "@/components/game-registry";
 import { useSession } from "@/components/session-provider";
+import { rememberNextPath } from "@/lib/auth-redirect";
 
 export function Nav() {
   const pathname = usePathname();
@@ -18,6 +19,9 @@ export function Nav() {
   const inHall = pathname.startsWith("/hall-of-fame");
   const inAbout = pathname.startsWith("/about");
   const inAuth = pathname.startsWith("/auth");
+  const inAccount = pathname.startsWith("/account");
+  // Remember where the user was, so sign in can send them back (SPEC 13).
+  const rememberHere = () => rememberNextPath(pathname);
   // GamePad menu: only on /games/<id>/play of a game that has an on-screen pad.
   const playId = /^\/games\/([^/]+)\/play\/?$/.exec(pathname)?.[1];
   const hasPad = !!playId && !!getGameDefinition(playId)?.touch?.pad;
@@ -53,11 +57,20 @@ export function Nav() {
           <span>CREDITS · 03</span>
         </div>
         {user ? (
-          <button className="btn ghost auth-btn" onClick={signOut}>
-            {user.name} ▾
-          </button>
+          <>
+            <Link href="/account" className="btn ghost auth-btn">
+              {user.name}
+            </Link>
+            <button
+              type="button"
+              className="btn ghost nav-signout"
+              onClick={signOut}
+            >
+              SIGN OUT
+            </button>
+          </>
         ) : (
-          <Link href="/auth" className="btn auth-btn">
+          <Link href="/auth" className="btn auth-btn" onClick={rememberHere}>
             Sign in
           </Link>
         )}
@@ -105,9 +118,38 @@ export function Nav() {
         <Link href="/about" className={inAbout ? "active" : ""} onClick={close}>
           About
         </Link>
-        <Link href="/auth" className={inAuth ? "active" : ""} onClick={close}>
-          {user ? "Account" : "Sign in"}
-        </Link>
+        {user ? (
+          <>
+            <Link
+              href="/account"
+              className={inAccount ? "active" : ""}
+              onClick={close}
+            >
+              Account
+            </Link>
+            <button
+              type="button"
+              className="av-mobile-signout"
+              onClick={() => {
+                close();
+                void signOut();
+              }}
+            >
+              Sign out
+            </button>
+          </>
+        ) : (
+          <Link
+            href="/auth"
+            className={inAuth ? "active" : ""}
+            onClick={() => {
+              rememberHere();
+              close();
+            }}
+          >
+            Sign in
+          </Link>
+        )}
         <div style={{ flex: 1 }}></div>
         <div
           className="pixel"

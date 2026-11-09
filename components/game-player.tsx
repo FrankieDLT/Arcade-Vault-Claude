@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState, useSyncExternalStore } from "react";
 import { getGameDefinition } from "@/components/game-registry";
 import { useGamepad } from "@/components/gamepad-provider";
@@ -16,7 +17,18 @@ import {
   HAPTIC_PATTERNS,
   type HapticKind,
 } from "@/lib/haptics";
-import { insertScore } from "@/lib/scores-db";
+import { rememberNextPath } from "@/lib/auth-redirect";
+import {
+  insertScore,
+  ScoreSaveError,
+  type ScoreSaveFailure,
+} from "@/lib/scores-db";
+
+const SAVE_FAILURE_TEXT: Record<ScoreSaveFailure, string> = {
+  banned: "THIS ACCOUNT CANNOT SAVE SCORES.",
+  signin: "SIGN IN TO SAVE YOUR SCORE.",
+  other: "COULD NOT SAVE SCORE. TRY AGAIN.",
+};
 
 const LEVEL_STEP = 2500;
 
@@ -30,7 +42,8 @@ export function GamePlayer({
   gameId: string;
   title: string;
 }) {
-  const { user } = useSession();
+  const { user, status } = useSession();
+  const pathname = usePathname();
   // Games with a real engine are in the registry; every other game keeps the fake simulation.
   const definition = getGameDefinition(gameId);
   const Canvas = definition?.Canvas;
@@ -75,9 +88,10 @@ export function GamePlayer({
   const [editedName, setEditedName] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [saveError, setSaveError] = useState(false);
+  const [saveFailure, setSaveFailure] = useState<ScoreSaveFailure | null>(null);
 
-  const name = editedName ?? user?.name ?? "GUEST";
+  // scores.name holds at most 10 chars, a username up to 20.
+  const name = editedName ?? user?.name.slice(0, 10) ?? "GUEST";
   const level = definition?.stats.level
     ? engineLevel
     : 1 + Math.floor(score / LEVEL_STEP);
@@ -130,18 +144,18 @@ export function GamePlayer({
     setOver(false);
     setSaved(false);
     setSaving(false);
-    setSaveError(false);
+    setSaveFailure(null);
   };
 
   const save = async () => {
     if (saving) return;
     setSaving(true);
-    setSaveError(false);
+    setSaveFailure(null);
     try {
       await insertScore({ gameId, name, score });
       setSaved(true);
-    } catch {
-      setSaveError(true);
+    } catch (err) {
+      setSaveFailure(err instanceof ScoreSaveError ? err.kind : "other");
     } finally {
       setSaving(false);
     }
@@ -394,7 +408,21 @@ export function GamePlayer({
             <h2>GAME OVER</h2>
             <div className="final-label">FINAL SCORE</div>
             <div className="final">{score.toLocaleString("en-US")}</div>
-            {!saved ? (
+            {saved ? (
+              <div className="toast-saved">▸ SCORE SAVED_</div>
+            ) : status === "loading" ? null : !user ? (
+              // Only signed-in users can save scores (SPEC 13).
+              <div className="signin-prompt">
+                <p className="toast-error">SIGN IN TO SAVE YOUR SCORE</p>
+                <Link
+                  href="/auth"
+                  className="btn yellow"
+                  onClick={() => rememberNextPath(pathname)}
+                >
+                  SIGN IN
+                </Link>
+              </div>
+            ) : (
               <>
                 <div className="input-row">
                   <input
@@ -413,14 +441,12 @@ export function GamePlayer({
                     SAVE SCORE
                   </button>
                 </div>
-                {saveError && (
+                {saveFailure && (
                   <p className="toast-error" role="alert">
-                    COULD NOT SAVE SCORE. TRY AGAIN.
+                    {SAVE_FAILURE_TEXT[saveFailure]}
                   </p>
                 )}
               </>
-            ) : (
-              <div className="toast-saved">▸ SCORE SAVED_</div>
             )}
             <div className="actions">
               <button className="btn" onClick={restart}>
