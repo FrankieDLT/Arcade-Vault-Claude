@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 13 rows. Five of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
+The `games` table in Supabase holds 14 rows. Six of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
 
 ## Implemented games
 
@@ -11,6 +11,7 @@ The `games` table in Supabase holds 13 rows. Five of them are real, playable gam
 | Arkanoid  | `arkanoid`  | ARCADE   | magenta | `lib/arkanoid/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
 | Snake     | `snake`     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
 | Glowmaw   | `glowmaw`   | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
+| Frogger   | `frogger`   | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
 
 ### Asteroids
 
@@ -55,9 +56,19 @@ The `games` table in Supabase holds 13 rows. Five of them are real, playable gam
 - **Touch (below 768px):** direction-only pad under the CRT (cross in the neon and retro gamepad skins, joystick in 80s Arcade and Wood); a tap sets the direction, which the engine remembers. Haptics: `pearl` (pearl eaten), `death` (life lost), `clear` (reef cleared).
 - **HUD:** score, lives, level.
 
+### Frogger
+
+- **Description:** Cross the road and the river without becoming roadkill.
+- **Details:** Guide your frog across a road packed with cars and a river of floating logs and turtles. Fill the five goal slots on the far side to complete the round; each level speeds up the traffic and shortens the time.
+- **Rules:** 16x14 grid of 40 px cells (640x560 canvas). Row 13 start, rows 12-8 road, row 7 median, rows 6-1 river, row 0 goal slots. One hop per key press (120 ms). Dies on a vehicle, water, a diving turtle, the river edges, an occupied slot or the timer (15 s, minus 1 s per level, min 8 s). 3 lives. +10 per new row, +50 per slot plus 10 per remaining second, +200 per round. Speed +15% per level.
+- **Controls:** arrow keys or `W` `A` `S` `D` hop.
+- **Touch (below 768px):** direction-only pad under the CRT (one hop per tap). Haptics: `death` (life lost), `clear` (round cleared).
+- **Skins:** `retro`, `neon`, `pastel`, `gothic`, `negative`, `tide-poster`, `midnight-toll` (palettes, no theme toggle).
+- **HUD:** score, lives, level (the canvas draws only the playfield and the time bar).
+
 ## Touch controls and haptics
 
-Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids and Glowmaw). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw and Frogger). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 

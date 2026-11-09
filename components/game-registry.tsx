@@ -2,6 +2,7 @@ import { withBasePath } from "@/lib/base-path";
 import type { ComponentType } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
+import { FroggerCanvas } from "@/components/frogger-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
@@ -233,6 +234,35 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { code: "ArrowDown", label: "▼", slot: "down" },
       ],
       hint: [{ keys: ["◀", "▲", "▼", "▶"], label: "STEER" }],
+    },
+  },
+  frogger: {
+    Canvas: FroggerCanvas,
+    controls: [
+      { keys: ["←", "↑", "→", "↓"], label: "HOP" },
+      { keys: ["W", "A", "S", "D"], label: "HOP" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "tide-poster", label: "TIDE POSTER" },
+        { id: "midnight-toll", label: "MIDNIGHT TOLL" },
+      ],
+      themes: false,
+    },
+    touch: {
+      pad: [
+        { code: "ArrowLeft", label: "◀", slot: "left" },
+        { code: "ArrowRight", label: "▶", slot: "right" },
+        { code: "ArrowUp", label: "▲", slot: "up" },
+        { code: "ArrowDown", label: "▼", slot: "down" },
+      ],
+      hint: [{ keys: ["◀", "▲", "▼", "▶"], label: "HOP" }],
     },
   },
 };

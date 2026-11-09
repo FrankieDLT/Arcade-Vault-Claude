@@ -30,3 +30,10 @@
 | 2026-11-09 | glowmaw | coral | CORAL | fresh | built | existing with the game: #1a0b1f bg, #b04062 walls, gold Glowmaw |
 | 2026-11-09 | glowmaw | sunken-ruin | SUNKEN RUIN | fresh | built | verdigris stone walls #1f3a34/#4fae98 on #07100e, old gold Glowmaw #e3b94f, drifters coral/ivory/violet/rust |
 | 2026-11-09 | glowmaw | paper-lantern | PAPER LANTERN | fresh | built | indigo night #0e1030, plum walls #2a1d4e/#8f7be0 outline, lantern-orange Glowmaw #ffb347, drifters vermilion/jade/gold/ivory |
+| 2026-11-09 | frogger | retro | RETRO | mandatory | built | existing default: #16161c road, #0b2a63 river, #16602a banks, frog #52f06a |
+| 2026-11-09 | frogger | neon | NEON | mandatory | built | #05060f road, #050a2a river, page tokens cyan/yellow/magenta/green for cars, logs, frog |
+| 2026-11-09 | frogger | pastel | PASTEL | mandatory | built | light lilac road #d9d5e8, sky river #b5dcf5, mint banks; entities darkened (frog #1a6b34) for 3:1 |
+| 2026-11-09 | frogger | gothic | GOTHIC | mandatory | built | #0d0b10 road, violet river #1a0c26, crimson #8c1226 banks, bone frog #e8e0c8, silver truck |
+| 2026-11-09 | frogger | negative | NEGATIVE | mandatory | built | computed inverse of retro (light road/river), log/cars/cab/frog/slot nudged for 3:1 |
+| 2026-11-09 | frogger | tide-poster | TIDE POSTER | fresh | built | flat poster: cream #f2e6c8 banks, dark teal river #0a3038, ink road #1b2a3a, terracotta/mustard cars, cream logs, frog #28903c (3:1 on every lane) |
+| 2026-11-09 | frogger | midnight-toll | MIDNIGHT TOLL | fresh | built | slate #11161f road, navy #0a1a33 river, sodium-orange #ff9a2e lines/cars, cold-white #dfe9f5, teal frog #2fb3a3 |
