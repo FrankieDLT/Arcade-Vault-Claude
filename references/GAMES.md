@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 12 rows. Four of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
+The `games` table in Supabase holds 13 rows. Five of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
 
 ## Implemented games
 
@@ -10,6 +10,7 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 | Tetris    | `tetris`    | PUZZLE   | green   | `lib/tetris/`    | Retro, Neon, Pastel, Pixel Art (plus dark/light theme) | Background music, hold piece, ghost piece           |
 | Arkanoid  | `arkanoid`  | ARCADE   | magenta | `lib/arkanoid/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
 | Snake     | `snake`     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
+| Glowmaw   | `glowmaw`   | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
 
 ### Asteroids
 
@@ -45,9 +46,18 @@ The `games` table in Supabase holds 12 rows. Four of them are real, playable gam
 - **Touch:** no pad. Swipe on the canvas (24 px or more, dominant axis; one finger path can turn several times). Touch and pen only, a mouse drag does nothing. Haptics: `fruit`, `bonus`.
 - **HUD:** score, length.
 
+### Glowmaw
+
+- **Description:** Gulp the glowing motes and outswim the jelly drifters.
+- **Details:** Guide Glowmaw, a luminous orb with a big hungry mouth, through a coral maze and gulp every glowing mote. Jelly drifters hunt you down the corridors, but a pearl leaves them dazed and good to eat. Clear the reef to dive into a faster one.
+- **Rules:** 19x15 maze "Reef A" (135 motes, 4 pearls, a den and a warp on row 7). Mote `10 * multiplier`, pearl +50, dazed drifter 100/200/300/400, reef clear +1000. Gulp streak: each cell eaten within 0.6 s of the previous one extends the streak, multiplier x1 to x5 every 10 links. Drifters: Hunter, Mirror, Roamer, and Pacer from level 4. 3 lives, extra life at 10,000 and then every 40,000 (max 5).
+- **Controls:** arrow keys or `W` `A` `S` `D` steer. While paused, `LEVEL - NN +` restarts the reef at that level (score and lives kept).
+- **Touch (below 768px):** direction-only pad under the CRT (cross in the neon and retro gamepad skins, joystick in 80s Arcade and Wood); a tap sets the direction, which the engine remembers. Haptics: `pearl` (pearl eaten), `death` (life lost), `clear` (reef cleared).
+- **HUD:** score, lives, level.
+
 ## Touch controls and haptics
 
-All four real games are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris and Asteroids). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids and Glowmaw). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 

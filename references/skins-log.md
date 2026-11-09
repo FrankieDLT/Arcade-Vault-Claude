@@ -21,3 +21,12 @@
 | 2026-11-05 | tetris | negative | NEGATIVE | mandatory | built | computed inverse of retro (255-ch) pieces on #f4f4ec board; theme only changes the surround (#14141a / #f0f0e8) |
 | 2026-11-05 | tetris | woodshop | WOODSHOP | fresh | built | walnut board #241a12; oak #e0b27a, maple #f2d16b, rust #c8553d, moss #8fae5a, copper #d98b4a, slate #7aa6b8, linen #e8dcc4 |
 | 2026-11-05 | tetris | ice-cavern | ICE CAVERN | fresh | built | navy board #0a1a30; ice #bff3ff, white #ffffff, periwinkle #8fb7ff, aqua #6fe3d0, lilac #c4a8ff, blue #5fa0e8, frost #e0f0ff |
+| 2026-11-09 | glowmaw | abyss | ABYSS | mandatory | built | existing default (listed first, stands in for retro per caller): #030b17 bg, cyan walls, white-cyan Glowmaw |
+| 2026-11-09 | glowmaw | retro | RETRO | mandatory | built | 8-bit: #000 bg, #16224a walls/#5a78ff outline, yellow #ffe14a Glowmaw, drifters #ff4a3a #46d65a #ff9a2a #d8d8e8 |
+| 2026-11-09 | glowmaw | neon | NEON | mandatory | built | existing; #000 bg, cyan walls, yellow motes/Glowmaw, magenta pearls, 12px glow |
+| 2026-11-09 | glowmaw | pastel | PASTEL | mandatory | built | light #f6f0fa bg, #d6e6f7 walls/#5f7fae outline, amber #b87500 Glowmaw, drifters #d9456f #278a66 #a67608 #6a72b8 |
+| 2026-11-09 | glowmaw | gothic | GOTHIC | mandatory | built | #0a0709 bg, crimson #b03050 walls, bone #e8dfc8 Glowmaw, violet halo, drifters crimson/violet/silver/verdigris |
+| 2026-11-09 | glowmaw | negative | NEGATIVE | mandatory | built | computed inverse of retro: white bg, #a58700 walls, #001eb5 Glowmaw; drifters/dazed hues adjusted for 3:1 |
+| 2026-11-09 | glowmaw | coral | CORAL | fresh | built | existing with the game: #1a0b1f bg, #b04062 walls, gold Glowmaw |
+| 2026-11-09 | glowmaw | sunken-ruin | SUNKEN RUIN | fresh | built | verdigris stone walls #1f3a34/#4fae98 on #07100e, old gold Glowmaw #e3b94f, drifters coral/ivory/violet/rust |
+| 2026-11-09 | glowmaw | paper-lantern | PAPER LANTERN | fresh | built | indigo night #0e1030, plum walls #2a1d4e/#8f7be0 outline, lantern-orange Glowmaw #ffb347, drifters vermilion/jade/gold/ivory |

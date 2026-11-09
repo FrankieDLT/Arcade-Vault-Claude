@@ -2,6 +2,7 @@ import { withBasePath } from "@/lib/base-path";
 import type { ComponentType } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
+import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
 import type { TetrisTheme } from "@/lib/tetris/constants";
@@ -200,6 +201,38 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     touch: {
       swipe: true,
       hint: [{ keys: ["SWIPE"], label: "STEER" }],
+    },
+  },
+  glowmaw: {
+    Canvas: GlowmawCanvas,
+    controls: [
+      { keys: ["←", "↑", "→", "↓"], label: "MOVE" },
+      { keys: ["W", "A", "S", "D"], label: "MOVE" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    appearance: {
+      skins: [
+        { id: "abyss", label: "ABYSS" },
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "coral", label: "CORAL" },
+        { id: "sunken-ruin", label: "SUNKEN RUIN" },
+        { id: "paper-lantern", label: "PAPER LANTERN" },
+      ],
+      themes: false,
+    },
+    levelSelect: { min: 1, max: 99 },
+    touch: {
+      pad: [
+        { code: "ArrowLeft", label: "◀", slot: "left" },
+        { code: "ArrowRight", label: "▶", slot: "right" },
+        { code: "ArrowUp", label: "▲", slot: "up" },
+        { code: "ArrowDown", label: "▼", slot: "down" },
+      ],
+      hint: [{ keys: ["◀", "▲", "▼", "▶"], label: "STEER" }],
     },
   },
 };
