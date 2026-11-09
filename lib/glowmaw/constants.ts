@@ -162,7 +162,7 @@ export const SKINS: Record<SkinId, SkinPalette> = {
     mote: "#b8678f",
     pearl: "#d9457f",
     player: "#b87500",
-    halo: "#c98200",
+    halo: "#b87500",
     haloBlur: 8,
     eye: "#fff6e0",
     door: "#c04a86",
