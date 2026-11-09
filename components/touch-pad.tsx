@@ -27,15 +27,28 @@ function keyFor(code: string): string {
   return code;
 }
 
-function sendKey(type: "keydown" | "keyup", code: string) {
+function sendKey(type: "keydown" | "keyup", code: string, repeat = false) {
   window.dispatchEvent(
     new KeyboardEvent(type, {
       code,
       key: keyFor(code),
+      repeat,
       bubbles: true,
       cancelable: true,
     }),
   );
+}
+
+/** Held direction repeat, Tetris Guideline timing at 60 Hz: DAS 10 frames, ARR 2 frames. */
+const REPEAT_DELAY_MS = 167;
+const REPEAT_INTERVAL_MS = 33;
+
+/** Controls whose held codes auto-repeat: the four direction slots and the joystick. */
+const REPEAT_IDS = new Set<string>(["up", "down", "left", "right", "stick"]);
+
+interface RepeatTimer {
+  timeout?: number;
+  interval?: number;
 }
 
 /** What a slot shows when the game gives it no action (drawn dimmed and inert). */
@@ -93,6 +106,7 @@ export function TouchPad({
   const [down, setDown] = useState<ReadonlySet<string>>(new Set());
   const [ball, setBall] = useState({ x: 0, y: 0 });
   const stickPointer = useRef<number | null>(null);
+  const repeatRef = useRef(new Map<string, RepeatTimer>());
   const joystick = usesJoystick(skin);
 
   const bySlot = useMemo(() => {
@@ -108,13 +122,33 @@ export function TouchPad({
       const prev = held.get(id)?.codes ?? [];
       const heldElsewhere = (code: string) =>
         [...held].some(([other, h]) => other !== id && h.codes.includes(code));
+      const timers = repeatRef.current;
+      const repeats = REPEAT_IDS.has(id);
       for (const code of prev) {
-        if (!codes.includes(code) && !heldElsewhere(code))
-          sendKey("keyup", code);
+        if (!codes.includes(code)) {
+          const t = timers.get(`${id}:${code}`);
+          if (t) {
+            window.clearTimeout(t.timeout);
+            window.clearInterval(t.interval);
+            timers.delete(`${id}:${code}`);
+          }
+          if (!heldElsewhere(code)) sendKey("keyup", code);
+        }
       }
       for (const code of codes) {
-        if (!prev.includes(code) && !heldElsewhere(code))
-          sendKey("keydown", code);
+        if (prev.includes(code)) continue;
+        if (!heldElsewhere(code)) sendKey("keydown", code);
+        if (repeats) {
+          const key = `${id}:${code}`;
+          const t: RepeatTimer = {};
+          t.timeout = window.setTimeout(() => {
+            t.interval = window.setInterval(
+              () => sendKey("keydown", code, true),
+              REPEAT_INTERVAL_MS,
+            );
+          }, REPEAT_DELAY_MS);
+          timers.set(key, t);
+        }
       }
       if (codes.length) held.set(id, { pointerId, codes });
       else held.delete(id);
@@ -149,12 +183,18 @@ export function TouchPad({
     const onHidden = () => {
       if (document.visibilityState === "hidden") releaseAll();
     };
+    const timers = repeatRef.current;
     document.addEventListener("visibilitychange", onHidden);
     window.addEventListener("blur", releaseAll);
     return () => {
       document.removeEventListener("visibilitychange", onHidden);
       window.removeEventListener("blur", releaseAll);
       releaseAll();
+      for (const t of timers.values()) {
+        window.clearTimeout(t.timeout);
+        window.clearInterval(t.interval);
+      }
+      timers.clear();
     };
   }, [releaseAll]);
 
