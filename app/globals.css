@@ -74,6 +74,12 @@ a { color: inherit; text-decoration: none; }
 @keyframes gridscroll {
   to { background-position: 0 60px, 0 60px; }
 }
+/* On a play page the game canvas redraws every frame, so the scrolling grid behind it
+   is held still: animating a masked, perspective layer costs ~3 ms per frame on browsers
+   without GPU raster (SPEC 12). The grid stays visible, only its scroll stops. */
+body:has(.crt-screen) .av-bg::before {
+  animation: none;
+}
 .av-bg::after {
   /* scanlines */
   content: "";
@@ -81,10 +87,11 @@ a { color: inherit; text-decoration: none; }
   inset: 0;
   background-image: repeating-linear-gradient(
     to bottom,
-    rgba(255, 255, 255, 0.03) 0 1px,
+    rgba(255, 255, 255, 0.012) 0 1px,
     transparent 1px 3px
   );
-  mix-blend-mode: overlay;
+  /* No mix-blend-mode: a full-screen blend is paid on the CPU when the browser
+     has no GPU raster (SPEC 12). Overlay on this dark base was ~1% anyway. */
   opacity: 0.6;
 }
 
@@ -785,7 +792,7 @@ a { color: inherit; text-decoration: none; }
   position: absolute; inset: 0;
   background: repeating-linear-gradient(0deg, rgba(0,0,0,0.18) 0 2px, transparent 2px 4px);
   pointer-events: none;
-  mix-blend-mode: multiply;
+  /* Multiply with black equals plain alpha, so the blend mode is dropped (SPEC 12). */
 }
 .crt-screen::before {
   content: "";
