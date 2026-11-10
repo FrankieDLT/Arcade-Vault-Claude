@@ -141,6 +141,16 @@ export const GAMES: Game[] = [
     color: "green",
     plays: "0",
   },
+  {
+    id: "pong",
+    title: "PONG",
+    short: "Two paddles, one ball. Beat the CPU or a friend.",
+    long: "The arcade classic: bounce the ball past your rival's paddle. Play solo against a CPU with three difficulty levels, or share the keyboard with a friend. Longer rallies are worth more points, and three missed balls end the match.",
+    cat: "VERSUS",
+    cover: "cover-pong",
+    color: "magenta",
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [

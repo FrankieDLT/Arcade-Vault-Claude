@@ -4,6 +4,7 @@ import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
 import { FroggerCanvas } from "@/components/frogger-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
+import { PongCanvas } from "@/components/pong-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
 import type { TetrisTheme } from "@/lib/tetris/constants";
@@ -28,6 +29,10 @@ export interface GameCanvasProps {
   onHaptic?: (name: string) => void;
   /** A change of `id` asks the engine to jump to `level` (level select in the PAUSED overlay). */
   levelRequest?: { level: number; id: number };
+  /** Mode id from `modes`, fixed for the run. Only sent to entries that define `modes`. */
+  mode?: string;
+  /** Difficulty id from `difficultySelect`. Only sent to entries that define it. */
+  difficulty?: string;
 }
 
 export interface TouchButton {
@@ -53,9 +58,22 @@ export interface GameDefinition {
   /** Optional SKIN / THEME buttons under the CRT. They only change what the canvas draws. */
   appearance?: { skins: { id: string; label: string }[]; themes: boolean };
   /** Optional sound effects, played by the platform on engine `onSound` events. */
-  sfx?: { sounds: Record<string, string>; volume: number };
+  sfx?: {
+    sounds: Record<string, string>;
+    volume: number;
+    /** Also show a SOUND ON/OFF button in the PAUSED overlay (same shared mute state). */
+    pauseToggle?: boolean;
+  };
   /** Optional level selector in the PAUSED overlay. */
   levelSelect?: { min: number; max: number };
+  /** Optional mode picker shown on the CRT before the run starts. The mode is fixed per run. */
+  modes?: { id: string; label: string; hint: string }[];
+  /** Optional difficulty selector in the PAUSED overlay, shown only in the listed modes. */
+  difficultySelect?: {
+    options: { id: string; label: string }[];
+    default: string;
+    onlyModes: string[];
+  };
   /** Optional touch controls (phones). The pad and the hint show below 768px only. */
   touch?: {
     pad?: TouchButton[];
@@ -263,6 +281,61 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { code: "ArrowDown", label: "▼", slot: "down" },
       ],
       hint: [{ keys: ["◀", "▲", "▼", "▶"], label: "HOP" }],
+    },
+  },
+  pong: {
+    Canvas: PongCanvas,
+    controls: [
+      { keys: ["W", "S"], label: "PLAYER 1" },
+      { keys: ["↑", "↓"], label: "PLAYER 2 / PVE" },
+    ],
+    stats: { lives: false, lines: false, level: false },
+    sfx: {
+      sounds: {
+        paddle: withBasePath("/game-assets/pong/paddle.wav"),
+        goal: withBasePath("/game-assets/pong/goal.wav"),
+        gameover: withBasePath("/game-assets/pong/gameover.wav"),
+      },
+      volume: 0.2,
+      pauseToggle: true,
+    },
+    modes: [
+      { id: "pve", label: "PVE", hint: "YOU VS THE CPU" },
+      { id: "pvp", label: "PVP", hint: "2 PLAYERS, ONE SCREEN" },
+    ],
+    difficultySelect: {
+      options: [
+        { id: "easy", label: "EASY" },
+        { id: "normal", label: "NORMAL" },
+        { id: "hard", label: "HARD" },
+      ],
+      default: "normal",
+      onlyModes: ["pve"],
+    },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "phosphor", label: "PHOSPHOR" },
+        { id: "clay-court", label: "CLAY COURT" },
+      ],
+      themes: false,
+    },
+    touch: {
+      // d-pad / joystick = Player 1 (KeyW / KeyS); A / B = Player 2 (arrows). In PvE both move the human paddle.
+      pad: [
+        { code: "KeyW", label: "▲", slot: "up", hold: true },
+        { code: "KeyS", label: "▼", slot: "down", hold: true },
+        { code: "ArrowUp", label: "P2 ▲", slot: "a", hold: true },
+        { code: "ArrowDown", label: "P2 ▼", slot: "b", hold: true },
+      ],
+      hint: [
+        { keys: ["D-PAD"], label: "PLAYER 1" },
+        { keys: ["A", "B"], label: "PLAYER 2 UP / DOWN" },
+      ],
     },
   },
 };
