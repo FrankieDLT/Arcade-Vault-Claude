@@ -1,6 +1,6 @@
 import { formatDate } from "./format-date";
 import { getSupabase } from "./supabase/client";
-import type { ScoreRow } from "./types";
+import type { RoyaltyRow, ScoreRow } from "./types";
 
 // Client use only: getSupabase() is the browser client.
 
@@ -22,6 +22,23 @@ export async function fetchTopScores(
     name: r.name,
     score: r.score,
     date: formatDate(new Date(r.created_at).getTime()),
+  }));
+}
+
+/** Players ranked by the sum of their best score in every game (RPC `royalty_of_games`). */
+export async function fetchRoyalty(count: number): Promise<RoyaltyRow[]> {
+  const { data, error } = await getSupabase().rpc("royalty_of_games", {
+    p_limit: count,
+  });
+
+  if (error) throw error;
+
+  return data.map((r) => ({
+    rank: r.rank,
+    name: r.name,
+    total: Number(r.total),
+    games: r.games,
+    lastPlayed: formatDate(new Date(r.last_at).getTime()),
   }));
 }
 

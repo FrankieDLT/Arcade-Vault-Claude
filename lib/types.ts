@@ -27,6 +27,17 @@ export interface ScoreRow {
   date: string;
 }
 
+/** One player of the Royalty of Games ranking (sum of best score per game). */
+export interface RoyaltyRow {
+  rank: number;
+  name: string;
+  total: number;
+  /** Games the player has a saved score in. */
+  games: number;
+  /** "DD/MM/YYYY" */
+  lastPlayed: string;
+}
+
 export type AuthProvider = "email" | "google" | "github";
 
 export interface SessionUser {

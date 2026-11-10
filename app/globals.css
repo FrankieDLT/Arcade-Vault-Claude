@@ -395,6 +395,11 @@ body:has(.crt-screen) .av-bg::before {
 }
 .chip.active { color: var(--magenta); border-color: var(--magenta); box-shadow: 0 0 10px rgba(255,0,110,0.35); }
 .chip:hover:not(.active) { color: var(--ink); }
+/* Royalty of Games tab: gold instead of magenta so it reads as the overall board. */
+.chip.royal { color: var(--gold); border-color: var(--gold); }
+.chip.royal.active { color: var(--gold); border-color: var(--gold); box-shadow: 0 0 12px rgba(255,207,58,0.4); }
+.chip.royal:hover:not(.active) { color: var(--gold); }
+.royalty-note { text-align: center; color: var(--ink-dim); font-size: 13px; margin: -6px auto 20px; max-width: 52ch; }
 
 /* ===== grid + cards ===== */
 .av-grid {
