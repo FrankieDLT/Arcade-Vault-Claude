@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 16 rows. Eight of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
+The `games` table in Supabase holds 17 rows. Nine of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
 
 ## Implemented games
 
@@ -14,6 +14,7 @@ The `games` table in Supabase holds 16 rows. Eight of them are real, playable ga
 | Frogger   | `frogger`   | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
 | Pong      | `pong`      | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
 | Space Invaders | `space-invaders` | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
+| Galactic DogFight | `galactic-dogfight` | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
 
 ### Asteroids
 
@@ -89,9 +90,19 @@ The `games` table in Supabase holds 16 rows. Eight of them are real, playable ga
 - **Sound:** `shoot`, `hit`, `boom`, `gameover` (own generated `.wav` files in `public/game-assets/space-invaders/`, volume 0.2). The mute button under the CRT is the only toggle.
 - **HUD:** score, lives, level (the canvas draws only the playfield).
 
+### Galactic DogFight
+
+- **Description:** Break the formation. Rescue your captured ship.
+- **Details:** Alien squadrons swoop in, lock into formation and dive at your fighter. Shoot them down, beware the Boss tractor beam that steals your ship, and win it back for a deadly dual fighter. Survive the Challenging Stages for a perfect bonus. A Galaga-style game with our own art, name, music and sound effects (nothing from the arcade original).
+- **Rules:** 480x600 canvas, fighter 26x26 at 240 px/s, 40 ships (4 Boss, 16 Butterfly, 20 Bee) enter in 5 waves and sway and breathe in formation. Ships dive and shoot; Bosses take 2 hits. Points: Bee 50 / 100, Butterfly 80 / 160, Boss 150 / 400 (formation / diving), Boss with 1 or 2 escorts 800 / 1600. A diving Boss may stop and emit a 3 s tractor beam that captures the fighter; shooting that Boss while it dives frees the ship for a dual fighter (+1000). 3 lives, extra lives at 20,000 and 70,000 then every 70,000 (max 5). Stages 3, 7, 11 ... are Challenging Stages (100 per ship, 40 / 40 gives +10,000). Each stage ends with a SHOTS FIRED / HITS / RATIO banner. Endless stages.
+- **Controls:** `←` `→` or `A` `D` move, `SPACE` fires (hold to keep firing).
+- **Touch (below 768px):** pad under the CRT with ◀ ▶ (hold) and `A` = FIRE (hold). Haptics: `death` (fighter destroyed or captured), `clear` (stage cleared).
+- **Sound:** 12 effects (`shoot`, `hit`, `bossHit`, `death`, `gameover`, `stageStart`, `beam`, `capture`, `rescue`, `challenge`, `perfect`, `extraLife`, volume 0.2) and a 12 s music loop (volume 0.12), all generated `.wav` files in `public/game-assets/galactic-dogfight/`. The mute button under the CRT is the only toggle.
+- **HUD:** score, lives (total fighters), level (stage). The canvas also draws banners, reserve fighters and stage badges.
+
 ## Touch controls and haptics
 
-Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong and Space Invaders). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong, Space Invaders and Galactic DogFight). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 

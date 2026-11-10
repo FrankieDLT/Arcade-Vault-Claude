@@ -714,6 +714,19 @@ body:has(.crt-screen) .av-bg::before {
   filter: drop-shadow(0 0 6px rgba(0,245,255,0.5));
 }
 
+/* Galactic DogFight: a yellow Boss casts a striped tractor beam; a red captured ship hovers inside it and the cyan fighter below fires into it. Magenta butterflies and cyan bees sit in formation, one bee dives on a dotted path */
+.cover-galactic-dogfight {
+  background:
+    radial-gradient(ellipse at 71% 70%, rgba(0,245,255,0.16), transparent 55%),
+    #07051a;
+}
+.cover-galactic-dogfight::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3Cpath id='b' transform='scale(2.4)' d='M3 0h6v2h2v4h-2v2h-6v-2h-2v-4h2zM0 2h1v4h-1zM11 2h1v4h-1z'/%3E%3Cpath id='f' transform='scale(2.4)' d='M0 0h4l2 3l2-3h4v6l-3 3h-6l-3-3z'/%3E%3Cpath id='s' transform='scale(2.4)' d='M3 0h8l3 3v4l-3 3h-8l-3-3v-4zM0 4h-1v3h1zM14 4h1v3h-1z'/%3E%3Cpath id='p' transform='scale(2.4)' d='M5 0h2v4h3v3h2v5h-12v-5h2v-3h3z'/%3E%3ClinearGradient id='g' x1='0' y1='0' x2='0' y2='1'%3E%3Cstop offset='0' stop-color='%2300f5ff' stop-opacity='0.5'/%3E%3Cstop offset='1' stop-color='%2300f5ff' stop-opacity='0.08'/%3E%3C/linearGradient%3E%3CclipPath id='k'%3E%3Cpath d='M284 64L226 262H342z'/%3E%3C/clipPath%3E%3C/defs%3E%3Cg fill='%23fff' fill-opacity='0.4'%3E%3Crect x='24' y='18' width='2' height='2'/%3E%3Crect x='186' y='10' width='2' height='2'/%3E%3Crect x='372' y='24' width='2' height='2'/%3E%3Crect x='14' y='150' width='2' height='2'/%3E%3Crect x='388' y='160' width='2' height='2'/%3E%3Crect x='170' y='270' width='2' height='2'/%3E%3Crect x='60' y='230' width='2' height='2'/%3E%3Crect x='360' y='270' width='2' height='2'/%3E%3Crect x='200' y='140' width='2' height='2'/%3E%3C/g%3E%3Cg fill='%23f5ff00'%3E%3Cuse href='%23s' x='24' y='22'/%3E%3Cuse href='%23s' x='64' y='22'/%3E%3Cuse href='%23s' x='104' y='22'/%3E%3C/g%3E%3Cg fill='%23ff006e'%3E%3Cuse href='%23f' x='14' y='62'/%3E%3Cuse href='%23f' x='54' y='62'/%3E%3Cuse href='%23f' x='94' y='62'/%3E%3Cuse href='%23f' x='134' y='62'/%3E%3C/g%3E%3Cg fill='%2300f5ff'%3E%3Cuse href='%23b' x='14' y='100'/%3E%3Cuse href='%23b' x='54' y='100'/%3E%3Cuse href='%23b' x='134' y='100'/%3E%3C/g%3E%3Cpath d='M101 112C150 120 200 150 196 196' fill='none' stroke='%23fff' stroke-opacity='0.5' stroke-width='3' stroke-linecap='round' stroke-dasharray='2 9'/%3E%3Cg fill='%2300f5ff' transform='rotate(18 196 206)'%3E%3Cuse href='%23b' x='180' y='196'/%3E%3C/g%3E%3Crect x='149' y='170' width='4' height='14' fill='%23ff006e'/%3E%3Cg fill='%23f5ff00'%3E%3Cuse href='%23s' x='266' y='30'/%3E%3C/g%3E%3Cpath d='M284 64L226 262H342z' fill='url(%23g)'/%3E%3Cg clip-path='url(%23k)' fill='%2300f5ff' fill-opacity='0.35'%3E%3Crect x='200' y='84' width='160' height='3'/%3E%3Crect x='200' y='112' width='160' height='3'/%3E%3Crect x='200' y='140' width='160' height='3'/%3E%3Crect x='200' y='168' width='160' height='3'/%3E%3Crect x='200' y='196' width='160' height='3'/%3E%3Crect x='200' y='224' width='160' height='3'/%3E%3C/g%3E%3Cg fill='%23ff3b3b' transform='rotate(24 284 158)'%3E%3Cuse href='%23p' x='270' y='144'/%3E%3C/g%3E%3Cg fill='%2300f5ff'%3E%3Cuse href='%23p' x='270' y='234'/%3E%3C/g%3E%3Cg fill='%23f5ff00'%3E%3Crect x='283' y='206' width='3' height='14'/%3E%3Crect x='283' y='186' width='3' height='9' fill-opacity='0.45'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;
+  filter: drop-shadow(0 0 6px rgba(245,255,0,0.45));
+}
+
 /* ===== detail screen ===== */
 .av-detail {
   display: grid;
@@ -930,6 +943,16 @@ body:has(.crt-screen) .av-bg::before {
 }
 
 /* 440x600 playfield: not 4:3, so keep its ratio and letterbox inside the CRT */
+/* 480x600 portrait playfield: not 4:3, so keep its ratio and letterbox inside the CRT */
+.galactic-dogfight-canvas {
+  position: absolute; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  object-fit: contain;
+  background: #000;
+  touch-action: none; /* keys and the pad drive the fighter; a touch must not scroll the page */
+}
+
 .tetris-canvas {
   position: absolute; inset: 0;
   display: block;

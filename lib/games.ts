@@ -161,6 +161,16 @@ export const GAMES: Game[] = [
     color: "cyan",
     plays: "0",
   },
+  {
+    id: "galactic-dogfight",
+    title: "GALACTIC DOGFIGHT",
+    short: "Break the formation. Rescue your captured ship.",
+    long: "Alien squadrons swoop in, lock into formation and dive at your fighter. Shoot them down, beware the Boss tractor beam that steals your ship, and win it back for a deadly dual fighter. Survive the Challenging Stages for a perfect bonus.",
+    cat: "SHOOTER",
+    cover: "cover-galactic-dogfight",
+    color: "yellow",
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [
