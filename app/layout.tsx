@@ -31,6 +31,7 @@ const courier = Courier_Prime({
 export const metadata: Metadata = {
   title: { default: "Arcade Vault", template: "%s | Arcade Vault" },
   description: "Play games and compete for the highest score.",
+  referrer: "strict-origin-when-cross-origin",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
