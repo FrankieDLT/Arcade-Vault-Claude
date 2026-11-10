@@ -701,6 +701,19 @@ body:has(.crt-screen) .av-bg::before {
   filter: drop-shadow(0 0 6px rgba(255,0,110,0.55));
 }
 
+/* Space Invaders: the cyan cannon's shot punches through the fleet and leaves a burst where an invader was. A magenta bomb zigzags down toward the cannon. Rows use the 30 / 20 / 10 point colors, life pips sit under the ground line */
+.cover-space-invaders {
+  background:
+    radial-gradient(ellipse at 47% 100%, rgba(0,245,255,0.18), transparent 60%),
+    #05060f;
+}
+.cover-space-invaders::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'%3E%3Cdefs%3E%3Cpath id='c' transform='scale(3)' d='M2 0h1v1h-1zM8 0h1v1h-1zM3 1h1v1h-1zM7 1h1v1h-1zM2 2h7v1h-7zM1 3h2v1h-2zM4 3h3v1h-3zM8 3h2v1h-2zM0 4h11v1h-11zM0 5h1v1h-1zM2 5h7v1h-7zM10 5h1v1h-1zM0 6h1v1h-1zM2 6h1v1h-1zM8 6h1v1h-1zM10 6h1v1h-1zM3 7h2v1h-2zM6 7h2v1h-2z'/%3E%3C/defs%3E%3Cg fill='%23fff' fill-opacity='0.4'%3E%3Crect x='30' y='22' width='2' height='2'/%3E%3Crect x='352' y='34' width='2' height='2'/%3E%3Crect x='372' y='150' width='2' height='2'/%3E%3Crect x='20' y='170' width='2' height='2'/%3E%3Crect x='340' y='222' width='2' height='2'/%3E%3Crect x='96' y='12' width='2' height='2'/%3E%3C/g%3E%3Cg fill='%23f5ff00'%3E%3Cuse href='%23c' x='62' y='36'/%3E%3Cuse href='%23c' x='118' y='36'/%3E%3Cuse href='%23c' x='174' y='36'/%3E%3Cuse href='%23c' x='230' y='36'/%3E%3Cuse href='%23c' x='286' y='36'/%3E%3C/g%3E%3Cg fill='%23ff006e'%3E%3Cuse href='%23c' x='62' y='78'/%3E%3Cuse href='%23c' x='118' y='78'/%3E%3Cuse href='%23c' x='174' y='78'/%3E%3Cuse href='%23c' x='230' y='78'/%3E%3Cuse href='%23c' x='286' y='78'/%3E%3C/g%3E%3Cg fill='%2352f06a'%3E%3Cuse href='%23c' x='62' y='120'/%3E%3Cuse href='%23c' x='118' y='120'/%3E%3Cuse href='%23c' x='230' y='120'/%3E%3Cuse href='%23c' x='286' y='120'/%3E%3C/g%3E%3Cpath d='M190 110v10M190 144v10M168 132h10M202 132h10M174 116l7 7M206 148l-7-7M206 116l-7 7M174 148l7-7' fill='none' stroke='%23f5ff00' stroke-width='3' stroke-linecap='round'/%3E%3Ccircle cx='190' cy='132' r='5' fill='%23fff'/%3E%3Crect x='188' y='160' width='4' height='68' fill='%2300f5ff'/%3E%3Crect x='189' y='146' width='2' height='10' fill='%2300f5ff' fill-opacity='0.4'/%3E%3Cpath d='M303 150l6 8l-12 8l12 8l-12 8l6 8' fill='none' stroke='%23ff006e' stroke-width='3' stroke-linejoin='round'/%3E%3Cg fill='%2300f5ff'%3E%3Crect x='168' y='252' width='44' height='12'/%3E%3Crect x='176' y='244' width='28' height='8'/%3E%3Crect x='187' y='234' width='6' height='10'/%3E%3C/g%3E%3Crect y='270' width='400' height='3' fill='%2300f5ff' fill-opacity='0.55'/%3E%3Cg fill='%2300f5ff'%3E%3Crect x='24' y='282' width='14' height='6'/%3E%3Crect x='28' y='278' width='6' height='4'/%3E%3Crect x='44' y='282' width='14' height='6'/%3E%3Crect x='48' y='278' width='6' height='4'/%3E%3Crect x='64' y='282' width='14' height='6'/%3E%3Crect x='68' y='278' width='6' height='4'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;
+  filter: drop-shadow(0 0 6px rgba(0,245,255,0.5));
+}
+
 /* ===== detail screen ===== */
 .av-detail {
   display: grid;
@@ -888,6 +901,14 @@ body:has(.crt-screen) .av-bg::before {
   width: 100%; height: 100%;
   background: #000;
   touch-action: none; /* keys and the pad drive the paddles; a touch must not scroll the page */
+}
+
+.space-invaders-canvas {
+  position: absolute; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  background: #000;
+  touch-action: none; /* keys and the pad drive the cannon; a touch must not scroll the page */
 }
 
 .glowmaw-canvas {
