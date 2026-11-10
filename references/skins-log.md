@@ -37,3 +37,10 @@
 | 2026-11-09 | frogger | negative | NEGATIVE | mandatory | built | computed inverse of retro (light road/river), log/cars/cab/frog/slot nudged for 3:1 |
 | 2026-11-09 | frogger | tide-poster | TIDE POSTER | fresh | built | flat poster: cream #f2e6c8 banks, dark teal river #0a3038, ink road #1b2a3a, terracotta/mustard cars, cream logs, frog #28903c (3:1 on every lane) |
 | 2026-11-09 | frogger | midnight-toll | MIDNIGHT TOLL | fresh | built | slate #11161f road, navy #0a1a33 river, sodium-orange #ff9a2e lines/cars, cold-white #dfe9f5, teal frog #2fb3a3 |
+| 2026-11-10 | pong | retro | RETRO | mandatory | built | black #000, all white (net/tags alpha white) |
+| 2026-11-10 | pong | neon | NEON | mandatory | built | #05020f bg, cyan #00f5ff / magenta #ff006e paddles, yellow #f5ff00 ball, glow 14 |
+| 2026-11-10 | pong | pastel | PASTEL | mandatory | built | lilac #f3ecf7 bg, teal #2f8f7a / rose #c4486a paddles, violet ball, plum ink #5a4a63 |
+| 2026-11-10 | pong | gothic | GOTHIC | mandatory | built | #0d0a0e bg, bone #e8e0cc, crimson #cf2442, violet ball #b9a4ff, silver net |
+| 2026-11-10 | pong | negative | NEGATIVE | mandatory | built | computed inverse of retro: white bg, black elements |
+| 2026-11-10 | pong | phosphor | PHOSPHOR | fresh | built | bg #02100a, paddles #7dffa6 / #d4ff7a, ball #fff, net/numerals/tags green #7dffa6, glow 8 |
+| 2026-11-10 | pong | clay-court | CLAY COURT | fresh | built | clay bg #5a2310, cream #f6efe0 left/net/text, apricot #f2a03d right, tennis-yellow ball #e8f542 |

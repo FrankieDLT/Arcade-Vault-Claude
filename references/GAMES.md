@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 14 rows. Six of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
+The `games` table in Supabase holds 15 rows. Seven of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
 
 ## Implemented games
 
@@ -12,6 +12,7 @@ The `games` table in Supabase holds 14 rows. Six of them are real, playable game
 | Snake     | `snake`     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
 | Glowmaw   | `glowmaw`   | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
 | Frogger   | `frogger`   | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
+| Pong      | `pong`      | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
 
 ### Asteroids
 
@@ -66,9 +67,20 @@ The `games` table in Supabase holds 14 rows. Six of them are real, playable game
 - **Skins:** `retro`, `neon`, `pastel`, `gothic`, `negative`, `tide-poster`, `midnight-toll` (palettes, no theme toggle).
 - **HUD:** score, lives, level (the canvas draws only the playfield and the time bar).
 
+### Pong
+
+- **Description:** Two paddles, one ball. Beat the CPU or a friend.
+- **Details:** The arcade classic: bounce the ball past your rival's paddle. Longer rallies are worth more points, and three missed balls end the match. `pixel-duel` stays a fake catalog entry.
+- **Rules:** 800x600 canvas, paddles 12x100 px, ball 14 px. The ball starts at 420 px/s and gains 5% per paddle hit (cap 900); a hit near the paddle edge bounces up to 55 degrees. Each time a human returns the ball they get +5 (the CPU gets nothing for hits). A goal is worth `10 x rally hits` (min 10) and costs the conceder 1 of 3 lives. PvE: only the human has lives, so the run is endless until 3 misses. PvP: the run ends when either player reaches 0 lives. The leaderboard record is the human score (PvE) or the higher of the two scores (PvP); both modes share one leaderboard.
+- **Modes:** a picker on the CRT before the run (`PVE`, `PVP`). PLAY AGAIN keeps the mode; `CHANGE MODE` in the GAME OVER modal returns to the picker. In PvE the PAUSED overlay has an `EASY` / `NORMAL` (default) / `HARD` CPU selector (`CPU` table in `lib/pong/constants.ts`). Choosing a different difficulty restarts the match (score, lives and positions reset). The human's points are multiplied by x0.75 / x1 / x1.5 (rounded), and in PvE every 3 goals the human scores add 1 unit to that multiplier (max +10 units, kept when a life is lost, reset by a new match); the `P1` tag shows it.
+- **Controls:** Player 1 `W` `S`, Player 2 `↑` `↓`. In PvE the human accepts both pairs.
+- **Touch (below 768px):** d-pad or joystick up / down = Player 1 (`KeyW` / `KeyS`); `A` = Player 2 up, `B` = Player 2 down (hold). Left, right, `X` and `Y` are dimmed. Haptic `death` when a life is lost.
+- **Sound:** `paddle`, `goal`, `gameover` (own generated `.wav` files, volume 0.2). `SOUND ON/OFF` in the PAUSED overlay shares the mute state with the button under the CRT.
+- **HUD:** score only (each side's score, lives and `P1` / `P2` / `CPU` tag are drawn on the canvas).
+
 ## Touch controls and haptics
 
-Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw and Frogger). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger and Pong). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 
@@ -85,7 +97,7 @@ These rows exist in the `games` table and in `GAMES` (`lib/games.ts`), but have 
 | Hopper       | `hopper`       | ARCADE   | Cross the pixel highway.                       |
 | Pixel Duel   | `pixel-duel`   | VERSUS   | Two paddles. One ball. Maximum reflexes.       |
 
-Brick Buster, Drop, Serpentine and Rocks overlap with the real Arkanoid, Tetris, Snake and Asteroids.
+Brick Buster, Drop, Serpentine and Rocks overlap with the real Arkanoid, Tetris, Snake and Asteroids. Pixel Duel overlaps with the real Pong.
 
 ## Adding a game
 

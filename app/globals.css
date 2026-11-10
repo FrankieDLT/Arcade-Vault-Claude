@@ -683,6 +683,19 @@ body:has(.crt-screen) .av-bg::before {
   filter: drop-shadow(0 0 6px rgba(0,245,255,0.4));
 }
 
+/* Pong: one long rally frozen mid-flight. The ball leaves the cyan paddle, kisses the top wall in a burst of sparks and fades into a ghost trail toward the magenta paddle. Ghost score numerals sit behind the net and life pips mark each side */
+.cover-pong {
+  background:
+    radial-gradient(ellipse at 50% 55%, rgba(255,0,110,0.16), transparent 65%),
+    #07040f;
+}
+.cover-pong::after {
+  content: "";
+  position: absolute; inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 300' preserveAspectRatio='xMidYMid slice'%3E%3Crect y='0' width='400' height='5' fill='%2300f5ff' fill-opacity='0.5'/%3E%3Crect y='295' width='400' height='5' fill='%2300f5ff' fill-opacity='0.5'/%3E%3Cline x1='200' y1='0' x2='200' y2='300' stroke='%23fff' stroke-opacity='0.22' stroke-width='4' stroke-dasharray='14 12'/%3E%3Cg fill='%23fff' fill-opacity='0.1'%3E%3Cg transform='translate(140 120)'%3E%3Crect width='36' height='12'/%3E%3Crect y='24' width='36' height='12'/%3E%3Crect y='48' width='36' height='12'/%3E%3Crect x='24' width='12' height='60'/%3E%3C/g%3E%3Cg transform='translate(224 120)'%3E%3Crect width='36' height='12'/%3E%3Crect y='24' width='36' height='12'/%3E%3Crect y='48' width='36' height='12'/%3E%3Crect width='12' height='36'/%3E%3Crect x='24' y='24' width='12' height='36'/%3E%3C/g%3E%3C/g%3E%3Cpath d='M40 196L249 14L356 107' fill='none' stroke='%23fff' stroke-opacity='0.45' stroke-width='3' stroke-linecap='round' stroke-dasharray='2 9'/%3E%3Cpath d='M236 26L228 36M249 30V42M262 26L270 36' fill='none' stroke='%23f5ff00' stroke-width='3' stroke-linecap='round'/%3E%3Crect x='24' y='170' width='10' height='64' rx='4' fill='%2300f5ff'/%3E%3Crect x='366' y='76' width='10' height='64' rx='4' fill='%23ff006e'/%3E%3Cg fill='%23f5ff00'%3E%3Ccircle cx='284' cy='44' r='6' fill-opacity='0.14'/%3E%3Ccircle cx='312' cy='69' r='7' fill-opacity='0.26'/%3E%3Ccircle cx='336' cy='90' r='7.5' fill-opacity='0.42'/%3E%3Ccircle cx='356' cy='107' r='8'/%3E%3C/g%3E%3Cg fill='%2300f5ff'%3E%3Crect x='24' y='276' width='9' height='9'/%3E%3Crect x='38' y='276' width='9' height='9'/%3E%3Crect x='52' y='276' width='9' height='9'/%3E%3C/g%3E%3Cg fill='%23ff006e'%3E%3Crect x='328' y='276' width='9' height='9'/%3E%3Crect x='342' y='276' width='9' height='9'/%3E%3Crect x='356' y='277' width='7' height='7' fill='none' stroke='%23ff006e' stroke-width='2'/%3E%3C/g%3E%3C/svg%3E") center/cover no-repeat;
+  filter: drop-shadow(0 0 6px rgba(255,0,110,0.55));
+}
+
 /* ===== detail screen ===== */
 .av-detail {
   display: grid;
@@ -864,6 +877,14 @@ body:has(.crt-screen) .av-bg::before {
   touch-action: none; /* swipes steer the snake, they must not scroll the page */
 }
 
+.pong-canvas {
+  position: absolute; inset: 0;
+  display: block;
+  width: 100%; height: 100%;
+  background: #000;
+  touch-action: none; /* keys and the pad drive the paddles; a touch must not scroll the page */
+}
+
 .glowmaw-canvas {
   position: absolute; inset: 0;
   display: block;
@@ -916,6 +937,49 @@ body:has(.crt-screen) .av-bg::before {
 }
 .level-select .btn { padding: 8px 0; width: 42px; font-size: 14px; letter-spacing: 0; }
 .level-select .btn:disabled { opacity: 0.3; cursor: not-allowed; }
+/* Text option buttons (difficulty, sound): wider than the − / + steppers, lit when selected */
+.level-select .btn.ls-opt { width: auto; min-width: 42px; padding: 8px 14px; font-size: 11px; letter-spacing: 0.12em; }
+.level-select .btn.ls-opt[aria-pressed="true"] {
+  color: var(--yellow); border-color: var(--yellow);
+  box-shadow: 0 0 10px rgba(245,255,0,0.35);
+}
+
+/* Small CRT (phones): keep the difficulty and sound blocks inside the PAUSED overlay */
+@media (max-width: 767px) {
+  .level-select.opt-select { margin-top: 8px; gap: 6px; }
+  .level-select.opt-select .ls-note { display: none; }
+  .level-select.opt-select .btn.ls-opt { padding: 6px 10px; font-size: 10px; }
+}
+
+/* Mode picker on the CRT, before the run starts (games with registry `modes`) */
+.mode-picker { display: flex; flex-direction: column; align-items: center; gap: 22px; padding: 0 16px; }
+.mode-options { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.mode-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 10px;
+  min-width: 190px; min-height: 96px; padding: 18px 22px;
+  background: rgba(0,0,0,0.55);
+  border: 2px solid var(--mode-c);
+  color: var(--mode-c);
+  font-family: var(--pixel);
+  cursor: pointer;
+  box-shadow: 0 0 12px color-mix(in srgb, var(--mode-c) 40%, transparent);
+}
+.mode-btn.cyan { --mode-c: var(--cyan); }
+.mode-btn.magenta { --mode-c: var(--magenta); }
+.mode-btn:hover, .mode-btn:focus-visible {
+  background: color-mix(in srgb, var(--mode-c) 18%, #000);
+  outline: none;
+}
+.mode-btn:focus-visible { outline: 2px solid var(--yellow); outline-offset: 3px; }
+.mode-name { font-size: 24px; letter-spacing: 0.1em; }
+.mode-hint { font-family: var(--mono); font-size: 10px; letter-spacing: 0.16em; color: var(--ink-dim); }
+@media (max-width: 767px) {
+  .mode-picker { gap: 12px; }
+  .mode-options { gap: 10px; }
+  .mode-btn { min-width: 130px; min-height: 64px; padding: 10px 12px; gap: 6px; }
+  .mode-name { font-size: 18px; }
+  .mode-hint { font-size: 8px; }
+}
 .level-select .ls-note {
   margin: 0; max-width: 34ch;
   font-family: var(--mono); font-size: 9px; line-height: 1.5; letter-spacing: 0.1em;

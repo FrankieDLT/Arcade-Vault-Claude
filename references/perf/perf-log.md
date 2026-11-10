@@ -128,3 +128,51 @@ Headed-equivalent Chrome (headless), real timers, 1280x1000 and 375x812 (touch c
 - Page look: before and after screenshots at 1280 (`.pwScreencaps/perf-before-frogger-1280.png`, `perf-after-frogger-1280.png`, plus tetris and the 375 case) look the same. Only the grid scroll stops on play pages.
 - Game speed: with frozen rAF, 4 s of game time gives a pixel-identical Frogger canvas at 16, 20, 32 and 40 ms per frame, so game speed does not depend on frame rate.
 - Other games: their engines are unchanged, and the canvas hashes were captured for Frogger only, since it is the only engine under test for sameness; the walkthrough shows each other game's skin switch still redraws.
+
+## pong (2026-11-10, game-perf-booster)
+
+Verdict: within target, no change. No code touched.
+
+### Environment
+
+- Chrome (installed, via `playwright-core`, headless), production build (`npm run build`, `out/` on a Node static server), Windows 11, devicePixelRatio 1.
+- `chrome-software`: `--disable-gpu --disable-gpu-compositing` (vsync-paced at 60 Hz in this run, so `avgFrameMs` cannot read below 16.67; the headroom is `taskMs`). `headless`: default flags (fixed 10 ms rAF pacing).
+- 1280x1100 (whole CRT visible) and 375x812 touch context, CPU x1 and x4 (CDP). Run: load `/games/pong/play/`, wait 1.5 s, click the `PVE` (or `PVP`) mode button, 0.5 s, then 10 s recorded with a key pattern (PvE: `ArrowUp` / `ArrowDown` every 500 ms; PvP: `W`+`ArrowDown` / `S`+`ArrowUp`). First second of deltas dropped. If a run reached GAME OVER inside the window the script clicked PLAY AGAIN (and the mode button) so the loop kept running; `restarts` below counts these. Scripts live in the scratchpad, not in the repo.
+
+### Baseline = final table
+
+| Config          | Viewport | Mode | CPU | avgFrameMs | p95FrameMs | longFrames (of ~540) | taskMs | scriptMs |
+| --------------- | -------- | ---- | --- | ---------- | ---------- | -------------------- | ------ | -------- |
+| chrome-software | 1280     | PvE  | x1  | 16.79 / 16.70 | 16.8 / 16.7 | 2 / 1 (0.4%)       | 0.95 / 0.98 | 0.10 / 0.12 |
+| chrome-software | 1280     | PvP  | x1  | 16.67      | 16.7       | 0                    | 0.60   | 0.08     |
+| chrome-software | 1280     | PvE  | x4  | 16.67      | 16.7       | 0                    | 2.58   | 0.34     |
+| chrome-software | 375      | PvE  | x1  | 16.67      | 16.8       | 0                    | 0.54   | 0.06     |
+| chrome-software | 375      | PvE  | x4  | 16.67      | 16.7       | 0                    | 2.42   | 0.28     |
+| headless        | 1280     | PvE  | x1  | 10.00      | 10.1       | 0                    | 0.27   | 0.05     |
+| headless        | 1280     | PvP  | x1  | 10.00      | 10.1       | 0                    | 0.26   | 0.05     |
+| headless        | 1280     | PvE  | x4  | 10.00      | 10.1       | 0                    | 1.06   | 0.20     |
+
+### Diagnosis
+
+- Software rendering sits on the 60 Hz vsync cap (16.67 ms), where the old CSS gave 33 to 42 ms in SPEC 12. The shared-layer fix holds for Pong, so no CSS gap to report. The two rows at 16.70 / 16.79 have 1 to 2 frames over 33 ms (0.2 to 0.4%, under the 1% limit), at the moment of a PLAY AGAIN remount, not steady state.
+- The engine is cheap: `scriptMs` 0.05 to 0.12 ms per frame at x1, 0.34 at x4. `draw` is a handful of `fillRect` calls plus a 3x5 pixel numeral (at most ~15 rects per digit), so there is no static art worth caching and no per-frame allocation of note. Layout time is not a concern.
+- 375 px: no `longFrames`, p95 16.7 to 16.8 ms, `taskMs` 0.54 at x1 and 2.4 at x4 (the pad adds DOM, not frame time).
+- Target met at 1280 (cap-limited avg 16.67 to 16.79, longFrames <= 1%) and at 375 (longFrames 0%). Rule of the job: no fix before a number asks for it, so nothing was changed.
+
+### Per-skin (chrome-software, 1280x1100, PvE, x1, skin cycled by clicking SKIN, same scroll)
+
+| Skin       | avgFrameMs | longFrames | taskMs | scriptMs |
+| ---------- | ---------- | ---------- | ------ | -------- |
+| retro      | 16.67      | 0          | 0.60   | 0.08     |
+| neon       | 16.73      | 2          | 0.99   | 0.11     |
+| pastel     | 16.67      | 0          | 0.68   | 0.07     |
+| gothic     | 16.67      | 0          | 0.70   | 0.08     |
+| negative   | 16.73      | 2          | 0.72   | 0.08     |
+| phosphor   | 16.67      | 0          | 0.71   | 0.08     |
+| clay-court | 16.67      | 0          | 0.66   | 0.07     |
+
+All skins are at the vsync cap (neon, with canvas glow, has the highest `taskMs`, still under 1 ms). Differences between skins are under 10 percent of the frame time.
+
+### Not run
+
+No code changed, so the canvas-hash, game-speed and walkthrough checks were skipped. Captures: `.pwScreencaps/perf-pong-*.png`. The 60 Hz cap here means the proxy shows "fits in a frame", not exact cost; confirm on real hardware.

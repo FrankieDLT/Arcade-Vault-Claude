@@ -58,6 +58,15 @@ export function GamePlayer({
   const [over, setOver] = useState(false);
   // In memory only: resets on reload, kept by PLAY AGAIN.
   const [muted, setMuted] = useState(false);
+  // Games with `modes` start on a mode picker (mode = null); the mode is fixed per run.
+  const [mode, setMode] = useState<string | null>(
+    definition?.modes ? null : "default",
+  );
+  // PvE difficulty (PAUSED overlay): in memory only, kept by PLAY AGAIN.
+  const [difficulty, setDifficulty] = useState<string | undefined>(
+    definition?.difficultySelect?.default,
+  );
+  const choosingMode = mode === null;
   // Canvas look: in memory only, kept by PLAY AGAIN, reset on reload.
   const [skin, setSkin] = useState<string>(
     definition?.appearance?.skins[0]?.id ?? "retro",
@@ -147,6 +156,22 @@ export function GamePlayer({
     setSaveFailure(null);
   };
 
+  const pickMode = (id: string) => {
+    restart();
+    setMode(id);
+  };
+
+  const changeMode = () => {
+    restart();
+    setMode(null);
+  };
+
+  const difficultySelect = definition?.difficultySelect;
+  const showDifficulty =
+    !!difficultySelect &&
+    mode !== null &&
+    difficultySelect.onlyModes.includes(mode);
+
   const save = async () => {
     if (saving) return;
     setSaving(true);
@@ -180,7 +205,7 @@ export function GamePlayer({
               <div className="l">{definition.linesLabel ?? "Lines"}</div>
               <div className="v">{lines.toLocaleString("en-US")}</div>
             </div>
-          ) : (
+          ) : definition && !definition.stats.lives ? null : (
             <div className="hud-stat lives">
               <div className="l">Lives</div>
               <div className="v">{"♥ ".repeat(lives).trim() || "—"}</div>
@@ -194,10 +219,18 @@ export function GamePlayer({
           )}
         </div>
         <div className="hud-actions">
-          <button className="btn yellow" onClick={() => setPaused((p) => !p)}>
+          <button
+            className="btn yellow"
+            disabled={choosingMode}
+            onClick={() => setPaused((p) => !p)}
+          >
             {paused ? "RESUME" : "PAUSE"}
           </button>
-          <button className="btn magenta" onClick={endRun}>
+          <button
+            className="btn magenta"
+            disabled={choosingMode}
+            onClick={endRun}
+          >
             END
           </button>
           {(definition?.music || definition?.sfx) && (
@@ -221,9 +254,35 @@ export function GamePlayer({
 
       <div className="crt">
         <div className="crt-screen">
-          {Canvas && definition ? (
+          {choosingMode && definition?.modes ? (
+            <div className="crt-content">
+              <div className="mode-picker">
+                <div className="pixel neon-yellow" style={{ fontSize: 18 }}>
+                  CHOOSE A MODE
+                </div>
+                <div className="mode-options">
+                  {definition.modes.map((m, i) => (
+                    <button
+                      key={m.id}
+                      className={`mode-btn ${i === 0 ? "cyan" : "magenta"}`}
+                      onClick={(e) => {
+                        pickMode(m.id);
+                        // Keep Space from re-clicking the button.
+                        e.currentTarget.blur();
+                      }}
+                    >
+                      <span className="mode-name">{m.label}</span>
+                      <span className="mode-hint">{m.hint}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : Canvas && definition ? (
             <Canvas
               key={runId}
+              mode={definition.modes ? (mode ?? undefined) : undefined}
+              difficulty={difficultySelect ? difficulty : undefined}
               paused={paused}
               endSignal={endSignal}
               onScore={setScore}
@@ -281,6 +340,48 @@ export function GamePlayer({
                 >
                   PRESS RESUME TO CONTINUE
                 </div>
+                {showDifficulty && difficultySelect && (
+                  <div className="level-select opt-select">
+                    <div className="ls-label">CPU DIFFICULTY</div>
+                    <div
+                      className="ls-row"
+                      role="group"
+                      aria-label="CPU difficulty"
+                    >
+                      {difficultySelect.options.map((o) => (
+                        <button
+                          key={o.id}
+                          className="btn ghost ls-opt"
+                          aria-pressed={difficulty === o.id}
+                          onClick={(e) => {
+                            setDifficulty(o.id);
+                            e.currentTarget.blur();
+                          }}
+                        >
+                          {o.label}
+                        </button>
+                      ))}
+                    </div>
+                    <p className="ls-note">
+                      CHANGING DIFFICULTY RESTARTS THE MATCH. SCORE X0.75 · X1 ·
+                      X1.5
+                    </p>
+                  </div>
+                )}
+                {definition?.sfx?.pauseToggle && (
+                  <div className="level-select opt-select">
+                    <button
+                      className="btn ghost ls-opt"
+                      aria-pressed={muted}
+                      onClick={(e) => {
+                        setMuted((m) => !m);
+                        e.currentTarget.blur();
+                      }}
+                    >
+                      SOUND {muted ? "OFF" : "ON"}
+                    </button>
+                  </div>
+                )}
                 {levelSelect && (
                   <div className="level-select">
                     <div className="ls-row">
@@ -327,7 +428,7 @@ export function GamePlayer({
         <TouchPad
           buttons={definition.touch.pad}
           skin={padSkin}
-          disabled={paused || over}
+          disabled={paused || over || choosingMode}
           onPress={() => fireHaptic("tap")}
         />
       )}
@@ -452,6 +553,11 @@ export function GamePlayer({
               <button className="btn" onClick={restart}>
                 PLAY AGAIN
               </button>
+              {definition?.modes && (
+                <button className="btn yellow" onClick={changeMode}>
+                  CHANGE MODE
+                </button>
+              )}
               <Link href="/library" className="btn magenta">
                 BACK TO THE VAULT
               </Link>
