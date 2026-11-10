@@ -6,6 +6,7 @@ import { FroggerCanvas } from "@/components/frogger-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { PongCanvas } from "@/components/pong-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
+import { SpaceInvadersCanvas } from "@/components/space-invaders-canvas";
 import { TetrisCanvas } from "@/components/tetris-canvas";
 import type { TetrisTheme } from "@/lib/tetris/constants";
 import type { PadSlot } from "@/lib/gamepad";
@@ -335,6 +336,48 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       hint: [
         { keys: ["D-PAD"], label: "PLAYER 1" },
         { keys: ["A", "B"], label: "PLAYER 2 UP / DOWN" },
+      ],
+    },
+  },
+  "space-invaders": {
+    Canvas: SpaceInvadersCanvas,
+    controls: [
+      { keys: ["←", "→"], label: "MOVE" },
+      { keys: ["SPACE"], label: "FIRE" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    levelSelect: { min: 1, max: 99 },
+    sfx: {
+      sounds: {
+        shoot: withBasePath("/game-assets/space-invaders/shoot.wav"),
+        hit: withBasePath("/game-assets/space-invaders/hit.wav"),
+        boom: withBasePath("/game-assets/space-invaders/boom.wav"),
+        gameover: withBasePath("/game-assets/space-invaders/gameover.wav"),
+      },
+      volume: 0.2,
+    },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "blueprint", label: "BLUEPRINT" },
+        { id: "newsprint", label: "NEWSPRINT" },
+      ],
+      themes: false,
+    },
+    touch: {
+      // left / right move the cannon; A fires (hold = keeps firing as bullets clear).
+      pad: [
+        { code: "ArrowLeft", label: "◀", slot: "left", hold: true },
+        { code: "ArrowRight", label: "▶", slot: "right", hold: true },
+        { code: "Space", label: "FIRE", slot: "a", hold: true },
+      ],
+      hint: [
+        { keys: ["◀", "▶"], label: "MOVE" },
+        { keys: ["FIRE"], label: "SHOOT" },
       ],
     },
   },

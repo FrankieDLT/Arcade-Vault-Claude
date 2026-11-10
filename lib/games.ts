@@ -151,6 +151,16 @@ export const GAMES: Game[] = [
     color: "magenta",
     plays: "0",
   },
+  {
+    id: "space-invaders",
+    title: "SPACE INVADERS",
+    short: "Hold the line. Stop the invasion.",
+    long: "A fleet of invaders marches down the screen, faster with every ship you destroy. Move your cannon, shoot them one by one and dodge their bombs. Clear the wave to face a faster one. If they land, it is over.",
+    cat: "SHOOTER",
+    cover: "cover-space-invaders",
+    color: "cyan",
+    plays: "0",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [

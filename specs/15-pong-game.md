@@ -1,6 +1,6 @@
 # SPEC 15 — Pong game (PvE and PvP)
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 05, SPEC 06, SPEC 07, SPEC 10, SPEC 11, SPEC 13
 > **Date:** 2026-11-10
 > **Objective:** Build a new Pong game as a TypeScript engine plus a React canvas component, add it to the catalog as a new entry `pong` with a mode picker (PvE against a CPU with a difficulty selector in the pause menu, or local two-player PvP), and wire its score into the platform HUD and the GAME OVER / SAVE SCORE flow.

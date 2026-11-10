@@ -44,3 +44,10 @@
 | 2026-11-10 | pong | negative | NEGATIVE | mandatory | built | computed inverse of retro: white bg, black elements |
 | 2026-11-10 | pong | phosphor | PHOSPHOR | fresh | built | bg #02100a, paddles #7dffa6 / #d4ff7a, ball #fff, net/numerals/tags green #7dffa6, glow 8 |
 | 2026-11-10 | pong | clay-court | CLAY COURT | fresh | built | clay bg #5a2310, cream #f6efe0 left/net/text, apricot #f2a03d right, tennis-yellow ball #e8f542 |
+| 2026-11-10 | space-invaders | retro | RETRO | mandatory | built | #000 bg, all white sprites, ground white 60% |
+| 2026-11-10 | space-invaders | neon | NEON | mandatory | built | #05020f bg; yellow/magenta/cyan rows, green cannon, 14px glow on cannon and shots |
+| 2026-11-10 | space-invaders | pastel | PASTEL | mandatory | built | #f3ecf7 bg; violet #7c4fc0, rose #c4486a, teal #2f8f7a rows, #5a4a63 cannon |
+| 2026-11-10 | space-invaders | gothic | GOTHIC | mandatory | built | #0d0a0e bg; violet, crimson, bone rows, bone cannon, silver ground |
+| 2026-11-10 | space-invaders | negative | NEGATIVE | mandatory | built | computed inverse of retro: #fff bg, black sprites |
+| 2026-11-10 | space-invaders | blueprint | BLUEPRINT | fresh | built | #0b2a5b bg; rows #ffd166 / #7fd0ff / #e8f1ff, cannon #fff, bomb #ff9f68, ground #e8f1ff 60% |
+| 2026-11-10 | space-invaders | newsprint | NEWSPRINT | fresh | built | #e9e1cf bg; rows #b3261e / #1f3f8a / #1b1a17, cannon #1b1a17, bomb #b3261e, ground #1b1a17 60% |

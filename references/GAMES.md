@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 15 rows. Seven of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
+The `games` table in Supabase holds 16 rows. Eight of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
 
 ## Implemented games
 
@@ -13,6 +13,7 @@ The `games` table in Supabase holds 15 rows. Seven of them are real, playable ga
 | Glowmaw   | `glowmaw`   | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
 | Frogger   | `frogger`   | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
 | Pong      | `pong`      | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
+| Space Invaders | `space-invaders` | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
 
 ### Asteroids
 
@@ -78,9 +79,19 @@ The `games` table in Supabase holds 15 rows. Seven of them are real, playable ga
 - **Sound:** `paddle`, `goal`, `gameover` (own generated `.wav` files, volume 0.2). `SOUND ON/OFF` in the PAUSED overlay shares the mute state with the button under the CRT.
 - **HUD:** score only (each side's score, lives and `P1` / `P2` / `CPU` tag are drawn on the canvas).
 
+### Space Invaders
+
+- **Description:** Hold the line. Stop the invasion.
+- **Details:** A fleet of invaders marches down the screen, faster with every ship you destroy. Move your cannon, shoot them one by one and dodge their bombs. Clear the wave to face a faster one. `invaders` stays a fake catalog entry.
+- **Rules:** 800x600 canvas, 11x5 fleet (55 invaders, 32x24 hit boxes), cannon 44x22 at 360 px/s, one player bullet on screen at a time (600 px/s). The fleet moves 16 px per step and drops 24 px at each edge; `stepInterval(alive, level)` shortens as invaders die and as the level rises (cap 2.5x). Up to 3 bombs (240 px/s) fall from the lowest invader of a random column. Points by row: 30 / 20 / 20 / 10 / 10; wave clear +`100 x level`. 3 lives; a bomb hit pauses the game for 1.2 s and the cannon respawns at center. The run also ends at once if an invader reaches the cannon row. Waves are endless; a later wave starts lower (start row capped at level 9).
+- **Controls:** `←` `→` or `A` `D` move, `SPACE` fires (hold to keep firing). While paused, `LEVEL - NN +` restarts the wave at that level (score and lives kept).
+- **Touch (below 768px):** pad under the CRT with ◀ ▶ (hold) and `A` = FIRE (hold). Haptics: `death` (life lost), `clear` (wave cleared).
+- **Sound:** `shoot`, `hit`, `boom`, `gameover` (own generated `.wav` files in `public/game-assets/space-invaders/`, volume 0.2). The mute button under the CRT is the only toggle.
+- **HUD:** score, lives, level (the canvas draws only the playfield).
+
 ## Touch controls and haptics
 
-Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger and Pong). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong and Space Invaders). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Catalog-only games (fake simulation)
 
@@ -97,7 +108,7 @@ These rows exist in the `games` table and in `GAMES` (`lib/games.ts`), but have 
 | Hopper       | `hopper`       | ARCADE   | Cross the pixel highway.                       |
 | Pixel Duel   | `pixel-duel`   | VERSUS   | Two paddles. One ball. Maximum reflexes.       |
 
-Brick Buster, Drop, Serpentine and Rocks overlap with the real Arkanoid, Tetris, Snake and Asteroids. Pixel Duel overlaps with the real Pong.
+Brick Buster, Drop, Serpentine and Rocks overlap with the real Arkanoid, Tetris, Snake and Asteroids. Pixel Duel overlaps with the real Pong. Invaders overlaps with the real Space Invaders.
 
 ## Adding a game
 
