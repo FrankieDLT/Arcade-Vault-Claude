@@ -125,7 +125,7 @@ Agents live in `.claude/agents/`. Details in each file.
 
 Skills:
 
-- `/full-game-impl <spec>`: full pipeline for a new real game (`/spec-impl` flow, then `mobile-porter`, then `skin-designer`). See `.claude/skills/full-game-impl/SKILL.md`.
+- `/full-game-impl <spec>`: full pipeline for a new real game (`/spec-impl` flow, then `mobile-porter`, then `skin-designer`, then `game-perf-booster`). See `.claude/skills/full-game-impl/SKILL.md`.
 - `add-game`: writes spec to port a vanilla-JS game. See `.claude/skills/add-game/SKILL.md`.
 
 ## Playwright
