@@ -24,6 +24,13 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
+      - name: Check Supabase secrets
+        run: |
+          test -n "$NEXT_PUBLIC_SUPABASE_URL" || { echo "::error::secret NEXT_PUBLIC_SUPABASE_URL missing"; exit 1; }
+          test -n "$NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY" || { echo "::error::secret NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY missing"; exit 1; }
+        env:
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY }}
       - run: npm run build
         env:
           NEXT_PUBLIC_BASE_PATH: /Arcade-Vault-Claude
