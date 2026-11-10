@@ -111,7 +111,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      royalty_of_games: {
+        Args: { p_limit?: number }
+        Returns: {
+          games: number
+          last_at: string
+          name: string
+          rank: number
+          total: number
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never

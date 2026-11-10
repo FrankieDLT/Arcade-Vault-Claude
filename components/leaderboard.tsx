@@ -1,8 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { fetchTopScores } from "@/lib/scores-db";
-import type { ScoreRow } from "@/lib/types";
+import { fetchRoyalty, fetchTopScores } from "@/lib/scores-db";
+import type { RoyaltyRow, ScoreRow } from "@/lib/types";
 
 export type ScoresStatus = "loading" | "ready" | "error";
 
@@ -46,6 +46,42 @@ export function useTopScores(
       status: result.failed ? ("error" as const) : ("ready" as const),
     };
   }, [result, gameId, count]);
+}
+
+/** Royalty of Games ranking. Same loading / ready / error contract as `useTopScores`. */
+export function useRoyalty(count: number): {
+  rows: RoyaltyRow[];
+  status: ScoresStatus;
+} {
+  const [result, setResult] = useState<{
+    count: number;
+    rows: RoyaltyRow[];
+    failed: boolean;
+  } | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    fetchRoyalty(count)
+      .then((rows) => {
+        if (!cancelled) setResult({ count, rows, failed: false });
+      })
+      .catch(() => {
+        if (!cancelled) setResult({ count, rows: [], failed: true });
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [count]);
+
+  return useMemo(() => {
+    if (!result || result.count !== count) {
+      return { rows: [], status: "loading" as const };
+    }
+    return {
+      rows: result.rows,
+      status: result.failed ? ("error" as const) : ("ready" as const),
+    };
+  }, [result, count]);
 }
 
 export function scoresStatusMessage(status: ScoresStatus): string {
