@@ -17,7 +17,7 @@
 - {{Full port of the gameplay: list every rule, entity, mode and power-up from the inventory.}}
 - Pure TypeScript engine in `lib/{{id}}/` with no React and no Next.js imports.
 - Client component `components/{{id}}-canvas.tsx` that owns the `<canvas>`, creates and destroys the engine.
-- {{Registry: introduce `components/game-registry.tsx` and move asteroids into it, OR add an entry to the existing registry.}} `GamePlayer` dispatches through it; games not in the registry keep the fake simulation.
+- {{Registry: introduce `components/game-registry.tsx` and move space-voyage into it, OR add an entry to the existing registry.}} `GamePlayer` dispatches through it; games not in the registry keep the fake simulation.
 - Score, {{stats}} in the platform HUD come from the engine; PAUSE / RESUME pauses the engine; END ends the run; GAME OVER modal and SAVE SCORE (`insertScore`) work as in SPEC 06; PLAY AGAIN starts a new run.
 - Canvas draws only the playfield {{and in-game timers}}. HUD, PAUSED and GAME OVER belong to the platform.
 - Fixed {{W}}x{{H}} game coordinates, scaled by CSS to fit `.crt-screen` keeping the aspect ratio.
@@ -34,7 +34,6 @@
 - Touch or gamepad controls; any input not listed above.
 - Sound and music {{unless opted in}}.
 - High-DPI canvas scaling and a responsive playfield size.
-- Real game stats: `best` and `plays` stay mock fields.
 - Supabase Auth, server client, rate limiting, anti-cheat.
 - Changes to other games, the Home, auth or the Hall of Fame layout.
 - Automated tests (no test runner is configured).
@@ -54,7 +53,6 @@ Catalog entry (the `Game` type is unchanged):
   cover: "{{cover-id}}",
   color: "{{cyan|magenta|yellow|green}}",
   best: 0,
-  plays: "0",
 }
 ```
 
@@ -133,7 +131,7 @@ Before step 1, read the relevant guides in `node_modules/next/dist/docs/` as req
 5. **Entities.** {{...}} `npm run lint` and `npm run build` pass.
 6. **Engine.** {{state, input, update, draw, collision/rules, loop, callbacks, public API}}
 7. **Canvas wrapper.** `components/{{id}}-canvas.tsx`, Strict-Mode safe.
-8. **Registry and player wiring.** {{Create the registry and move asteroids / add the entry. `GamePlayer` reads the registry; `END` uses `endSignal`; `onGameOver` sets `over`; `restart()` bumps `runId`. Asteroids and the fake games behave as before.}}
+8. **Registry and player wiring.** {{Create the registry and move space-voyage / add the entry. `GamePlayer` reads the registry; `END` uses `endSignal`; `onGameOver` sets `over`; `restart()` bumps `runId`. Space Voyage and the fake games behave as before.}}
 9. **Score walkthrough.** In `npm run dev` with Playwright (captures in `.pwScreencaps/`): play to game over, SAVE SCORE, confirm the row in `scores`, on `/games/<id>` and in the Hall of Fame tab after a reload, at 1280px and 375px.
 10. **Docs.** Update `CLAUDE.md`. Run `npm run lint` and `npm run build`.
 
@@ -156,7 +154,7 @@ Generic:
 - [ ] EXIT or leaving the page stops the engine: no rAF loop and no `keydown` / `keyup` / `blur` / `visibilitychange` listener remains.
 - [ ] In dev (React Strict Mode) only one loop runs: speed is normal, not double.
 - [ ] At 375px width the canvas fits the CRT frame without horizontal scroll and keeps its ratio.
-- [ ] Asteroids and the other games' play pages behave exactly as before.
+- [ ] Space Voyage and the other games' play pages behave exactly as before.
 - [ ] No new `localStorage` keys; `lib/storage.ts` is unchanged.
 - [ ] `lib/{{id}}/` imports nothing from `react` or `next`.
 - [ ] No text on the canvas or in the player is in Spanish.

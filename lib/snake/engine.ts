@@ -9,7 +9,6 @@ import {
   INPUT_QUEUE,
   MAX_DT,
   ROWS,
-  SHEET_SRC,
   SKINS,
   START_COL,
   START_LENGTH,
@@ -23,7 +22,7 @@ import {
   drawBonus,
   drawFruit,
   drawSnake,
-  SpriteSheet,
+  FruitArt,
   type Bonus,
   type Cell,
   type Direction,
@@ -59,7 +58,7 @@ export class SnakeEngine {
   private readonly canvas: HTMLCanvasElement;
   private readonly ctx: CanvasRenderingContext2D;
   private readonly callbacks: SnakeCallbacks;
-  private readonly sheet = new SpriteSheet();
+  private readonly art = new FruitArt();
   private skin: SnakeSkin;
 
   // Lifecycle
@@ -68,7 +67,6 @@ export class SnakeEngine {
   private finished = false; // onGameOver already fired for this run
   private destroyed = false;
   private listening = false;
-  private sheetDone = false; // sprite sheet loaded or failed: the loop may run
   private rafId: number | null = null;
   private lastTime: number | null = null;
 
@@ -102,7 +100,7 @@ export class SnakeEngine {
     if (!(skin in SKINS)) return;
     this.skin = skin;
     if (this.destroyed) return;
-    this.sheet.applyFilter(SKINS[skin].fruitFilter);
+    this.art.setFilter(SKINS[skin].fruitFilter);
     this.draw();
   }
 
@@ -114,14 +112,9 @@ export class SnakeEngine {
     this.initGame();
     this.emitChanges();
     this.attachListeners();
-    this.sheet.applyFilter(SKINS[this.skin].fruitFilter);
+    this.art.setFilter(SKINS[this.skin].fruitFilter);
     this.draw();
-    this.sheet.load(SHEET_SRC, () => {
-      if (this.destroyed) return;
-      this.sheetDone = true;
-      this.draw();
-      if (!this.paused && !this.finished) this.schedule();
-    });
+    this.schedule();
   }
 
   pause(): void {
@@ -150,13 +143,12 @@ export class SnakeEngine {
     this.cancelFrame();
     this.detachListeners();
     this.clearInput();
-    this.sheet.destroy();
+    this.art.destroy();
   }
 
   // ── Loop ───────────────────────────────────────────────────────────────────
 
   private schedule(): void {
-    if (!this.sheetDone) return;
     this.cancelFrame();
     this.rafId = requestAnimationFrame(this.loop);
   }
@@ -365,8 +357,8 @@ export class SnakeEngine {
     const palette = SKINS[this.skin];
     ctx.clearRect(0, 0, W, H);
     drawBoard(ctx, palette);
-    if (this.fruit) drawFruit(ctx, this.fruit, this.sheet, palette);
-    if (this.bonus) drawBonus(ctx, this.bonus, this.clock, this.sheet, palette);
+    if (this.fruit) drawFruit(ctx, this.fruit, this.art);
+    if (this.bonus) drawBonus(ctx, this.bonus, this.clock, this.art, palette);
     drawSnake(ctx, this.snake, this.dir, palette);
   }
 }

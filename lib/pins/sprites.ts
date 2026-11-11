@@ -4,7 +4,7 @@
 export type PinSpriteDef = { palette: Record<string, string>; rows: string[] };
 
 export const PIN_SPRITES: Record<string, PinSpriteDef> = {
-  "asteroids-big-rock": {
+  "space-voyage-big-rock": {
     palette: {"k":"#15131f","s":"#aab2bd","w":"#f5f1e8","S":"#646d7a"},
     rows: [
       "................",
@@ -25,7 +25,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-mid-rock": {
+  "space-voyage-mid-rock": {
     palette: {"k":"#15131f","s":"#aab2bd","w":"#f5f1e8","S":"#646d7a"},
     rows: [
       "................",
@@ -46,7 +46,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-pebble": {
+  "space-voyage-pebble": {
     palette: {"k":"#15131f","s":"#aab2bd","w":"#f5f1e8","S":"#646d7a"},
     rows: [
       "................",
@@ -67,7 +67,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-bomb": {
+  "space-voyage-bomb": {
     palette: {"y":"#ffd23f","k":"#15131f","S":"#646d7a","w":"#f5f1e8"},
     rows: [
       "................",
@@ -88,7 +88,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-comet": {
+  "space-voyage-comet": {
     palette: {"k":"#15131f","c":"#35d6ff","b":"#4a78f0","w":"#f5f1e8","s":"#aab2bd"},
     rows: [
       ".k.k............",
@@ -109,7 +109,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-crescent-moon": {
+  "space-voyage-crescent-moon": {
     palette: {"k":"#15131f","y":"#ffd23f","Y":"#b8860b"},
     rows: [
       "................",
@@ -130,7 +130,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-hyperspace": {
+  "space-voyage-hyperspace": {
     palette: {"k":"#15131f","B":"#213a8a","b":"#4a78f0","w":"#f5f1e8","c":"#35d6ff"},
     rows: [
       "................",
@@ -151,7 +151,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-lightning-bolt": {
+  "space-voyage-lightning-bolt": {
     palette: {"y":"#ffd23f"},
     rows: [
       "................",
@@ -172,7 +172,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-plasma-bolt": {
+  "space-voyage-plasma-bolt": {
     palette: {"y":"#ffd23f","w":"#f5f1e8","o":"#ff8a1f"},
     rows: [
       "................",
@@ -193,7 +193,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-ringed-planet": {
+  "space-voyage-ringed-planet": {
     palette: {"k":"#15131f","o":"#ff8a1f","y":"#ffd23f","p":"#ff86b8","O":"#b85a00"},
     rows: [
       "................",
@@ -214,7 +214,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-rocket": {
+  "space-voyage-rocket": {
     palette: {"r":"#e63946","w":"#f5f1e8","c":"#35d6ff","k":"#15131f","o":"#ff8a1f","y":"#ffd23f"},
     rows: [
       "................",
@@ -235,7 +235,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-satellite": {
+  "space-voyage-satellite": {
     palette: {"k":"#15131f","b":"#4a78f0","s":"#aab2bd","w":"#f5f1e8"},
     rows: [
       "................",
@@ -256,7 +256,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-shield": {
+  "space-voyage-shield": {
     palette: {"k":"#15131f","b":"#4a78f0","c":"#35d6ff"},
     rows: [
       "................",
@@ -277,7 +277,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-slow-mo": {
+  "space-voyage-slow-mo": {
     palette: {"k":"#15131f","c":"#35d6ff","w":"#f5f1e8","y":"#ffd23f"},
     rows: [
       "................",
@@ -298,7 +298,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-star": {
+  "space-voyage-star": {
     palette: {"y":"#ffd23f"},
     rows: [
       "................",
@@ -319,7 +319,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-sun": {
+  "space-voyage-sun": {
     palette: {"y":"#ffd23f","w":"#f5f1e8","o":"#ff8a1f"},
     rows: [
       "................",
@@ -340,7 +340,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-thruster-flame": {
+  "space-voyage-thruster-flame": {
     palette: {"r":"#e63946","o":"#ff8a1f","y":"#ffd23f"},
     rows: [
       "................",
@@ -361,7 +361,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-triple-shot": {
+  "space-voyage-triple-shot": {
     palette: {"o":"#ff8a1f","y":"#ffd23f"},
     rows: [
       "................",
@@ -382,7 +382,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-astronaut": {
+  "space-voyage-astronaut": {
     palette: {"w":"#f5f1e8","c":"#35d6ff"},
     rows: [
       "................",
@@ -403,7 +403,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-robot": {
+  "space-voyage-robot": {
     palette: {"s":"#aab2bd","r":"#e63946","w":"#f5f1e8","k":"#15131f"},
     rows: [
       "................",
@@ -424,7 +424,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "asteroids-rocket-ship": {
+  "space-voyage-rocket-ship": {
     palette: {"k":"#15131f","c":"#35d6ff","s":"#aab2bd","S":"#646d7a"},
     rows: [
       "................",
@@ -445,7 +445,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-cyan-brick": {
+  "wall-wrecker-cyan-brick": {
     palette: {"k":"#15131f","w":"#f5f1e8","c":"#35d6ff","C":"#0e7f9e"},
     rows: [
       "................",
@@ -466,7 +466,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-green-brick": {
+  "wall-wrecker-green-brick": {
     palette: {"k":"#15131f","w":"#f5f1e8","g":"#3fd05a","G":"#1f7a3a"},
     rows: [
       "................",
@@ -487,7 +487,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-hot-pink-brick": {
+  "wall-wrecker-hot-pink-brick": {
     palette: {"k":"#15131f","w":"#f5f1e8","p":"#ff86b8","M":"#7b2a9a"},
     rows: [
       "................",
@@ -508,7 +508,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-magenta-brick": {
+  "wall-wrecker-magenta-brick": {
     palette: {"k":"#15131f","w":"#f5f1e8","m":"#e251f7","M":"#7b2a9a"},
     rows: [
       "................",
@@ -529,7 +529,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-red-brick": {
+  "wall-wrecker-red-brick": {
     palette: {"k":"#15131f","w":"#f5f1e8","r":"#e63946","R":"#8f1d2c"},
     rows: [
       "................",
@@ -550,7 +550,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-yellow-brick": {
+  "wall-wrecker-yellow-brick": {
     palette: {"k":"#15131f","w":"#f5f1e8","y":"#ffd23f","Y":"#b8860b"},
     rows: [
       "................",
@@ -571,7 +571,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-balloon": {
+  "wall-wrecker-balloon": {
     palette: {"k":"#15131f","r":"#e63946","w":"#f5f1e8","R":"#8f1d2c","s":"#aab2bd"},
     rows: [
       ".....kkkkkk.....",
@@ -592,7 +592,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       ".......ksk......",
     ],
   },
-  "arkanoid-bell": {
+  "wall-wrecker-bell": {
     palette: {"y":"#ffd23f","w":"#f5f1e8","Y":"#b8860b","o":"#ff8a1f"},
     rows: [
       "................",
@@ -613,7 +613,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-cartridge": {
+  "wall-wrecker-cartridge": {
     palette: {"k":"#15131f","S":"#646d7a","w":"#f5f1e8","r":"#e63946"},
     rows: [
       "................",
@@ -634,7 +634,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-coin": {
+  "wall-wrecker-coin": {
     palette: {"k":"#15131f","y":"#ffd23f","w":"#f5f1e8","Y":"#b8860b"},
     rows: [
       "................",
@@ -655,7 +655,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-complete-bar-capsule": {
+  "wall-wrecker-complete-bar-capsule": {
     palette: {"k":"#15131f","g":"#3fd05a","w":"#f5f1e8","G":"#1f7a3a"},
     rows: [
       "................",
@@ -676,7 +676,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-dice": {
+  "wall-wrecker-dice": {
     palette: {"k":"#15131f","w":"#f5f1e8","s":"#aab2bd"},
     rows: [
       "................",
@@ -697,7 +697,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-energy-ball": {
+  "wall-wrecker-energy-ball": {
     palette: {"k":"#15131f","c":"#35d6ff","w":"#f5f1e8","b":"#4a78f0"},
     rows: [
       "................",
@@ -718,7 +718,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-frenzy-capsule": {
+  "wall-wrecker-frenzy-capsule": {
     palette: {"k":"#15131f","r":"#e63946","w":"#f5f1e8","R":"#8f1d2c"},
     rows: [
       "................",
@@ -739,7 +739,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-gift": {
+  "wall-wrecker-gift": {
     palette: {"k":"#15131f","y":"#ffd23f","M":"#7b2a9a","m":"#e251f7"},
     rows: [
       "................",
@@ -760,7 +760,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-joystick": {
+  "wall-wrecker-joystick": {
     palette: {"k":"#15131f","r":"#e63946","w":"#f5f1e8","R":"#8f1d2c","s":"#aab2bd","S":"#646d7a"},
     rows: [
       "......kkkk......",
@@ -781,7 +781,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "..kkkkkkkkkkkk..",
     ],
   },
-  "arkanoid-magic-wand": {
+  "wall-wrecker-magic-wand": {
     palette: {"k":"#15131f","y":"#ffd23f","w":"#f5f1e8","n":"#8b5a2b"},
     rows: [
       "................",
@@ -802,7 +802,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-music-note": {
+  "wall-wrecker-music-note": {
     palette: {"k":"#15131f","c":"#35d6ff","b":"#4a78f0","C":"#0e7f9e"},
     rows: [
       "..............k.",
@@ -823,7 +823,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-playing-card": {
+  "wall-wrecker-playing-card": {
     palette: {"k":"#15131f","w":"#f5f1e8","r":"#e63946"},
     rows: [
       "...kkkkkkkkkk...",
@@ -844,7 +844,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "...kkkkkkkkkk...",
     ],
   },
-  "arkanoid-triple-ball-capsule": {
+  "wall-wrecker-triple-ball-capsule": {
     palette: {"k":"#15131f","c":"#35d6ff","w":"#f5f1e8","C":"#0e7f9e"},
     rows: [
       "................",
@@ -865,7 +865,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "arkanoid-vaus-paddle": {
+  "wall-wrecker-wrecker-paddle": {
     palette: {"k":"#15131f","R":"#8f1d2c","r":"#e63946","w":"#f5f1e8"},
     rows: [
       "................",
@@ -2062,7 +2062,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-car": {
+  "street-jumper-car": {
     palette: {"r":"#e63946","w":"#f5f1e8","k":"#15131f"},
     rows: [
       "................",
@@ -2083,7 +2083,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-truck": {
+  "street-jumper-truck": {
     palette: {"k":"#15131f","w":"#f5f1e8","r":"#e63946","c":"#35d6ff"},
     rows: [
       "................",
@@ -2104,7 +2104,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-lily-pad": {
+  "street-jumper-lily-pad": {
     palette: {"k":"#15131f","g":"#3fd05a","l":"#b9e769","G":"#1f7a3a"},
     rows: [
       "................",
@@ -2125,7 +2125,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-log": {
+  "street-jumper-log": {
     palette: {"k":"#15131f","t":"#ecd2a0","n":"#8b5a2b","N":"#54331a"},
     rows: [
       "................",
@@ -2146,7 +2146,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-lotus-flower": {
+  "street-jumper-lotus-flower": {
     palette: {"p":"#ff86b8","w":"#f5f1e8","g":"#3fd05a"},
     rows: [
       "................",
@@ -2167,7 +2167,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-raindrop": {
+  "street-jumper-raindrop": {
     palette: {"b":"#4a78f0","w":"#f5f1e8"},
     rows: [
       "................",
@@ -2188,7 +2188,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-rubber-boot": {
+  "street-jumper-rubber-boot": {
     palette: {"k":"#15131f","Y":"#b8860b","y":"#ffd23f"},
     rows: [
       "................",
@@ -2209,7 +2209,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-sailboat": {
+  "street-jumper-sailboat": {
     palette: {"w":"#f5f1e8","n":"#8b5a2b","r":"#e63946"},
     rows: [
       "................",
@@ -2230,7 +2230,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-umbrella": {
+  "street-jumper-umbrella": {
     palette: {"k":"#15131f","b":"#4a78f0","w":"#f5f1e8","B":"#213a8a","n":"#8b5a2b"},
     rows: [
       ".....kkkkkk.....",
@@ -2251,7 +2251,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-diving-turtle": {
+  "street-jumper-diving-turtle": {
     palette: {"k":"#15131f","w":"#f5f1e8","c":"#35d6ff","b":"#4a78f0","B":"#213a8a"},
     rows: [
       ".............k..",
@@ -2272,7 +2272,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-dragonfly": {
+  "street-jumper-dragonfly": {
     palette: {"k":"#15131f","G":"#1f7a3a","c":"#35d6ff","g":"#3fd05a"},
     rows: [
       ".......kk.......",
@@ -2293,7 +2293,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-duck": {
+  "street-jumper-duck": {
     palette: {"k":"#15131f","y":"#ffd23f","w":"#f5f1e8","Y":"#b8860b","o":"#ff8a1f"},
     rows: [
       "................",
@@ -2314,7 +2314,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-frog": {
+  "street-jumper-frog": {
     palette: {"w":"#f5f1e8","g":"#3fd05a","k":"#15131f","G":"#1f7a3a"},
     rows: [
       "................",
@@ -2335,7 +2335,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-frog-skull": {
+  "street-jumper-frog-skull": {
     palette: {"w":"#f5f1e8","k":"#15131f"},
     rows: [
       "................",
@@ -2356,7 +2356,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-ladybug": {
+  "street-jumper-ladybug": {
     palette: {"k":"#15131f","r":"#e63946","w":"#f5f1e8","R":"#8f1d2c"},
     rows: [
       "................",
@@ -2377,7 +2377,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-snail": {
+  "street-jumper-snail": {
     palette: {"k":"#15131f","n":"#8b5a2b","t":"#ecd2a0","N":"#54331a"},
     rows: [
       "................",
@@ -2398,7 +2398,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "frogger-turtle": {
+  "street-jumper-turtle": {
     palette: {"k":"#15131f","l":"#b9e769","g":"#3fd05a","G":"#1f7a3a"},
     rows: [
       "................",
@@ -2419,7 +2419,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-invader": {
+  "alien-attack-alien": {
     palette: {"g":"#3fd05a","k":"#15131f"},
     rows: [
       "................",
@@ -2440,7 +2440,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-invader-bomb": {
+  "alien-attack-alien-bomb": {
     palette: {"w":"#f5f1e8","c":"#35d6ff"},
     rows: [
       "................",
@@ -2461,7 +2461,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-waving-invader": {
+  "alien-attack-waving-alien": {
     palette: {"g":"#3fd05a","k":"#15131f"},
     rows: [
       "................",
@@ -2482,7 +2482,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-cannon-shot": {
+  "space-aliens-cannon-shot": {
     palette: {"c":"#35d6ff","w":"#f5f1e8"},
     rows: [
       "................",
@@ -2503,7 +2503,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-cannonball": {
+  "space-aliens-cannonball": {
     palette: {"k":"#15131f","S":"#646d7a","s":"#aab2bd"},
     rows: [
       "................",
@@ -2524,7 +2524,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-alien-head": {
+  "space-aliens-alien-head": {
     palette: {"g":"#3fd05a","k":"#15131f"},
     rows: [
       "................",
@@ -2545,7 +2545,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-bat": {
+  "space-aliens-bat": {
     palette: {"k":"#15131f","r":"#e63946"},
     rows: [
       "................",
@@ -2566,7 +2566,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-bear": {
+  "space-aliens-bear": {
     palette: {"n":"#8b5a2b","k":"#15131f","t":"#ecd2a0"},
     rows: [
       "................",
@@ -2587,7 +2587,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-bunny": {
+  "space-aliens-bunny": {
     palette: {"w":"#f5f1e8","p":"#ff86b8","k":"#15131f"},
     rows: [
       "................",
@@ -2608,7 +2608,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-cat": {
+  "space-aliens-cat": {
     palette: {"o":"#ff8a1f","y":"#ffd23f","k":"#15131f","p":"#ff86b8"},
     rows: [
       "................",
@@ -2629,7 +2629,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-ghost": {
+  "space-aliens-ghost": {
     palette: {"w":"#f5f1e8","b":"#4a78f0","k":"#15131f"},
     rows: [
       "................",
@@ -2650,7 +2650,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-laser-cannon": {
+  "space-aliens-laser-cannon": {
     palette: {"g":"#3fd05a"},
     rows: [
       "................",
@@ -2671,7 +2671,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-mystery-ship": {
+  "alien-attack-bonus-saucer": {
     palette: {"k":"#15131f","m":"#e251f7","w":"#f5f1e8","y":"#ffd23f"},
     rows: [
       "................",
@@ -2692,7 +2692,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-owl": {
+  "space-aliens-owl": {
     palette: {"n":"#8b5a2b","w":"#f5f1e8","k":"#15131f","y":"#ffd23f","t":"#ecd2a0"},
     rows: [
       "................",
@@ -2713,7 +2713,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-skull": {
+  "space-aliens-skull": {
     palette: {"w":"#f5f1e8","k":"#15131f"},
     rows: [
       "................",
@@ -2734,7 +2734,7 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
     ],
   },
-  "space-invaders-spider": {
+  "space-aliens-spider": {
     palette: {"k":"#15131f","r":"#e63946"},
     rows: [
       "................",
@@ -3173,6 +3173,1350 @@ export const PIN_SPRITES: Record<string, PinSpriteDef> = {
       "................",
       "................",
       "................",
+    ],
+  },
+  "robo-vault-vault-hero": {
+    palette: {"k":"#050c0a","c":"#00f5ff","d":"#0a6aa8","w":"#ffffff","y":"#f5ff00"},
+    rows: [
+      "......kkkk......",
+      ".....kddddk.....",
+      "....kdccccdk....",
+      "...kdcckwwcdk...",
+      "...kdcckkkcdk...",
+      "....kdccccdk....",
+      "....kccddcckk...",
+      "...kdccccccyyk..",
+      "...kdcdccccyyk..",
+      "....kccccccck...",
+      "....kcddddcck...",
+      "....kcckkcck....",
+      "....kdckkcdk....",
+      "....kdckkcdk....",
+      "...kdddkkdddk...",
+      "....kkk..kkk....",
+    ],
+  },
+  "robo-vault-frostbyte": {
+    palette: {"k":"#15131f","i":"#9fd8f2","n":"#4f88b8","d":"#16314f","c":"#e8fbff","w":"#ffffff"},
+    rows: [
+      "......kkwkk.....",
+      ".....kwiwkwk....",
+      "....kiiwiwik....",
+      "...kiiiiiiiik...",
+      "...kiiiiiiiik...",
+      "..kiddddddddik..",
+      "...kdccddccdk...",
+      "...kddddddddk...",
+      "...kkiiiiiikk...",
+      "..knniiiiiinnk..",
+      "..knniwwwwnnnk..",
+      "..knniwwwwnnnk..",
+      "..knniiinnnnnk..",
+      "...kknnnnnnkk...",
+      "....knnnnnnk....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "robo-vault-embercore": {
+    palette: {"k":"#15131f","r":"#e0503a","m":"#8f2a1e","d":"#2a1410","y":"#ffe85c","o":"#ff9a2e"},
+    rows: [
+      ".......kok......",
+      ".....kkoyok.....",
+      "....krrooork....",
+      "...krrrrrrrrk...",
+      "...krrrrrrrrk...",
+      "..krddddddddrk..",
+      "...kdyyddyydk...",
+      "...kddddddddk...",
+      "...kkrrrrrrkk...",
+      "..kmmrrrrrrmmk..",
+      "..kmmroooommmk..",
+      "..kmmroooommmk..",
+      "..kmmrrrmmmmmk..",
+      "...kkmmmmmmkk...",
+      "....kmmmmmmk....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "robo-vault-galeforce": {
+    palette: {"k":"#15131f","g":"#4fc86a","n":"#2a7a3c","d":"#10301a","w":"#e8ffe8","y":"#ffe85c"},
+    rows: [
+      ".......kk.......",
+      ".....kkggkk.....",
+      "k...kggggggk...k",
+      "wkkkggggggggkkkw",
+      "kwwkggggggggkwwk",
+      "kwwgddddddddgwwk",
+      "wkkkdwwddwwdkkkw",
+      "k..kddddddddk..k",
+      "...kkggggggkk...",
+      "..knnggggggnnk..",
+      "..knngyyyynnnk..",
+      "..knngyyyynnnk..",
+      "..knngggnnnnnk..",
+      "...kknnnnnnkk...",
+      "....knnnnnnk....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "robo-vault-tidebreaker": {
+    palette: {"k":"#15131f","t":"#2fb5c8","n":"#1b6e80","d":"#0e2c36","w":"#e8fbff","c":"#8fe9f5"},
+    rows: [
+      ".......kck......",
+      ".....kktcck.....",
+      "....kttcccck....",
+      "...kttttttttk...",
+      "...kttttttttk...",
+      "..ktddddddddtk..",
+      "...kdwwddwwdk...",
+      "...kddddddddk...",
+      "...kkttttttkk...",
+      "..knnttttttnnk..",
+      "..knntccccnnnk..",
+      "..knntccccnnnk..",
+      "..knntttnnnnnk..",
+      "..kkknnnnnnkkk..",
+      ".kwkknnnnnnkkwk.",
+      "..k..kkkkkk..k..",
+    ],
+  },
+  "robo-vault-sam-saucer": {
+    palette: {"k":"#15131f","g":"#bfeaff","p":"#8a3fd0","m":"#aeb6c4","n":"#6a7388","y":"#ffe85c"},
+    rows: [
+      "................",
+      "................",
+      ".......kk.......",
+      ".....kkggkk.....",
+      "....kggggggk....",
+      "....kgppppgk....",
+      "...kggppppggk...",
+      "..kkkgmmmmgkkk..",
+      ".kmmmmmmmmmmmmk.",
+      "kmmmmmmmmmmmmnnk",
+      "kmmymmmmmmmmynnk",
+      ".kmmmmymmymnnnk.",
+      "..kkkknnnnkkkk..",
+      ".....knnnnk.....",
+      "......kkkk......",
+      "................",
+    ],
+  },
+  "robo-vault-sam-mech": {
+    palette: {"k":"#15131f","m":"#a9b2c2","n":"#5a6478","g":"#bfeaff","r":"#ff3b4a"},
+    rows: [
+      "......krk.......",
+      "....kkkrrkkk....",
+      ".kkkmmmmmmmmkkk.",
+      "knnnmmggggmmnnnk",
+      "knnnmmgrrgmmnnnk",
+      "knnnmmggggmmnnnk",
+      "knnnmmmmmmmmnnnk",
+      "knnnmmmmmmmmnnnk",
+      "knnnnnnnnnnnnnnk",
+      "knnnnnnnnnnnnnnk",
+      "krrkmmmkkmmmkrrk",
+      ".kkkmmmkkmmmkkk.",
+      "...kmmmkkmmmk...",
+      "...kmmmkkmmmk...",
+      "..knnnnkknnnnk..",
+      "...kkkk..kkkk...",
+    ],
+  },
+  "robo-vault-energy-tank": {
+    palette: {"k":"#15131f","c":"#bfeaff","b":"#3fb0ff","m":"#7a8498","w":"#ffffff"},
+    rows: [
+      "................",
+      "....kkkkkkkk....",
+      "...kmmmmmmmmk...",
+      "...kmmmmmmmmk...",
+      "....kcwcccck....",
+      "....kcwcccck....",
+      "....kcwcccck....",
+      "....kcccccck....",
+      "....kbbbbbbk....",
+      "....kbwwwbbk....",
+      "....kbbwbbbk....",
+      "....kbwwwbbk....",
+      "....kbbbbbbk....",
+      "...kmmmmmmmmk...",
+      "...kmmmmmmmmk...",
+      "....kkkkkkkk....",
+    ],
+  },
+  "robo-vault-walker-bot": {
+    palette: {"k":"#15131f","o":"#f58b1f","d":"#b3560c","w":"#ffffff","m":"#8a93a6"},
+    rows: [
+      "................",
+      "................",
+      "......kkkk......",
+      ".....kooook.....",
+      "....kooooook....",
+      "...kooowwoook...",
+      "...koowwwwook...",
+      "...koowwkwodk...",
+      "...kooowwoddk...",
+      "....kooooddk....",
+      "....kmooddmk....",
+      "....kmkkkkmk....",
+      "....kmk..kmmk...",
+      "...kmk....kmk...",
+      "..kmmmk..kmmmk..",
+      "...kkk....kkk...",
+    ],
+  },
+  "robo-vault-hover-drone": {
+    palette: {"k":"#15131f","m":"#aeb6c4","n":"#5a6478","r":"#ff3b4a","g":"#7fe0a0","y":"#ffe85c"},
+    rows: [
+      "................",
+      "................",
+      "..kkkkkkkkkkkk..",
+      ".kggggggggggggk.",
+      "..kkkkkknkkkkk..",
+      ".....kkknkk.....",
+      "....kmmmnmmk....",
+      "...kmmmmmmmmk...",
+      "...kmmmmmmmmk...",
+      "...kmmmrrrmnk...",
+      "...kmmmmmmnnk...",
+      "....kmmmmnnk....",
+      "....knnnnnnk....",
+      "....kykkykkyk...",
+      ".....k..k..k....",
+      "................",
+    ],
+  },
+  "robo-vault-spike-crawler": {
+    palette: {"k":"#15131f","g":"#4fc86a","d":"#2a7a3c","y":"#ffe85c","w":"#ffffff"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "................",
+      "...k..k..k..k...",
+      "..kykkykkykkyk..",
+      "..kyygyygyykyyk.",
+      "..kyygyygyygyyk.",
+      ".kggggggggggggk.",
+      ".kgggggggggwkdk.",
+      ".kggggggggggddk.",
+      ".kgggggggggdddk.",
+      "..kgggggggdddk..",
+      "..kdddgggddddk..",
+      "..kdddkkkkdddk..",
+      "...kkk....kkk...",
+    ],
+  },
+  "robo-vault-cannon-turret": {
+    palette: {"k":"#15131f","m":"#aeb6c4","l":"#dfe4ee","n":"#5a6478","y":"#ffe85c","r":"#ff3b4a"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "..............k.",
+      ".............kyk",
+      "......kkkk..knyk",
+      ".....kmmmmkknnnk",
+      "....kmmmmmnnnnk.",
+      "....kmmmmnnnnk..",
+      "....kmmrnnnnk...",
+      "...kkmmmnnnkk...",
+      "..kmllmmmmllmk..",
+      "..kmmmmmmmmmmk..",
+      "..kmmmmmmmmmmk..",
+      "..knnnnnnnnnnk..",
+      "...kkkkkkkkkk...",
+    ],
+  },
+  "robo-vault-saw-blade": {
+    palette: {"k":"#15131f","m":"#c5ccd8","n":"#7a8498","w":"#ffffff"},
+    rows: [
+      ".......k........",
+      "......kmk.......",
+      "...k.kkkkkk.k...",
+      "..kmkmmmmmmkmk..",
+      "...kmmwmmmmmk...",
+      "..kmmwmmmmmmmk..",
+      "..kmmmmkkmmmmk..",
+      ".kkmmmkkkkmmnkk.",
+      "kmkmmmkkkkmnnknk",
+      ".kkmmmmkkmnnnkk.",
+      "..kmmmmmmnnnnk..",
+      "...kmmmmnnnnk...",
+      "..kmkmmnnnnknk..",
+      "...k.kkkkkk.k...",
+      ".......knk......",
+      "........k.......",
+    ],
+  },
+  "robo-vault-buster-shot": {
+    palette: {"k":"#15131f","y":"#ffe85c","w":"#ffffff","o":"#ff9a2e"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "................",
+      "........kkkk....",
+      "...kk..kyyyyk...",
+      "..kookkyywwyyk..",
+      ".kkkkooywwwwyk..",
+      "kooooooywwwwyk..",
+      ".kkkkooyywwyyk..",
+      "..koookkyyyyk...",
+      "...kkk..kkkk....",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "robo-vault-weapon-capsule": {
+    palette: {"k":"#15131f","o":"#f58b1f","y":"#ffd060","d":"#b3560c","w":"#ffffff"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "................",
+      "....kkkkkkkk....",
+      "...kyyyyyyyyk...",
+      "..kyyyyyyyyyyk..",
+      "..kooowowowook..",
+      "..kooowwowwook..",
+      "..kddddddddddk..",
+      "...kddddddddk...",
+      "....kkkkkkkk....",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "robo-vault-small-energy": {
+    palette: {"k":"#15131f","c":"#7fe0ff","b":"#3fa0e0","w":"#ffffff"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+      "......kkkk......",
+      ".....kcccck.....",
+      "....kccwccck....",
+      "....kcwwccck....",
+      "....kcccccbk....",
+      "....kccccbbk....",
+      ".....kccbbk.....",
+      "......kkkk......",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "robo-vault-extra-life": {
+    palette: {"c":"#00f5ff","d":"#0a6aa8","w":"#ffffff","k":"#050c0a","y":"#f5ff00"},
+    rows: [
+      "................",
+      "......kkkkk.....",
+      ".....kdddddk....",
+      "....kkdddddkk...",
+      "...kddcccccddk..",
+      "..kdccckwwwccdk.",
+      "..kdccckwwwccdk.",
+      "..kdccckkkkccdk.",
+      "...kddcccccddk..",
+      "...kcccdddccck..",
+      "....kkkkkkkkk...",
+      "............k...",
+      "...........kyk..",
+      "..........kyyyk.",
+      "...........kyk..",
+      "............k...",
+    ],
+  },
+  "robo-vault-four-leaf-clover": {
+    palette: {"k":"#15131f","g":"#3fb950","d":"#238636","h":"#9af0a8","b":"#8a5a2a"},
+    rows: [
+      "................",
+      "....kk....kk....",
+      "...kggk..kggk...",
+      "..khhggkkhhggk..",
+      ".kgggggggggggdk.",
+      ".kggggggggggddk.",
+      "..kggggkkggddk..",
+      "...kggkddkddk...",
+      "..khhgkdgkddk...",
+      "..kggggkbddddk..",
+      ".kgggggdbdddddk.",
+      ".kggggddddddddk.",
+      "..kggddkkbdddk..",
+      "...kddk.kbddk...",
+      "....kk...kbk....",
+      "..........k.....",
+    ],
+  },
+  "robo-vault-boss-gate": {
+    palette: {"k":"#15131f","m":"#7a8498","d":"#3a4052","r":"#c8283a","y":"#ffe85c","l":"#c5ccd8"},
+    rows: [
+      "...kkkkkkkkkk...",
+      "..kmmmmmmmmmmk..",
+      "..kmlmmmmmmlmk..",
+      "..kddddddddddk..",
+      "..kmmmmmmmmmmk..",
+      "..kmmmrrrrmmmk..",
+      "..kdddryyrdddk..",
+      "..kmmmryyrmmmk..",
+      "..kmmmrrrrmmmk..",
+      "..kdddrrrrdddk..",
+      "..kmmmmmmmmmmk..",
+      "..kmmmmmmmmmmk..",
+      "..kddddddddddk..",
+      "..kmmmmmmmmmmk..",
+      "..kmmmmmmmmmmk..",
+      "...kkkkkkkkkk...",
+    ],
+  },
+  "robo-vault-password-dots": {
+    palette: {"k":"#15131f","g":"#52f06a","d":"#1f4a2a"},
+    rows: [
+      ".kk.kk.kk.kk.kk.",
+      "kggkddkddkggkddk",
+      "kggkddkddkggkddk",
+      ".kk.kk.kk.kk.kk.",
+      "kddkggkddkddkggk",
+      "kddkggkddkddkggk",
+      ".kk.kk.kk.kk.kk.",
+      "kddkddkggkddkddk",
+      "kddkddkggkddkddk",
+      ".kk.kk.kk.kk.kk.",
+      "kggkddkddkggkddk",
+      "kggkddkddkggkddk",
+      ".kk.kk.kk.kk.kk.",
+      "kddkggkddkddkggk",
+      "kddkggkddkddkggk",
+      ".kk.kk.kk.kk.kk.",
+    ],
+  },
+  "marcy-vampire-hunter-marcy-delrre": {
+    palette: {"k":"#15131f","h":"#7a4a2a","f":"#ffd2a8","g":"#2fa84f","l":"#7fe09a","s":"#d8dde8"},
+    rows: [
+      ".....kkhhkk.....",
+      "....khhhhhhkkk..",
+      "...khhhhhhhhssk.",
+      "...khhhhhhhhkksk",
+      "...khhffffhhkksk",
+      "...khhkffkhhkksk",
+      "..khhhffffhhhsk.",
+      "..khhhffffhhhsk.",
+      "..khhgfllfghssk.",
+      "..khhggllgghsk..",
+      "..khhggllgghhk..",
+      "..khgggllggghk..",
+      "...kgggllgggk...",
+      "...kgggllgggk...",
+      "....kkkllkkk....",
+      ".......kk.......",
+    ],
+  },
+  "marcy-vampire-hunter-frankford-delrre": {
+    palette: {"k":"#15131f","y":"#f2c84a","f":"#ffd2a8","B":"#3a5fc8","o":"#c88a2e","s":"#e8edf6"},
+    rows: [
+      ".....kkkkkk..k..",
+      "....kyyyyyykksk.",
+      "...kyyyyyyyyksk.",
+      "...kyyyyyyyyksk.",
+      "...kyyfffffyksk.",
+      "...kyyfkfkfyksk.",
+      "...kyyfffffyksk.",
+      "....kyfffffkksk.",
+      "...kkBBBBBBkksk.",
+      "..kBBBBBBBBBBsk.",
+      "..kBBBBBBBBBoook",
+      "..kBBooooooBBok.",
+      "..kBBBBBBBBBBk..",
+      "...kkooooookk...",
+      "....kooooook....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "marcy-vampire-hunter-count-faust": {
+    palette: {"k":"#15131f","r":"#a8182c","R":"#ff3b4a","p":"#e8dcd0","d":"#1a1224","w":"#ffffff"},
+    rows: [
+      "................",
+      ".....kkkkkk.....",
+      "....kddddddk....",
+      "...kkddddddk....",
+      "..krrpppppprk...",
+      "..krrpRppRprrk..",
+      "..krrpppppprrk..",
+      ".krrrpppppprrrk.",
+      ".krrrrpwwprrrrk.",
+      ".krrrrdwwdrrrrk.",
+      ".krrrrdwwdrrrrk.",
+      ".krrrddwwdrrrrk.",
+      "krrrrddddddrrrrk",
+      "krrrrddddddrrrrk",
+      ".kkkkkkkkkkkkkk.",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-hollow-king": {
+    palette: {"k":"#15131f","y":"#f2c84a","w":"#efe8d8","c":"#7fe9ff","d":"#1a1224","p":"#5a2a8a"},
+    rows: [
+      "................",
+      ".......kk..k....",
+      "....k.kyykkyk...",
+      "...kykyyyyyyk...",
+      "...kyyywwyyyk...",
+      "....kwwwwwwk....",
+      "....kwwwwwwk....",
+      "...kwwccwccwk...",
+      "....kwwwwwwk....",
+      "....kwwwdwwk....",
+      "....kppppppk....",
+      "...kppddddppk...",
+      "...kppdwwdppk...",
+      "...kppddddppk...",
+      "..kpppddddpppk..",
+      "...kkkkkkkkkk...",
+    ],
+  },
+  "marcy-vampire-hunter-credit-coin": {
+    palette: {"k":"#15131f","y":"#ffd21f","o":"#c88a00","w":"#fffbe0"},
+    rows: [
+      "................",
+      ".....kkkkkk.....",
+      "....kyyyyyyk....",
+      "...kywyooyyyk...",
+      "..kywooyyooyyk..",
+      ".kywoyyyyyyoyyk.",
+      ".kyyoyooooyoyyk.",
+      ".kyoyyoyyyyyoyk.",
+      ".kyoyyoyyyyyoyk.",
+      ".kyyoyoyyyyoyyk.",
+      ".kyyoyooooyoyyk.",
+      "..kyyooyyooyyk..",
+      "...kyyyooyyyk...",
+      "....kyyyyyyk....",
+      ".....kkkkkk.....",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-stone-gargoyle": {
+    palette: {"k":"#15131f","g":"#9aa3b2","d":"#555d70","r":"#ff3b4a"},
+    rows: [
+      ".....k...kgk....",
+      "....kgkkkggk....",
+      "....kgkggkgk....",
+      "k...kggggggk..k.",
+      "dkkkkggggggkkkdk",
+      "ddddkggrgrgddddk",
+      "dddddggggggdddk.",
+      "kddddggddggdddk.",
+      "kdddgggggggdddk.",
+      ".kddggggggdddk..",
+      "..kkdggggddkk...",
+      "....kgggdddk....",
+      ".....kgdddk.....",
+      ".....kddkddk....",
+      ".....kddkddk....",
+      "......kk.kk.....",
+    ],
+  },
+  "marcy-vampire-hunter-bone-drake": {
+    palette: {"k":"#15131f","w":"#efe8d8","b":"#a89a7a","r":"#ff3b4a","d":"#3a2a24"},
+    rows: [
+      "................",
+      ".....kk.........",
+      "....kbbkkk......",
+      "....kbbbwwkk....",
+      "...kkbbwwwwwk...",
+      "..kwbwwwwwrrwk..",
+      ".kwwwwwwwwwwwk..",
+      "kwwwwwwwwwwwwwk.",
+      ".kkwwwwwwdddddk.",
+      "..kwwwwwkwkwkwk.",
+      "...kwkkkkk.k.k..",
+      "..kbbkkbbkk.....",
+      "..kbbbbbbbbk....",
+      "...kkbbkkbbk....",
+      ".....kk..kk.....",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-vitality-crest": {
+    palette: {"k":"#15131f","y":"#f2c84a","r":"#c8283a","w":"#fff4f4","p":"#ff8a9a"},
+    rows: [
+      "................",
+      "..kkkkkkkkkkkk..",
+      ".kyyyyyyyyyyyyk.",
+      ".kyyyyyyyyyyyyk.",
+      ".kyyrrrrrrrryyk.",
+      ".kyyrprwwrrryyk.",
+      ".kyyrrrwwrrryyk.",
+      ".kyyrwwwwwwryyk.",
+      ".kyyrwwwwwwryyk.",
+      ".kyyyrrwwrryyk..",
+      "..kyyyrwwryyk...",
+      "...kyyyrryyk....",
+      "....kyyyyyk.....",
+      ".....kyyyk......",
+      "......kyk.......",
+      ".......k........",
+    ],
+  },
+  "marcy-vampire-hunter-mist-relic": {
+    palette: {"k":"#15131f","b":"#4a7ad0","c":"#9fd0ff","w":"#ffffff"},
+    rows: [
+      "................",
+      "......kkkk......",
+      "....kkbbbbkk....",
+      "...kbbbccbbbk...",
+      "..kbbcwccccbbk..",
+      "..kbcwccccccbk..",
+      ".kbbcccwwcccbbk.",
+      ".kbcccwwwwccbbk.",
+      ".kbccwwcccwbbbk.",
+      ".kbbwwccccwbbbk.",
+      "..kbcccccbbwbk..",
+      "..kbbcccbbbwbk..",
+      "...kbbbbbbbbk...",
+      "....kkbbbbkk....",
+      "......kkkk......",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-medusa-head": {
+    palette: {"k":"#15131f","g":"#7acb5a","d":"#2f6a2a","y":"#ffe85c","s":"#4f9a3c","w":"#ffffff"},
+    rows: [
+      "....kdkdddkdk...",
+      "...kdddkdkdddk..",
+      "..kdddk.k.kdddk.",
+      ".kdddkkkkkkkdddk",
+      "..kdkggggggkkdk.",
+      ".kddggggggggddk.",
+      ".kdkggggggggkkdk",
+      "kddgggygggyggddd",
+      ".kdgggygggyggkdk",
+      "..kgggggggggskk.",
+      "...kgggggggsk...",
+      "...kgggkkkssk...",
+      "....kggwgwsk....",
+      ".....kkkkkk.....",
+      "................",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-azure-medusa-head": {
+    palette: {"k":"#15131f","g":"#6fb0f0","d":"#2a4a9a","s":"#3f78c8","w":"#ffffff"},
+    rows: [
+      "....kdkdddkdk...",
+      "...kdddkdkdddk..",
+      "..kdddk.k.kdddk.",
+      ".kdddkkkkkkkdddk",
+      "..kdkggggggkkdk.",
+      ".kddggggggggddk.",
+      ".kdkggggggggkkdk",
+      "kddgggwgggwggddd",
+      ".kdgggwgggwggkdk",
+      "..kgggggggggskk.",
+      "...kgggggggsk...",
+      "...kgggkkkssk...",
+      "....kggwgwsk....",
+      ".....kkkkkk.....",
+      "................",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-treasure-chest": {
+    palette: {"k":"#15131f","b":"#a0602a","d":"#5a3414","y":"#f2c84a"},
+    rows: [
+      "................",
+      "................",
+      "...kkkkkkkkk....",
+      "..kbbybbbbybk...",
+      "..kbbybbbbybk...",
+      ".kbbbybbbbybbk..",
+      ".kbbbybyybybbk..",
+      ".kyyyyyyyyyyyyk.",
+      ".kbbbybkkbybbbk.",
+      ".kbbbybyybybbbk.",
+      ".kbbbybbbbybbbk.",
+      ".kbbbybbbbybbbk.",
+      ".kbbbybbbbybbbk.",
+      ".kddddddddddddk.",
+      "..kkkkkkkkkkkk..",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-skeleton": {
+    palette: {"k":"#15131f","w":"#efe8d8"},
+    rows: [
+      "......kkkk......",
+      ".....kwwwwk.....",
+      "....kwwwwwwk....",
+      "....kwwkwkwk....",
+      "....kwwwwwwk....",
+      ".....kwwkwk.....",
+      "....kkkkwkkkk...",
+      "...kwwwwwwwwwk..",
+      "...kwkkkwkkkwk..",
+      "..kwkwwwwwwwkwk.",
+      "..kwkkkkwkkkkwk.",
+      ".kwwkwwwwwwwkwwk",
+      ".kwk.kkkwkkk.kwk",
+      "..k..kwwkwwk..k.",
+      ".....kwwkwwk....",
+      "......kk.kk.....",
+    ],
+  },
+  "marcy-vampire-hunter-zombie": {
+    palette: {"k":"#15131f","g":"#7acb5a","q":"#4f9a3c","r":"#ff3b4a","b":"#8a5a3a","d":"#3a2a24"},
+    rows: [
+      ".....kkkk.......",
+      "....kggggk......",
+      "...kggggggk.....",
+      "...kggggggk.....",
+      "...kggrggrk.....",
+      "...kggkkkqk.....",
+      "....kggqqkkkkkk.",
+      "...kbbbbbbqqqqqk",
+      "...kbbbbbbqqqqqk",
+      "...kbbbbbbkkkkk.",
+      "...kbbbbbbk.....",
+      "...kbbbqbbk.....",
+      "...kbqbbbbk.....",
+      "....kddkddk.....",
+      "....kddkddk.....",
+      ".....kk.kk......",
+    ],
+  },
+  "marcy-vampire-hunter-crimson-bat": {
+    palette: {"k":"#15131f","r":"#c8283a","d":"#2a1224","y":"#ffe85c"},
+    rows: [
+      "................",
+      ".k............k.",
+      "krkk........kkrk",
+      "krrrk..kkk.krrrk",
+      "krrrrkkdddkrrrrk",
+      ".krrrrddddrrrrk.",
+      ".krrrrdydyrrrrk.",
+      ".krkrrddddrrkrk.",
+      "..kkrrddddrk.k..",
+      "....kkkddkrk....",
+      ".......kk.k.....",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-candelabra": {
+    palette: {"k":"#15131f","y":"#d8a830","w":"#fff4d0","o":"#ff9a2e"},
+    rows: [
+      "................",
+      ".......k........",
+      "...k..kok...k...",
+      "..kok.kook.kok..",
+      "..kwk.kwwk.kwk..",
+      "..kwk.kwwk.kwk..",
+      "..kyk.kyyk.kyk..",
+      "..kyykkyykkyyk..",
+      "...kykkyykkyk...",
+      "....kyyyyyyk....",
+      ".....kkyykk.....",
+      "......kyyk......",
+      "....kkkyykkk....",
+      "...kyyyyyyyyk...",
+      "...kyyyyyyyyk...",
+      "....kkkkkkkk....",
+    ],
+  },
+  "marcy-vampire-hunter-wandering-ghost": {
+    palette: {"k":"#15131f","w":"#f0f2ff","l":"#bcc4e0"},
+    rows: [
+      "......kkk.......",
+      ".....kwwwkk.....",
+      "....kwwwwwwk....",
+      "...kwwwwwwwwk...",
+      "...kwwwwwwwwk...",
+      "..kwwwwwwwwwwk..",
+      "..kwwkkwwkkwwk..",
+      "..kwwkkwwkkwwk..",
+      "..kwwkkwwkkwlk..",
+      "..kwwwwwwwwllk..",
+      "..kwwwwkkklllk..",
+      "..kwwwwwwllllk..",
+      "..kwwwwwlllllk..",
+      "..kwwwklllkllk..",
+      "..kwwk.klk.klk..",
+      "...kk...k...k...",
+    ],
+  },
+  "marcy-vampire-hunter-armor-knight": {
+    palette: {"k":"#15131f","m":"#b8c0d0","n":"#6a7388","d":"#1a2030","r":"#c8283a"},
+    rows: [
+      "......kkrrrk....",
+      ".....kmmmrrrk...",
+      "....kmmmmmmrk...",
+      "...kmmmmmmmmk...",
+      "...kmdddmddmk...",
+      "...kmdddmddmk...",
+      "...kmmmmmmmmk...",
+      "....kmmmmmmk....",
+      "..kkkkmmmmkkkk..",
+      ".knnmmmmmmmnnnk.",
+      ".knnmmmmmmnnnnk.",
+      ".knnmmmmmnnnnnk.",
+      ".knnmmmmnnnnnnk.",
+      "..kkmnnnnnnnkk..",
+      "....knnnnnnk....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "marcy-vampire-hunter-health-potion": {
+    palette: {"k":"#15131f","b":"#a0602a","c":"#cfe4ff","r":"#e8344b","w":"#ffffff"},
+    rows: [
+      ".......kk.......",
+      "......kbbk......",
+      "......kbbk......",
+      "......kcck......",
+      "......kcck......",
+      ".....kkcckk.....",
+      "....kcccccck....",
+      "...kcccccccck...",
+      "...kcccccccck...",
+      "..kccrrrrrrcck..",
+      "..kcrrwrrrrrck..",
+      "...kcrwrrrrck...",
+      "...kcrrrrrrck...",
+      "....kcrrrrck....",
+      ".....kkkkkk.....",
+      "................",
+    ],
+  },
+  "marcy-vampire-hunter-blue-flame": {
+    palette: {"k":"#15131f","b":"#3f6ae0","c":"#8fd0ff","w":"#ffffff"},
+    rows: [
+      ".......kk.......",
+      "......kbbk......",
+      ".....kbbbk......",
+      ".....kbbbbk.....",
+      "....kbbbbbbk....",
+      "....kbbccbbk....",
+      "....kbbcccbbk...",
+      "...kbbccccbbk...",
+      "..kbbbccccbbbk..",
+      "..kbbccwccbbbk..",
+      "..kbbccwwcbbbk..",
+      "...kbccwwcbbk...",
+      "...kbbccccbbk...",
+      "....kbbccbbk....",
+      ".....kkbbkk.....",
+      ".......kk.......",
+    ],
+  },
+  "wingshot-orbit-astronaut": {
+    palette: {"k":"#15131f","w":"#f4f6fb","l":"#c2c9d8","v":"#1f3a7a","o":"#ff8a2e","g":"#8a93a6"},
+    rows: [
+      ".....kkkkkk.....",
+      "....kwwwwwwk....",
+      "...kwwwvvwwwk...",
+      "...kwvvlvvvwk...",
+      "..kwwvlvvvvwwk..",
+      "..kwwvvvvvvwwk..",
+      "...kwvvvvvvwk...",
+      ".kkkwwvvvvwwkkk.",
+      "kggkkwwwwwwkkggk",
+      "kggwwwwwwwwwlggk",
+      "kggwwwoooowllggk",
+      "kggwwwoooolllggk",
+      "kggwwwwwwllllggk",
+      ".kkkkwwwlllkkkk.",
+      "....kwwllllk....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "wingshot-lake-fisherman": {
+    palette: {"k":"#15131f","y":"#e8c860","f":"#ffd2a8","B":"#3a78c8","b":"#8a5a2a","s":"#d8dde8"},
+    rows: [
+      ".....kkkkkk.....",
+      "....kyyyyyyk...k",
+      "...kyyyyyyyyk.ks",
+      "..kyyyyyyyyyykks",
+      ".kyyyyyyyyyyyybs",
+      "..kkkkfffffkkkbs",
+      ".....kfkfkfk.kbs",
+      ".....kfffffkkbks",
+      "...kkkfffffkkbks",
+      "..kBBBBBBBBBbbkk",
+      "..kBBBBBBBBBbk..",
+      "..kBBBBBBBBBk...",
+      "..kBBBBBBBBBk...",
+      "...kkBBBBBBBk...",
+      "....kBBBBBBBk...",
+      ".....kkkkkkk....",
+    ],
+  },
+  "wingshot-plague-doctor": {
+    palette: {"k":"#15131f","d":"#2a2430","p":"#e8dcc0","y":"#ffd24a","g":"#6a6478"},
+    rows: [
+      "......kkkk......",
+      ".....kddddk.....",
+      "....kkddddkk....",
+      "...kddddddddk...",
+      "....kddddddk....",
+      "....kyyydddk....",
+      "...kdykypdddk...",
+      "....kdddpppk....",
+      "....kdddppppk...",
+      "....kddddddpk...",
+      "...kdddggdddpk..",
+      "...kdddggdddk...",
+      "...kdddggdddk...",
+      "..kddddggddddk..",
+      "...kkkkkkkkkk...",
+      "................",
+    ],
+  },
+  "wingshot-dusk-samurai": {
+    palette: {"k":"#15131f","r":"#c8283a","y":"#e8c860","f":"#ffd2a8","d":"#2a2430","s":"#e8edf6"},
+    rows: [
+      "....kkkkkkkk....",
+      "...krrrrrrrrk...",
+      "...krrrrrrrrk...",
+      "..krrrrrrrrrsk..",
+      "..krrrrrrrrrsk..",
+      ".kyyyyyyyyyysyk.",
+      "..kkkkffffkksk..",
+      ".....kkffkkksk..",
+      "....kkffffkksk..",
+      "...kdddddddksk..",
+      "...kdddddddksk..",
+      "...krrrrrrrrsk..",
+      "...kdddddddyyyk.",
+      "...kdddddddksk..",
+      "....kkkkkkk.k...",
+      "................",
+    ],
+  },
+  "wingshot-golden-target": {
+    palette: {"k":"#15131f","y":"#ffd21f","w":"#fffbe0","o":"#e09a00","r":"#c8283a"},
+    rows: [
+      "................",
+      "....kkkkkkk.....",
+      "...kwyyyyyykk...",
+      "..kwyywwwwyyyk..",
+      "..kyywwwwwwyyk..",
+      ".kyywwoooowwyyk.",
+      ".kywwoorroowwyk.",
+      ".kywworrrrowwyk.",
+      ".kywworrrrowwyk.",
+      ".kywwoorroowwyk.",
+      ".kyywwoooowwyyk.",
+      "..kyywwwwwwyyk..",
+      "..kyyywwwwyyyk..",
+      "...kkyyyyyykk...",
+      ".....kkkkkk.....",
+      "................",
+    ],
+  },
+  "wingshot-reed-dragonfly": {
+    palette: {"k":"#15131f","g":"#2fb5a8","w":"#d8f4ff","r":"#ff3b4a","t":"#1b6e66"},
+    rows: [
+      "................",
+      ".......kk.......",
+      "......kggk......",
+      "...kkkgrrgkkk...",
+      ".kkwwkggggkwwkk.",
+      "kwwwwwwggwwwwwwk",
+      "kwwwwwwggwwwwwwk",
+      ".kkwwkkttkkwwkk.",
+      ".kwwwwwggwwwwwk.",
+      ".kwwwwwggwwwwwk.",
+      "..kkkkkggkkkkk..",
+      "......kggk......",
+      "......kggk......",
+      "......kggk......",
+      "......kggk......",
+      ".......kk.......",
+    ],
+  },
+  "wingshot-moor-moth": {
+    palette: {"k":"#15131f","p":"#8a78a8","d":"#2a2236","w":"#f0e8ff"},
+    rows: [
+      ".....k.....k....",
+      ".k..kdk...kdk.k.",
+      "kpk.kddk.kddkkpk",
+      "kppk.kdk.kdkkppk",
+      "kpppkkkdkdkppppk",
+      "kpppwpkddkpwpppk",
+      "kppppppddppppppk",
+      "kppppwddddwppppk",
+      "kpppppddddpppppk",
+      ".kpppppddpppppk.",
+      "..kkkpkddkpkkk..",
+      ".....k.kk.k.....",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "wingshot-shooting-comet": {
+    palette: {"k":"#15131f","y":"#ffe85c","w":"#ffffff","o":"#ff9a2e"},
+    rows: [
+      ".kkk..k.........",
+      "koookkok........",
+      "kooookook.......",
+      ".kowookook......",
+      "..koowokook.....",
+      ".kkkooookok.....",
+      "kookkooookokk...",
+      ".kookkkoooyoyk..",
+      "..kkokkkooowyyk.",
+      "....kookyoowwyk.",
+      ".....kooywwwwyk.",
+      "......kkoywwyyk.",
+      "........kyyyyk..",
+      ".........kkkk...",
+      "................",
+      "................",
+    ],
+  },
+  "wingshot-paper-crane": {
+    palette: {"k":"#15131f","w":"#fbfaf6","l":"#c8c4d4","r":"#e0402a"},
+    rows: [
+      "................",
+      "................",
+      ".k............k.",
+      "kwkk.........kwk",
+      ".krrk......kkwrr",
+      "..kwkk....kwwwkk",
+      "...kwwk..kwwwk..",
+      "....kwwkkwwwwk..",
+      "....kkwkkwkklk..",
+      "...klwwwwwwkk...",
+      "..kllwwwwwk.....",
+      ".klkkkwwwk......",
+      "..k...kwk.......",
+      ".......k........",
+      "................",
+      "................",
+    ],
+  },
+  "wingshot-decoy-balloon": {
+    palette: {"k":"#15131f","r":"#ee4b5a","d":"#a8182c","w":"#ffd0d6","s":"#c8c4d4"},
+    rows: [
+      "......kkkk......",
+      ".....krrrrk.....",
+      "....krrrrrrk....",
+      "...krrwrrrrrk...",
+      "...krwrrrrrrk...",
+      "...krrrrrrrrk...",
+      "...krrrrrrrdk...",
+      "...krrrrrrddk...",
+      "...krrrrrdddk...",
+      "....krrrdddk....",
+      ".....krdddk.....",
+      "......kdddk.....",
+      ".......ksk......",
+      ".......ksk......",
+      ".......ksk......",
+      ".......ksk......",
+    ],
+  },
+  "wingshot-tin-can": {
+    palette: {"k":"#15131f","m":"#aeb6c4","l":"#dfe4ee","n":"#6a7388","r":"#c8283a","w":"#fff4f4"},
+    rows: [
+      "................",
+      "................",
+      "....kkkkkkkk....",
+      "...kllllllllk...",
+      "...kllllllllk...",
+      "...kmlmmmmmmk...",
+      "...krrrrrrrrk...",
+      "...krrwwwwrrk...",
+      "...krrwwwwrrk...",
+      "...krrrrrrrrk...",
+      "...krrrrrrrrk...",
+      "...kmmmmmmmmk...",
+      "...knnnnnnnnk...",
+      "...knnnnnnnnk...",
+      "....kkkkkkkk....",
+      "................",
+    ],
+  },
+  "wingshot-gold-nugget": {
+    palette: {"k":"#15131f","y":"#ffd21f","o":"#c88a00","w":"#fffbe0"},
+    rows: [
+      ".............k..",
+      "............kwk.",
+      ".......kk..kwwwk",
+      ".....kkyykk.kwk.",
+      "....kyyyyyyk.k..",
+      "...kyywyyyyyk...",
+      "..kyywyyyyyyyk..",
+      "..kyywyyyyyyok..",
+      "..kyyyyyyyyook..",
+      ".kyyyyyyyyooook.",
+      ".kyyyyyyyooook..",
+      "..kyyyyyooook...",
+      "...kyyyooook....",
+      "....kkkkkkk.....",
+      "................",
+      "................",
+    ],
+  },
+  "super-tennis-champion-trophy": {
+    palette: {"k":"#15131f","y":"#ffd21f","o":"#c88a00","w":"#fffbe0"},
+    rows: [
+      "................",
+      "....kkkkkkkk....",
+      "...kyyyyyyyyk...",
+      "...kyywyyyyyyk..",
+      "..kyyywyyyyykok.",
+      ".kyykywyyyykkkok",
+      "..kyyyyyyyykook.",
+      "...kkyyyyyoook..",
+      ".....kyyyokkk...",
+      "......kyok......",
+      "......kook......",
+      "......kook......",
+      ".....kkookk.....",
+      "....kooooook....",
+      "....kooooook....",
+      ".....kkkkkk.....",
+    ],
+  },
+  "super-tennis-power-ball": {
+    palette: {"k":"#15131f","c":"#7fe0ff","w":"#ffffff","b":"#3f78e0"},
+    rows: [
+      "................",
+      "................",
+      ".........kk.....",
+      ".......kkcckk...",
+      ".kkk..kcccccck..",
+      "kbbbkkccwwwwcck.",
+      ".kkkbbbwwwwwwck.",
+      "kkkkkccwwwwwwcbk",
+      "bbbbbbcwwwwwwbbk",
+      "kkkkkkcwwwwwwbk.",
+      ".kkkbbbcwwwwbbk.",
+      "kbbbbkkcccbbbk..",
+      ".kkkk..kkbbkk...",
+      ".........kk.....",
+      "................",
+      "................",
+    ],
+  },
+  "super-tennis-court-paddle": {
+    palette: {"k":"#15131f","r":"#ee4b5a","w":"#ffd0d6","b":"#8a5a2a"},
+    rows: [
+      ".......kk.......",
+      "......krrk......",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krwwrk.....",
+      ".....krrrrk.....",
+      "......kbbk......",
+      "......kbbk......",
+      "......kbbk......",
+      "......kbbk......",
+      ".......kk.......",
+    ],
+  },
+  "super-tennis-tennis-ball": {
+    palette: {"k":"#15131f","y":"#d8f04a","o":"#a8c020","w":"#ffffff"},
+    rows: [
+      "................",
+      "......kkkk......",
+      "....kkyyyykk....",
+      "...kyyyyyyyykk..",
+      "..kwyyyyyyyyywk.",
+      "..kwwyyyyyyywwk.",
+      ".kyywwyyyyyywyk.",
+      ".kyyywyyyyywyok.",
+      ".kyyyywyyywyook.",
+      ".kyyywwyyywwook.",
+      "..kyywyyyyowwk..",
+      "..kywyyyyooowk..",
+      "..kwyyyyooookwk.",
+      "...kkkyoookk.k..",
+      "......kkkk......",
+      "................",
+    ],
+  },
+  "block-rain-long-block": {
+    palette: {"k":"#15131f","c":"#35d6e8","w":"#d8fbff","b":"#1b8ea0"},
+    rows: [
+      "................",
+      "......kkk.......",
+      ".....kwwck......",
+      ".....kwcbk......",
+      ".....kcbbk......",
+      ".....kwwck......",
+      ".....kwcbk......",
+      ".....kcbbk......",
+      ".....kwwck......",
+      ".....kwcbk......",
+      ".....kcbbk......",
+      ".....kwwck......",
+      ".....kwcbk......",
+      ".....kcbbk......",
+      "......kkk.......",
+      "................",
+    ],
+  },
+  "block-rain-square-block": {
+    palette: {"k":"#15131f","y":"#f8d83a","w":"#fff8c8","o":"#c89a10"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "....kkkkkk......",
+      "...kwwywwyk.....",
+      "...kwyowyok.....",
+      "...kyooyook.....",
+      "...kwwywwyk.....",
+      "...kwyowyok.....",
+      "...kyooyook.....",
+      "....kkkkkk......",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "block-rain-t-block": {
+    palette: {"k":"#15131f","p":"#a84ae0","w":"#ecd0ff","d":"#6a2a9a"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "...kkkkkkkkk....",
+      "..kwwpwwpwwpk...",
+      "..kwpdwpdwpdk...",
+      "..kpddpddpddk...",
+      "...kkkwwpkkk....",
+      ".....kwpdk......",
+      ".....kpddk......",
+      "......kkk.......",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "block-rain-s-block": {
+    palette: {"k":"#15131f","g":"#4fd05a","w":"#d8ffd8","d":"#2a8a34"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "......kkkkkk....",
+      ".....kwwgwwgk...",
+      ".....kwgdwgdk...",
+      "...kkkgddgddk...",
+      "..kwwgwwgkkk....",
+      "..kwgdwgdk......",
+      "..kgddgddk......",
+      "...kkkkkk.......",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "block-rain-z-block": {
+    palette: {"k":"#15131f","r":"#ee4b4b","w":"#ffd8d8","d":"#a02a2a"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "...kkkkkk.......",
+      "..kwwrwwrk......",
+      "..kwrdwrdk......",
+      "..krddrddkkk....",
+      "...kkkwwrwwrk...",
+      ".....kwrdwrdk...",
+      ".....krddrddk...",
+      "......kkkkkk....",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "block-rain-j-block": {
+    palette: {"k":"#15131f","b":"#4a78e8","w":"#d0e0ff","d":"#2a48a0"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "...kkk..........",
+      "..kwwbk.........",
+      "..kwbdk.........",
+      "..kbddkkkkkk....",
+      "..kwwbwwbwwbk...",
+      "..kwbdwbdwbdk...",
+      "..kbddbddbddk...",
+      "...kkkkkkkkk....",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "block-rain-l-block": {
+    palette: {"k":"#15131f","o":"#f89a2a","w":"#ffe8c0","d":"#b06010"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      ".........kkk....",
+      "........kwwok...",
+      "........kwodk...",
+      "...kkkkkkoddk...",
+      "..kwwowwowwok...",
+      "..kwodwodwodk...",
+      "..koddoddoddk...",
+      "...kkkkkkkkk....",
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+    ],
+  },
+  "block-rain-rainbow": {
+    palette: {"k":"#15131f","r":"#ee4b4b","y":"#f8d83a","g":"#4fd05a","b":"#4a78e8","w":"#f0f4ff"},
+    rows: [
+      "................",
+      "................",
+      "................",
+      "................",
+      "................",
+      "....kkkkkkkk....",
+      "...krrrrrrrrk...",
+      "..krryyyyyyrrk..",
+      ".krryyggggyyrrk.",
+      "krryyggggggyyrrk",
+      "kryygbbbbbbgyyrk",
+      "kryggbkkkkbggyrk",
+      "wwwwbbk..kbbwwww",
+      "wwwwwk....kwwwww",
+      "wwwwk......kwwww",
+      "kkkk........kkkk",
     ],
   },
 };

@@ -20,7 +20,7 @@ You are the game-jam spec writer for Arcade Vault, an online arcade where people
 2. `references/GAMES.md` and `lib/games.ts`: implemented and catalog-only games, categories (ARCADE, PUZZLE, SHOOTER, VERSUS), accent colors and covers in use.
 3. `components/game-registry.tsx`: platform features (`stats`, `linesLabel`, `appearance`, `music`, `sfx`, `levelSelect`).
 4. `CLAUDE.md`: engine rules and contracts.
-5. `specs/07-tetris-game.md`, `specs/08-arkanoid-game.md`, `specs/09-snake-game.md`: the model for format and depth. SPEC 09 is closest (no reference code, so every rule and number is a design value).
+5. `specs/07-block-rain-game.md`, `specs/08-wall-wrecker-game.md`, `specs/09-snake-game.md`: the model for format and depth. SPEC 09 is closest (no reference code, so every rule and number is a design value).
 6. `.claude/skills/add-game/template.md` (section structure) and the "Fixed platform rules" in `.claude/skills/add-game/SKILL.md`.
 7. Latest file in `supabase/migrations/` (the new migration timestamp must be later), `references/source-assets/` (art you may use), and existing `references/gameJam/` folders (the new id must not exist there).
 

@@ -122,7 +122,7 @@ Read this list once now, and come back to it when something behaves strangely.
 - **Make an original game.** Use your own name, art, sounds and music. Do not copy the assets, names or look of a commercial game, and never write a trademark in the UI. (The project's own Galactic DogFight is inspired by a classic arcade game, but it has its own name, art and audio, and never says the original name.)
 - **The site is a static export.** `next.config.ts` uses `output: "export"` to publish on GitHub Pages. There is **no server**: no API routes, no server actions, no cookies, no `proxy.ts` or `middleware.ts`. Everything your game does runs in the browser, and everything that talks to the backend goes through the Supabase client that already exists.
 - **Respect the performance rules.** Many players have no GPU acceleration, so full-screen CSS effects are the main cause of low frame rates. Do **not** add `mix-blend-mode`, animated `mask-image` or full-screen animated layers over or behind the game canvas. If you need a darkening effect, use plain transparency.
-- **Choose a canvas size.** Most games use 800x600 (4:3). Others exist: Tetris 440x600, Galactic DogFight 480x600, Arkanoid 640x480, Frogger 640x560. The canvas is scaled by CSS, so you draw in your own logical coordinates. A canvas that is not 4:3 needs `object-fit: contain` in its CSS (see Step 2).
+- **Choose a canvas size.** Most games use 800x600 (4:3). Others exist: Block Rain 440x600, Galactic DogFight 480x600, Wall Wrecker 640x480, Street Jumper 640x560. The canvas is scaled by CSS, so you draw in your own logical coordinates. A canvas that is not 4:3 needs `object-fit: contain` in its CSS (see Step 2).
 - **Choose the origin tag.** Every game declares who made it: `"ai"`, `"human"` or `"assisted"`. A game you write by hand is `"human"`; a game you write with AI help is `"assisted"`. It appears as an emoji on the Library card and as a tag on the detail page.
 - **The framework versions are new.** The project runs Next.js 16 and React 19, whose APIs differ from older tutorials. The patterns in this guide only need stable React features, but if you touch any Next-specific code, read the matching guide in `node_modules/next/dist/docs/` first.
 - **Never store game settings in `localStorage`.** Skin, theme, mute and difficulty are kept in memory on purpose.
@@ -184,7 +184,7 @@ These rules are not style preferences. Each one prevents a specific bug.
 7. **Keyboard input uses `e.code`**, not `e.key`. `e.code` is the physical key (`ArrowLeft`, `KeyA`, `Space`) and works on every keyboard layout. It also matches the touch gamepad, which sends synthetic `keydown` and `keyup` events carrying a `code`. `P` and `Escape` do nothing: pausing is the platform's button.
 8. **Call `preventDefault()` only for your game keys, and only while the game runs**, so arrow keys and space do not scroll the page, while the rest of the keyboard keeps working.
 9. **Clear held keys on `blur` and when the tab is hidden**, otherwise a key can stay "stuck" after the player switches tabs.
-10. **Engines never play sound and never vibrate.** They emit events: `onSound("catch")` and `onHaptic("death")`. The platform decides whether to play them (muted? on a phone? reduced motion?). The haptic names that already exist in `lib/haptics.ts` are `tap`, `gameover`, `brick`, `clear`, `tetris`, `split`, `fruit`, `bonus`, `pearl` and `death`. A new name needs a new pattern in that file.
+10. **Engines never play sound and never vibrate.** They emit events: `onSound("catch")` and `onHaptic("death")`. The platform decides whether to play them (muted? on a phone? reduced motion?). The haptic names that already exist in `lib/haptics.ts` are `tap`, `gameover`, `brick`, `clear`, `quad`, `split`, `fruit`, `bonus`, `pearl` and `death`. A new name needs a new pattern in that file.
 
 ### 3.4 How the game loop works (for beginners)
 
@@ -797,7 +797,7 @@ Run `npm run lint`. It should pass. The game is still not visible, because the p
 | `music`            | no       | `{ src, volume }`: one looping background track. Adds a `MUSIC ON/OFF` button.                   |
 | `sfx`              | no       | `{ sounds, volume, pauseToggle? }`: sound effects played on the engine's `onSound` events.       |
 | `levelSelect`      | no       | `{ min, max }`: a `LEVEL − NN +` selector in the paused overlay. Needs `setLevel` in the engine. |
-| `modes`            | no       | A mode picker shown before the run starts (for example Pong's player versus CPU).                |
+| `modes`            | no       | A mode picker shown before the run starts (for example Super Tennis's player versus CPU).                |
 | `difficultySelect` | no       | A difficulty selector in the paused overlay for chosen modes.                                    |
 | `touch`            | no       | `{ pad?, swipe?, hint }`: touch controls for phones.                                             |
 
@@ -850,7 +850,7 @@ Then add the entry inside `GAME_REGISTRY`:
 },
 ```
 
-If you also ship sound effects, add an `sfx` block like the one Space Invaders uses:
+If you also ship sound effects, add an `sfx` block like the one Alien Attack uses:
 
 ```ts
 sfx: {
@@ -888,7 +888,6 @@ Defined in `lib/types.ts`:
 | `cat`    | `"ARCADE"`, `"PUZZLE"`, `"SHOOTER"`, `"VERSUS"` | Category, used by the Library filters.                                     |
 | `cover`  | string                                          | Name of a CSS class in `app/globals.css`, for example `cover-dot-catcher`. |
 | `color`  | `"cyan"`, `"magenta"`, `"yellow"`, `"green"`    | Accent color of the card's PLAY button.                                    |
-| `plays`  | string                                          | Formatted play count. Use `"0"` for a new game.                            |
 | `origin` | `"ai"`, `"human"`, `"assisted"`                 | Who made the game. Hand-written games use `"human"`.                       |
 
 ### 6.2 The Dot Catcher entry
@@ -904,7 +903,6 @@ Append this to the `GAMES` array:
   cat: "ARCADE",
   cover: "cover-dot-catcher",
   color: "cyan",
-  plays: "0",
   origin: "human",
 },
 ```
@@ -983,7 +981,7 @@ Two details to double-check:
 - **`origin` is mandatory in the insert.** The column is `not null` and has no default (the migration `add_games_origin` removed the default on purpose, so a new game can never be labeled by accident). Forgetting it makes the insert fail.
 - **Apostrophes must be doubled in SQL.** `'Dot''s game'` is the way to write `Dot's game`. Check your texts for apostrophes.
 
-The existing files `supabase/migrations/20261110204111_add_space_invaders_game.sql` and `supabase/migrations/20261111014204_add_games_origin.sql` are good references.
+The existing files `supabase/migrations/20261111071959_add_wingshot_game.sql` and `supabase/migrations/20261111014204_add_games_origin.sql` are good references.
 
 ### 7.4 Apply the migration
 
@@ -1056,7 +1054,7 @@ The pad sends the same `keydown` and `keyup` events a real keyboard would, so **
 
 ### 8.3 Haptics (phone vibration)
 
-Call `onHaptic("name")` from the engine with a name that exists in `lib/haptics.ts` (`tap`, `gameover`, `brick`, `clear`, `tetris`, `split`, `fruit`, `bonus`, `pearl`, `death`). To invent a new one, add it to the `HapticKind` type and to `HAPTIC_PATTERNS` in that file. The platform only vibrates on touch layouts, when the browser supports it, when the player has haptics on, and when reduced motion is not requested.
+Call `onHaptic("name")` from the engine with a name that exists in `lib/haptics.ts` (`tap`, `gameover`, `brick`, `clear`, `block-rain`, `split`, `fruit`, `bonus`, `pearl`, `death`). To invent a new one, add it to the `HapticKind` type and to `HAPTIC_PATTERNS` in that file. The platform only vibrates on touch layouts, when the browser supports it, when the player has haptics on, and when reduced motion is not requested.
 
 ### 8.4 Sound effects and music
 
@@ -1078,7 +1076,7 @@ The platform adds the mute button, remembers the choice in memory only, and play
 - **`modes`**: the CRT shows a mode picker before the run starts, and the chosen id arrives as the `mode` prop. The engine reads it once, in its options.
 - **`difficultySelect`**: the paused overlay shows difficulty options, and the wrapper calls `engine.setDifficulty(id)` in an effect. Changing difficulty restarts the match.
 
-Study Space Invaders (`levelSelect`) and Pong (`modes` and `difficultySelect`) for working examples.
+Study Alien Attack (`levelSelect`) and Super Tennis (`modes` and `difficultySelect`) for working examples.
 
 ### 8.6 Pins
 
@@ -1185,15 +1183,15 @@ Run through this list before opening a pull request.
 The best teacher is the code of the existing games. Read them roughly in this order, from simplest to most complex:
 
 1. **Snake** (`lib/snake/`, `components/snake-canvas.tsx`): a small engine with swipe controls, a sprite sheet and skins. Its structure is the base for the Dot Catcher example.
-2. **Space Invaders** (`lib/space-invaders/`): lives, levels, level select, sound effects, touch pad, held-key input.
-3. **Pong** (`lib/pong/`): modes (player versus CPU, local two-player), difficulty, sound effects.
+2. **Alien Attack** (`lib/alien-attack/`): lives, levels, level select, sound effects, touch pad, held-key input.
+3. **Super Tennis** (`lib/super-tennis/`): modes (player versus CPU, local two-player), difficulty, sound effects.
 4. **Galactic DogFight** (`lib/galactic-dogfight/`): the most complete example: several phases, music, many sounds, a custom canvas stats screen.
 
 Other useful places:
 
-- `specs/`: the specification of every feature, including `16-space-invaders-game.md` and `17-galactic-dogfight-game.md`. They explain why each game works the way it does.
+- `specs/`: the specification of every feature, including `16-alien-attack-game.md` and `17-galactic-dogfight-game.md`. They explain why each game works the way it does.
 - `references/GAMES.md`: the catalog of real games with controls and touch layouts.
-- `references/StarterGames/`: the original vanilla-JavaScript sources of Asteroids, Tetris and Arkanoid, useful if you want to port a plain JavaScript game.
+- `references/StarterGames/`: the original vanilla-JavaScript sources of Space Voyage, Block Rain and Wall Wrecker, useful if you want to port a plain JavaScript game.
 - `references/perf/measure-fps.md`: how to measure a game's frame time.
 - `CLAUDE.md`: the most detailed technical notes about the whole project, kept up to date.
 

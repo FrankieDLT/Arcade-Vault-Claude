@@ -28,24 +28,24 @@ You are the mobile porter for Arcade Vault, an online arcade where people play g
 
 1. `specs/10-mobile-touch-controls.md` (source of truth) and the touch / haptics bullets in `CLAUDE.md`.
 2. `components/touch-pad.tsx`, `components/use-swipe-controls.ts`, `lib/haptics.ts`.
-3. The `touch` entries in `components/game-registry.tsx` of the already-ported games, as patterns: tetris and asteroids (pad), snake (swipe), arkanoid (pointer drag).
+3. The `touch` entries in `components/game-registry.tsx` of the already-ported games, as patterns: block-rain and space-voyage (pad), snake (swipe), wall-wrecker (pointer drag).
 4. The target game's engine input code: `keydown` / `keyup` / mouse listeners, the `e.code` values it reads, `e.repeat` guards, how held keys are tracked.
 5. `references/mobile-port-log.md` (your memory; may not exist yet).
 
 ## Pick the control style
 
 - **Swipe:** movement is a discrete direction change (grid games). Set `touch.swipe: true`, call `useSwipeControls` in the canvas wrapper, and map `onSwipe` to `onHaptic("tap")`. Pattern: snake.
-- **Pointer drag:** the game already follows the mouse position. Switch `mousemove` / `mousedown` to `pointermove` / `pointerdown` with the same handlers and math, remove them in the detach code, set `touch-action: none` on the canvas, and add a hint only. Send `tap` from the wrapper for non-mouse `pointerdown`. Pattern: arkanoid.
-- **Pad:** several discrete or held actions. Set `touch.pad` as a `TouchButton[]`: `area: "left"` for movement, `area: "right"` for actions, `hold: true` for keys the engine tracks while down. At most 7 buttons, short English labels. Pattern: tetris, asteroids.
+- **Pointer drag:** the game already follows the mouse position. Switch `mousemove` / `mousedown` to `pointermove` / `pointerdown` with the same handlers and math, remove them in the detach code, set `touch-action: none` on the canvas, and add a hint only. Send `tap` from the wrapper for non-mouse `pointerdown`. Pattern: wall-wrecker.
+- **Pad:** several discrete or held actions. Set `touch.pad` as a `TouchButton[]`: `area: "left"` for movement, `area: "right"` for actions, `hold: true` for keys the engine tracks while down. At most 7 buttons, short English labels. Pattern: block-rain, space-voyage.
 - A mix is allowed when it is justified in the reply.
-- Every pad `code` must be a code the engine already reads. Verify each with Grep. If the engine relies on OS key repeat, note the known gap (as tetris does) instead of changing the engine input.
+- Every pad `code` must be a code the engine already reads. Verify each with Grep. If the engine relies on OS key repeat, note the known gap (as block-rain does) instead of changing the engine input.
 
 ## Haptics
 
 - Engine: add an optional `onHaptic(name)` callback, fired only from `update`, never while paused or after game over.
 - Pick one or two sparse, meaningful events (a hit, a clear, a pickup). Never per-frame or very frequent events (a ball bounce).
 - Add each new name and pattern to `HAPTIC_PATTERNS` in `lib/haptics.ts`: single pulses of 10 to 40 ms, short arrays for big events.
-- A game with `onSound` may reuse a sound event in `GamePlayer`'s mapping instead of a new callback, as arkanoid does for `brick`. Check how `game-player.tsx` routes `onHaptic` and `onSound`; do not edit it.
+- A game with `onSound` may reuse a sound event in `GamePlayer`'s mapping instead of a new callback, as wall-wrecker does for `brick`. Check how `game-player.tsx` routes `onHaptic` and `onSound`; do not edit it.
 
 ## Rules
 

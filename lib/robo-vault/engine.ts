@@ -71,6 +71,7 @@ import {
   emptyProgress,
   encodePassword,
   filledLabels,
+  parsePasswordText,
   passwordScore,
   type PasswordGrid,
   type Progress,
@@ -313,6 +314,8 @@ export class RoboVaultEngine {
   private pwRow = 0;
   private pwCol = 0;
   private pwMsgT = 0;
+  private pwMsg = "";
+  private pasteListening = false;
   private pwTitle = "";
   private pwNext: Screen = "select";
   /** Password screen (show mode) and victory screen: 0 = CONTINUE / FINISH, 1 = COPY. */
@@ -433,6 +436,7 @@ export class RoboVaultEngine {
   private teardown(): void {
     cancelAnimationFrame(this.raf);
     this.raf = 0;
+    this.stopPasteListener();
     window.removeEventListener("keydown", this.onKeyDown);
     window.removeEventListener("keyup", this.onKeyUp);
     window.removeEventListener("blur", this.onBlur);
@@ -616,8 +620,63 @@ export class RoboVaultEngine {
     this.pwRow = 0;
     this.pwCol = 0;
     this.pwMsgT = 0;
+    this.pwMsg = "";
     this.pwNext = "title";
     this.screen = "password";
+    this.startPasteListener();
+  }
+
+  // Ctrl+V works only while the password entry screen is open; the listener is removed on every way out.
+  private startPasteListener(): void {
+    if (this.pasteListening) return;
+    this.pasteListening = true;
+    window.addEventListener("paste", this.onPaste);
+  }
+
+  private stopPasteListener(): void {
+    if (!this.pasteListening) return;
+    this.pasteListening = false;
+    window.removeEventListener("paste", this.onPaste);
+  }
+
+  private onPaste = (e: ClipboardEvent): void => {
+    if (this.over || this.screen !== "password" || this.pwMode !== "enter") return;
+    const text = e.clipboardData?.getData("text") ?? "";
+    e.preventDefault();
+    this.applyPasted(text);
+  };
+
+  /** Fills the grid from pasted cell labels. Only fills: the player confirms with OK. */
+  private applyPasted(text: string): void {
+    const grid = parsePasswordText(text);
+    if (!grid) {
+      this.pwMsg = "NOT A PASSWORD";
+      this.pwMsgT = 2;
+      this.sound("hit");
+      return;
+    }
+    this.pwGrid = grid;
+    this.pwMsg = "PASTED";
+    this.pwMsgT = 1.5;
+    this.sound("pickup");
+  }
+
+  private pasteFromClipboard(): void {
+    const nav = typeof navigator !== "undefined" ? navigator : null;
+    const fail = () => {
+      this.pwMsg = "PRESS CTRL+V";
+      this.pwMsgT = 2.5;
+    };
+    if (!nav?.clipboard?.readText) {
+      fail();
+      return;
+    }
+    nav.clipboard.readText().then(
+      (text) => {
+        if (this.screen === "password" && this.pwMode === "enter" && !this.over) this.applyPasted(text);
+      },
+      fail,
+    );
   }
 
   private passwordKey(up: boolean, down: boolean, left: boolean, right: boolean, ok: boolean, back: boolean): void {
@@ -632,7 +691,7 @@ export class RoboVaultEngine {
     const rows = 6;
     if (up) { this.pwRow = (this.pwRow + rows - 1) % rows; this.sound("select"); }
     if (down) { this.pwRow = (this.pwRow + 1) % rows; this.sound("select"); }
-    const cols = this.pwRow === 5 ? 2 : 5;
+    const cols = this.pwRow === 5 ? 3 : 5;
     if (left) { this.pwCol = (this.pwCol + cols - 1) % cols; this.sound("select"); }
     if (right) { this.pwCol = (this.pwCol + 1) % cols; this.sound("select"); }
     if (this.pwCol >= cols) this.pwCol = cols - 1;
@@ -642,13 +701,17 @@ export class RoboVaultEngine {
       const i = this.pwRow * 5 + this.pwCol;
       this.pwGrid[i] = !this.pwGrid[i];
       this.sound("select");
-    } else if (this.pwCol === 1) {
+    } else if (this.pwCol === 0) {
+      this.pasteFromClipboard();
+    } else if (this.pwCol === 2) {
       this.sound("select");
       this.titleCursor = 1;
+      this.stopPasteListener();
       this.screen = "title";
     } else {
       const decoded = decodePassword(this.pwGrid);
-      if (!decoded) { this.pwMsgT = 2; this.sound("hit"); return; }
+      if (!decoded) { this.pwMsg = "WRONG PASSWORD"; this.pwMsgT = 2; this.sound("hit"); return; }
+      this.stopPasteListener();
       this.progress = decoded;
       this.score = decoded.score;
       this.resetNextLife();
@@ -1900,8 +1963,8 @@ export class RoboVaultEngine {
     if (lines.length === 0) this.text("(none)", 470, 172, 18, "#5a7a6a");
     lines.forEach((l, i) => this.text(l, 470, 172 + i * 28, 18, "#ffffff"));
     if (entering) {
-      ["OK", "BACK"].forEach((label, i) => {
-        const bx = 150 + i * 150;
+      ["PASTE", "OK", "BACK"].forEach((label, i) => {
+        const bx = 110 + i * 140;
         const by = 450;
         const on = this.pwRow === 5 && this.pwCol === i;
         c.fillStyle = on ? "rgba(245,255,0,0.2)" : "rgba(82,240,106,0.1)";
@@ -1911,8 +1974,8 @@ export class RoboVaultEngine {
         c.strokeRect(bx, by, 120, 44);
         this.text(label, bx + 60, by + 22, 20, "#ffffff", "center");
       });
-      this.text("SPACE: DOT / PRESS   X: CLEAR", W / 2, 530, 14, "#5a7a6a", "center");
-      if (this.pwMsgT > 0) this.text("WRONG PASSWORD", 470, 400, 26, "#ff3b6b");
+      this.text("SPACE: DOT   X: CLEAR   CTRL+V: PASTE", W / 2, 530, 14, "#5a7a6a", "center");
+      if (this.pwMsgT > 0) this.text(this.pwMsg, 470, 400, 26, this.pwMsg === "PASTED" ? "#52f06a" : "#ff3b6b");
     } else {
       this.text(`SCORE ${this.progress.score}`, 470, 380, 18, "#f5ff00");
       this.text("WRITE THE DOTS DOWN, OR COPY THEM.", W / 2, 462, 16, "#9fe8ff", "center");

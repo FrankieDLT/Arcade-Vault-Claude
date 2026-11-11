@@ -11,7 +11,7 @@ Rule of the whole job: **no fix lands before a number says it is needed.** Measu
 
 ## Scope
 
-- The game id comes from the prompt (`asteroids`, `tetris`, `arkanoid`, `snake`, `glowmaw`, `frogger`, or a later real game listed in `references/GAMES.md`). With no id, stop and ask for one.
+- The game id comes from the prompt (`space-voyage`, `block-rain`, `wall-wrecker`, `snake`, `glowmaw`, `street-jumper`, or a later real game listed in `references/GAMES.md`). With no id, stop and ask for one.
 - If the game is catalog-only (`getGameDefinition(gameId)` is `undefined` in `components/game-registry.tsx`), stop and say it needs a real engine first.
 - Allowed edits, for the named game only:
   - Files in `lib/<game>/`.

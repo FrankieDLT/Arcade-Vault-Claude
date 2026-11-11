@@ -6,37 +6,37 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 
 | Game      | Id          | Origin | Category | Accent  | Engine           | Skins                                                  | Extras                                              |
 | --------- | ----------- | ------ | -------- | ------- | ---------------- | ------------------------------------------------------ | --------------------------------------------------- |
-| Asteroids | `asteroids` | ai     | SHOOTER  | cyan    | `lib/asteroids/` | Retro, Neon, Pastel, Gothic, Negative, Amber CRT, Deep Sea | Power-ups: Bomb, Hyper, Shield, SlowMo, Triple shot |
-| Tetris    | `tetris`    | ai     | PUZZLE   | green   | `lib/tetris/`    | Retro, Neon, Pastel, Pixel Art (plus dark/light theme) | Background music, hold piece, ghost piece           |
-| Arkanoid  | `arkanoid`  | ai     | ARCADE   | magenta | `lib/arkanoid/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
+| Space Voyage | `space-voyage` | ai     | SHOOTER  | cyan    | `lib/space-voyage/` | Retro, Neon, Pastel, Gothic, Negative, Amber CRT, Deep Sea | Power-ups: Bomb, Hyper, Shield, SlowMo, Triple shot |
+| Block Rain    | `block-rain`    | ai     | PUZZLE   | green   | `lib/block-rain/`    | Retro, Neon, Pastel, Pixel Art (plus dark/light theme) | Background music, hold piece, ghost piece           |
+| Wall Wrecker  | `wall-wrecker`  | ai     | ARCADE   | magenta | `lib/wall-wrecker/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
 | Snake     | `snake`     | ai     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
 | Glowmaw   | `glowmaw`   | ai     | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
-| Frogger   | `frogger`   | ai     | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
-| Pong      | `pong`      | ai     | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
-| Space Invaders | `space-invaders` | ai     | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
+| Street Jumper   | `street-jumper`   | ai     | ARCADE   | green   | `lib/street-jumper/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
+| Super Tennis      | `super-tennis`      | ai     | VERSUS   | magenta | `lib/super-tennis/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
+| Alien Attack | `alien-attack` | ai     | SHOOTER | cyan | `lib/alien-attack/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
 | Galactic DogFight | `galactic-dogfight` | ai     | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
 | Robo Vault | `robo-vault` | ai     | ARCADE  | green  | `lib/robo-vault/` | `retro neon pastel gothic negative lcd-handheld sepia-reel` (CSS filters on the canvas; one palette per stage underneath) | Platformer, 4 Robot Masters with a weakness cycle, Sam's castle, dot-grid password save, music and sound effects |
 | Marcy the Vampire Hunter | `marcy-vampire-hunter` | ai | ARCADE | magenta | `lib/vampire-hunter/` | None by decision (SPEC 24): one palette per zone | Castle platformer with a map, relics, RPG levels and gear, two heroes, Turned Castle, 12x12 dot-grid password, Credit Coin, music and sound effects |
 
-### Asteroids
+### Space Voyage
 
 - **Description:** Split rocks in zero gravity and survive the field.
-- **Details:** Your ship drifts in open space. Rotate, thrust and fire to break big asteroids into smaller ones before they hit you. Grab power-ups: Bomb, Hyper, Shield, SlowMo and Triple shot.
+- **Details:** Your ship drifts in open space. Rotate, thrust and fire to break big space-voyage into smaller ones before they hit you. Grab power-ups: Bomb, Hyper, Shield, SlowMo and Triple shot.
 - **Controls:** `←` `→` rotate, `↑` thrust, `SPACE` fire.
 - **Touch (below 768px):** pad under the CRT with ◀ ▶ (rotate), THRUST (hold) and FIRE (hold). Rotate and thrust can be held together. Haptic `split` when an asteroid splits.
 - **Gamepad (GamePad menu, any width):** `left` `right` (hold) rotate, `up` and `b` THRUST (hold), `a` FIRE (hold). `down`, `x` and `y` have no action and are drawn dimmed.
 - **HUD:** score, lives, level.
 
-### Tetris
+### Block Rain
 
 - **Description:** Stack, rotate and clear lines before the stack hits the top.
 - **Details:** Seven classic pieces fall into a ten-column well. Slide, rotate and drop them to clear lines, stash one piece on hold for later and follow the ghost to aim. Gravity speeds up every 10 lines.
 - **Controls:** `←` `→` move, `↑` or `X` rotate, `↓` soft drop, `SPACE` hard drop, `S` hold, `C` slow fall.
-- **Touch (below 768px):** pad under the CRT with ◀ ▶ ▼ (hold), ⟳ rotate, DROP, HOLD and SLOW (hold). Holding ◀ ▶ moves one cell per press (the engine relies on OS key repeat, which a pad does not send). Haptics: `clear` for 1 to 3 lines, `tetris` for 4.
+- **Touch (below 768px):** pad under the CRT with ◀ ▶ ▼ (hold), ⟳ rotate, DROP, HOLD and SLOW (hold). Holding ◀ ▶ moves one cell per press (the engine relies on OS key repeat, which a pad does not send). Haptics: `clear` for 1 to 3 lines, `block-rain` for 4.
 - **Gamepad (GamePad menu, any width):** `left` `right` `down` (hold) move, `up` and `a` rotate, `b` DROP, `x` HOLD, `y` SLOW (hold). Skins: Neon (default), Retro, 80s Arcade, Wood.
 - **HUD:** score, lines, level.
 
-### Arkanoid
+### Wall Wrecker
 
 - **Description:** Break the wall, catch the power-ups and keep the ball alive.
 - **Details:** Slide the paddle, bounce the ball and smash a wall of colored bricks. Falling capsules split the ball, add a safety bar or send it into a frenzy. Every level builds a new wall and the ball gets faster.
@@ -61,7 +61,7 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 - **Touch (below 768px):** direction-only pad under the CRT (cross in the neon and retro gamepad skins, joystick in 80s Arcade and Wood); a tap sets the direction, which the engine remembers. Haptics: `pearl` (pearl eaten), `death` (life lost), `clear` (reef cleared).
 - **HUD:** score, lives, level.
 
-### Frogger
+### Street Jumper
 
 - **Description:** Cross the road and the river without becoming roadkill.
 - **Details:** Guide your frog across a road packed with cars and a river of floating logs and turtles. Fill the five goal slots on the far side to complete the round; each level speeds up the traffic and shortens the time.
@@ -71,25 +71,25 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 - **Skins:** `retro`, `neon`, `pastel`, `gothic`, `negative`, `tide-poster`, `midnight-toll` (palettes, no theme toggle).
 - **HUD:** score, lives, level (the canvas draws only the playfield and the time bar).
 
-### Pong
+### Super Tennis
 
 - **Description:** Two paddles, one ball. Beat the CPU or a friend.
 - **Details:** The arcade classic: bounce the ball past your rival's paddle. Longer rallies are worth more points, and three missed balls end the match.
 - **Rules:** 800x600 canvas, paddles 12x100 px, ball 14 px. The ball starts at 420 px/s and gains 5% per paddle hit (cap 900); a hit near the paddle edge bounces up to 55 degrees. Each time a human returns the ball they get +5 (the CPU gets nothing for hits). A goal is worth `10 x rally hits` (min 10) and costs the conceder 1 of 3 lives. PvE: only the human has lives, so the run is endless until 3 misses. PvP: the run ends when either player reaches 0 lives. The leaderboard record is the human score (PvE) or the higher of the two scores (PvP); both modes share one leaderboard.
-- **Modes:** a picker on the CRT before the run (`PVE`, `PVP`). PLAY AGAIN keeps the mode; `CHANGE MODE` in the GAME OVER modal returns to the picker. In PvE the PAUSED overlay has an `EASY` / `NORMAL` (default) / `HARD` CPU selector (`CPU` table in `lib/pong/constants.ts`). Choosing a different difficulty restarts the match (score, lives and positions reset). The human's points are multiplied by x0.75 / x1 / x1.5 (rounded), and in PvE every 3 goals the human scores add 1 unit to that multiplier (max +10 units, kept when a life is lost, reset by a new match); the `P1` tag shows it.
+- **Modes:** a picker on the CRT before the run (`PVE`, `PVP`). PLAY AGAIN keeps the mode; `CHANGE MODE` in the GAME OVER modal returns to the picker. In PvE the PAUSED overlay has an `EASY` / `NORMAL` (default) / `HARD` CPU selector (`CPU` table in `lib/super-tennis/constants.ts`). Choosing a different difficulty restarts the match (score, lives and positions reset). The human's points are multiplied by x0.75 / x1 / x1.5 (rounded), and in PvE every 3 goals the human scores add 1 unit to that multiplier (max +10 units, kept when a life is lost, reset by a new match); the `P1` tag shows it.
 - **Controls:** Player 1 `W` `S`, Player 2 `↑` `↓`. In PvE the human accepts both pairs.
 - **Touch (below 768px):** d-pad or joystick up / down = Player 1 (`KeyW` / `KeyS`); `A` = Player 2 up, `B` = Player 2 down (hold). Left, right, `X` and `Y` are dimmed. Haptic `death` when a life is lost.
 - **Sound:** `paddle`, `goal`, `gameover` (own generated `.wav` files, volume 0.2). `SOUND ON/OFF` in the PAUSED overlay shares the mute state with the button under the CRT.
 - **HUD:** score only (each side's score, lives and `P1` / `P2` / `CPU` tag are drawn on the canvas).
 
-### Space Invaders
+### Alien Attack
 
 - **Description:** Hold the line. Stop the invasion.
 - **Details:** A fleet of invaders marches down the screen, faster with every ship you destroy. Move your cannon, shoot them one by one and dodge their bombs. Clear the wave to face a faster one.
 - **Rules:** 800x600 canvas, 11x5 fleet (55 invaders, 32x24 hit boxes), cannon 44x22 at 360 px/s, one player bullet on screen at a time (600 px/s). The fleet moves 16 px per step and drops 24 px at each edge; `stepInterval(alive, level)` shortens as invaders die and as the level rises (cap 2.5x). Up to 3 bombs (240 px/s) fall from the lowest invader of a random column. Points by row: 30 / 20 / 20 / 10 / 10; wave clear +`100 x level`. 3 lives; a bomb hit pauses the game for 1.2 s and the cannon respawns at center. The run also ends at once if an invader reaches the cannon row. Waves are endless; a later wave starts lower (start row capped at level 9).
 - **Controls:** `←` `→` or `A` `D` move, `SPACE` fires (hold to keep firing). While paused, `LEVEL - NN +` restarts the wave at that level (score and lives kept).
 - **Touch (below 768px):** pad under the CRT with ◀ ▶ (hold) and `A` = FIRE (hold). Haptics: `death` (life lost), `clear` (wave cleared).
-- **Sound:** `shoot`, `hit`, `boom`, `gameover` (own generated `.wav` files in `public/game-assets/space-invaders/`, volume 0.2). The mute button under the CRT is the only toggle.
+- **Sound:** `shoot`, `hit`, `boom`, `gameover` (own generated `.wav` files in `public/game-assets/alien-attack/`, volume 0.2). The mute button under the CRT is the only toggle.
 - **HUD:** score, lives, level (the canvas draws only the playfield).
 
 ### Galactic DogFight
@@ -136,7 +136,7 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 
 ## Touch controls and haptics
 
-Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong, Space Invaders and Galactic DogFight and Robo Vault). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Space Voyage, Block Rain, Wall Wrecker and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Block Rain, Space Voyage, Glowmaw, Street Jumper, Super Tennis, Alien Attack and Galactic DogFight and Robo Vault). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Adding a game
 

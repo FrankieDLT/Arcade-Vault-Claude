@@ -64,6 +64,32 @@ export type Database = {
         }
         Relationships: []
       }
+      game_likes: {
+        Row: {
+          created_at: string
+          game_id: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          game_id: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          game_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "game_likes_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       games: {
         Row: {
           cat: string
@@ -233,6 +259,7 @@ export type Database = {
         Args: { p_game_id: string; p_score: number; p_seconds: number }
         Returns: Json
       }
+      get_game_likes: { Args: { p_game_id: string }; Returns: Json }
       pull_pin: { Args: { p_cost: number }; Returns: Json }
       royalty_of_games: {
         Args: { p_limit?: number }
@@ -244,6 +271,7 @@ export type Database = {
           total: number
         }[]
       }
+      toggle_game_like: { Args: { p_game_id: string }; Returns: Json }
     }
     Enums: {
       [_ in never]: never

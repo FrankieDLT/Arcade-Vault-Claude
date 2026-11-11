@@ -49,13 +49,13 @@ Use in phase 2 of `/add-game`. Fill the inventory from the code, not from the RE
 
 ## Duplicate matching
 
-Compare the game against each catalog entry by genre (`cat`), title and `long` text. The catalog has no placeholder games since SPEC 19: a match means the game already exists (for example Asteroids, SPEC 05). Check the live `lib/games.ts`.
+Compare the game against each catalog entry by genre (`cat`), title and `long` text. The catalog has no placeholder games since SPEC 19: a match means the game already exists (for example Space Voyage, SPEC 05). Check the live `lib/games.ts`.
 
 ## Notes on the starter games (verify against the code)
 
-- `02-asteroids`: already ported by SPEC 05 and SPEC 06. Use as the reference pattern.
-- `03-tetris`: vanilla JS, one global script, 2 canvases (board and 120x120 next piece), Spanish UI, `localStorage` keys for records, theme and skin, themes and skins to decide on.
-- `04-arkanoid`: 640x480 canvas, `dt` capped at 1/30 s, spritesheet (`assets/spritesheet.js`, `.png`) and 2 sounds, mouse click input, seeded level generator, power-ups, pause menu with level select, skins, own high score key, its own `specs/` folder with design intent.
+- `02-` (first StarterGames folder, now Space Voyage): already ported by SPEC 05 and SPEC 06. Use as the reference pattern.
+- `03-` (second StarterGames folder, now Block Rain): vanilla JS, one global script, 2 canvases (board and 120x120 next piece), Spanish UI, `localStorage` keys for records, theme and skin, themes and skins to decide on.
+- `04-` (third StarterGames folder, now Wall Wrecker): 640x480 canvas, `dt` capped at 1/30 s, spritesheet (`assets/spritesheet.js`, `.png`) and 2 sounds, mouse click input, seeded level generator, power-ups, pause menu with level select, skins, own high score key, its own `specs/` folder with design intent.
 
 ## Score sanity
 

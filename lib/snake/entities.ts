@@ -4,15 +4,17 @@ import {
   BONUS_LIFETIME,
   CELL,
   COLS,
-  FRUIT_SPRITES,
   H,
   ROWS,
-  SPRITE_BOX,
   W,
   type FruitName,
+  type SpriteName,
   type SkinPalette,
 } from "./constants";
+import { FRUIT_SPRITES, SPRITE_GRID } from "./sprites";
 import { DIRECTION_VECTORS } from "./utils";
+
+const SPRITE_SCALE = 2; // 16 px run tables drawn at 32 px (fits SPRITE_BOX)
 
 export interface Cell {
   col: number;
@@ -29,89 +31,66 @@ export interface Bonus extends Cell {
   age: number; // seconds of game time since it appeared
 }
 
-// One per engine instance. Loads fruits.png once and keeps a filtered copy for the skin.
-export class SpriteSheet {
-  private original: HTMLCanvasElement | null = null;
-  private source: HTMLCanvasElement | null = null;
+// One per engine instance. Draws the run tables of sprites.ts once per skin filter into 32x32 offscreen
+// canvases (2x, no smoothing); a frame only calls drawImage.
+export class FruitArt {
+  private readonly cache = new Map<string, Map<SpriteName, HTMLCanvasElement>>();
   private filter = "none";
-  private destroyed = false;
-  private image: HTMLImageElement | null = null;
-  loaded = false;
-  failed = false;
 
-  // onDone(true) once the sheet is ready, onDone(false) if the image failed to load.
-  // Nothing is called after destroy().
-  load(src: string, onDone: (ok: boolean) => void): void {
-    if (this.loaded) {
-      onDone(true);
-      return;
-    }
-    if (this.image) return;
-    const img = new Image();
-    this.image = img;
-    img.onload = () => {
-      if (this.destroyed) return;
-      const oc = document.createElement("canvas");
-      oc.width = img.width;
-      oc.height = img.height;
-      oc.getContext("2d")?.drawImage(img, 0, 0);
-      this.original = oc;
-      this.source = oc;
-      this.loaded = true;
-      this.applyFilter(this.filter);
-      onDone(true);
-    };
-    img.onerror = () => {
-      if (this.destroyed) return;
-      console.error("Snake: failed to load the fruit sprite sheet");
-      this.failed = true;
-      onDone(false);
-    };
-    img.src = src;
-  }
-
-  // "none" restores the original. Does nothing when ctx.filter is unsupported.
-  // Before the sheet loads the filter is remembered and applied on load.
-  applyFilter(filter: string): void {
+  setFilter(filter: string): void {
     this.filter = filter;
-    if (!this.loaded || !this.original) return;
-    if (filter === "none") {
-      this.source = this.original;
-      return;
+  }
+
+  private build(name: SpriteName): HTMLCanvasElement | null {
+    const def = FRUIT_SPRITES[name];
+    const [raw, rctx] = makeCanvas(SPRITE_GRID);
+    const [out, octx] = makeCanvas(SPRITE_GRID * SPRITE_SCALE);
+    if (!rctx || !octx) return null;
+    def.rows.forEach((row, y) => {
+      for (let x = 0; x < SPRITE_GRID; x++) {
+        if (row[x] === ".") continue;
+        rctx.fillStyle = def.palette[row[x]] ?? "#ff00ff";
+        rctx.fillRect(x, y, 1, 1);
+      }
+    });
+    octx.imageSmoothingEnabled = false;
+    // ctx.filter is missing in some browsers (Safari): the sprite then keeps its own colors.
+    if (this.filter !== "none" && "filter" in octx) octx.filter = this.filter;
+    octx.drawImage(raw, 0, 0, SPRITE_GRID * SPRITE_SCALE, SPRITE_GRID * SPRITE_SCALE);
+    return out;
+  }
+
+  get(name: SpriteName): HTMLCanvasElement | null {
+    let sprites = this.cache.get(this.filter);
+    if (!sprites) {
+      sprites = new Map();
+      this.cache.set(this.filter, sprites);
     }
-    const oc = document.createElement("canvas");
-    oc.width = this.original.width;
-    oc.height = this.original.height;
-    const octx = oc.getContext("2d");
-    if (!octx || !("filter" in octx)) return;
-    octx.filter = filter;
-    octx.drawImage(this.original, 0, 0);
-    this.source = oc;
+    let c = sprites.get(name) ?? null;
+    if (!c) {
+      c = this.build(name);
+      if (c) sprites.set(name, c);
+    }
+    return c;
   }
 
-  // Draws a fruit scaled to fit the SPRITE_BOX square, centered on (cx, cy), keeping its ratio.
-  drawFruit(ctx: CanvasRenderingContext2D, name: FruitName, cx: number, cy: number): void {
-    if (!this.loaded || !this.source) return;
-    const s = FRUIT_SPRITES[name];
-    const scale = Math.min(SPRITE_BOX / s.w, SPRITE_BOX / s.h);
-    const w = s.w * scale;
-    const h = s.h * scale;
-    ctx.drawImage(this.source, s.x, s.y, s.w, s.h, cx - w / 2, cy - h / 2, w, h);
+  // Draws a sprite centered on (cx, cy).
+  draw(ctx: CanvasRenderingContext2D, name: SpriteName, cx: number, cy: number): void {
+    const c = this.get(name);
+    if (c) ctx.drawImage(c, Math.round(cx - c.width / 2), Math.round(cy - c.height / 2));
   }
 
-  // Late onload / onerror become no-ops.
   destroy(): void {
-    this.destroyed = true;
-    if (this.image) {
-      this.image.onload = null;
-      this.image.onerror = null;
-      this.image = null;
-    }
-    this.original = null;
-    this.source = null;
-    this.loaded = false;
+    this.cache.clear();
   }
 }
+
+const makeCanvas = (size: number): [HTMLCanvasElement, CanvasRenderingContext2D | null] => {
+  const c = document.createElement("canvas");
+  c.width = size;
+  c.height = size;
+  return [c, c.getContext("2d")];
+};
 
 const cellCenter = (c: Cell): { x: number; y: number } => ({
   x: c.col * CELL + CELL / 2,
@@ -182,32 +161,9 @@ export const drawSnake = (
   }
 };
 
-const drawFlatFruit = (
-  ctx: CanvasRenderingContext2D,
-  c: Cell,
-  color: string,
-): void => {
-  const { x, y } = cellCenter(c);
-  ctx.fillStyle = color;
-  ctx.beginPath();
-  ctx.arc(x, y, SPRITE_BOX / 2 - 3, 0, Math.PI * 2);
-  ctx.fill();
-};
-
-// Waits for the sheet: nothing is drawn until it loaded or failed (then flat circles).
-export const drawFruit = (
-  ctx: CanvasRenderingContext2D,
-  fruit: Fruit,
-  sheet: SpriteSheet,
-  palette: SkinPalette,
-): void => {
-  if (sheet.failed) {
-    drawFlatFruit(ctx, fruit, palette.fallbackFruit);
-    return;
-  }
-  if (!sheet.loaded) return;
+export const drawFruit = (ctx: CanvasRenderingContext2D, fruit: Fruit, art: FruitArt): void => {
   const { x, y } = cellCenter(fruit);
-  sheet.drawFruit(ctx, fruit.sprite, x, y);
+  art.draw(ctx, fruit.sprite, x, y);
 };
 
 // `clock` is the engine clock in seconds (frozen while paused), used for the pulse and the blink.
@@ -216,7 +172,7 @@ export const drawBonus = (
   ctx: CanvasRenderingContext2D,
   bonus: Bonus,
   clock: number,
-  sheet: SpriteSheet,
+  art: FruitArt,
   palette: SkinPalette,
 ): void => {
   const remaining = Math.max(0, BONUS_LIFETIME - bonus.age);
@@ -233,6 +189,5 @@ export const drawBonus = (
   ctx.arc(x, y, radius, 0, Math.PI * 2);
   ctx.stroke();
   ctx.restore();
-  if (sheet.failed) drawFlatFruit(ctx, bonus, palette.bonusRing);
-  else sheet.drawFruit(ctx, BONUS_FRUIT, x, y);
+  art.draw(ctx, BONUS_FRUIT, x, y);
 };

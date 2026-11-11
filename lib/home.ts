@@ -18,7 +18,7 @@ export const FEATURES: Feature[] = [
   {
     icon: "GAMEPAD",
     title: "CLASSIC GAMES",
-    desc: "Arkanoid, Tetris, Snake and many more. The greatest arcade games of all time in one place.",
+    desc: "Wall Wrecker, Block Rain, Snake and many more. The greatest arcade games of all time in one place.",
     color: "cyan",
   },
   {
