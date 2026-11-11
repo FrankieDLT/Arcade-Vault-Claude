@@ -6,6 +6,7 @@ import { FroggerCanvas } from "@/components/frogger-canvas";
 import { GalacticDogfightCanvas } from "@/components/galactic-dogfight-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { RoboVaultCanvas } from "@/components/robo-vault-canvas";
+import { VampireHunterCanvas } from "@/components/vampire-hunter-canvas";
 import { PongCanvas } from "@/components/pong-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
 import { SpaceInvadersCanvas } from "@/components/space-invaders-canvas";
@@ -30,6 +31,10 @@ export interface GameCanvasProps {
   onSound?: (sound: string) => void;
   /** Robo Vault: a boss was defeated (`frostbyte`, `rematch:frostbyte`, `sam`, ...). Signed-in players earn 1 credit each. */
   onBossDefeated?: (boss: string) => void;
+  /** Marcy the Vampire Hunter: a Credit Coin was collected. Signed-in players earn 1 credit. */
+  onCreditDrop?: () => void;
+  /** Marcy the Vampire Hunter: false for guests (no coin roll). Read by the engine at every roll. */
+  canDropCredit?: () => boolean;
   /** Track switch for entries whose `music` has an `alt` track: "boss" = alt, "stage" = main. */
   onMusic?: (track: "stage" | "boss") => void;
   /** Haptic events from the engine ("clear", "tetris", "split", "fruit", "bonus"); the platform vibrates. */
@@ -519,6 +524,74 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { keys: ["▲", "SHOOT"], label: "SHOOT UP" },
         { keys: ["▼", "SHOOT"], label: "CROUCH SHOOT" },
         { keys: ["◀ W", "W ▶"], label: "WEAPON" },
+      ],
+    },
+  },
+  "marcy-vampire-hunter": {
+    Canvas: VampireHunterCanvas,
+    controls: [
+      { keys: ["←", "→"], label: "MOVE" },
+      { keys: ["SPACE"], label: "JUMP" },
+      { keys: ["X"], label: "ATTACK" },
+      { keys: ["C"], label: "SPECIAL" },
+      { keys: ["Z"], label: "DASH" },
+      { keys: ["↑"], label: "INTERACT" },
+      { keys: ["ENTER"], label: "MENU" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    music: {
+      src: withBasePath("/game-assets/marcy-vampire-hunter/music.wav"),
+      volume: 0.12,
+      // Faster, pounding organ track for boss fights.
+      alt: {
+        src: withBasePath("/game-assets/marcy-vampire-hunter/music-boss.wav"),
+        volume: 0.18,
+      },
+    },
+    sfx: {
+      sounds: {
+        whip: withBasePath("/game-assets/marcy-vampire-hunter/whip.wav"),
+        slash: withBasePath("/game-assets/marcy-vampire-hunter/slash.wav"),
+        hit: withBasePath("/game-assets/marcy-vampire-hunter/hit.wav"),
+        enemyDie: withBasePath("/game-assets/marcy-vampire-hunter/enemy-die.wav"),
+        bossHit: withBasePath("/game-assets/marcy-vampire-hunter/boss-hit.wav"),
+        bossTick: withBasePath("/game-assets/marcy-vampire-hunter/boss-tick.wav"),
+        bossDie: withBasePath("/game-assets/marcy-vampire-hunter/boss-die.wav"),
+        pickup: withBasePath("/game-assets/marcy-vampire-hunter/pickup.wav"),
+        relic: withBasePath("/game-assets/marcy-vampire-hunter/relic.wav"),
+        levelUp: withBasePath("/game-assets/marcy-vampire-hunter/level-up.wav"),
+        jump: withBasePath("/game-assets/marcy-vampire-hunter/jump.wav"),
+        dash: withBasePath("/game-assets/marcy-vampire-hunter/dash.wav"),
+        save: withBasePath("/game-assets/marcy-vampire-hunter/save.wav"),
+        death: withBasePath("/game-assets/marcy-vampire-hunter/death.wav"),
+        gameover: withBasePath("/game-assets/marcy-vampire-hunter/gameover.wav"),
+        select: withBasePath("/game-assets/marcy-vampire-hunter/select.wav"),
+        victory: withBasePath("/game-assets/marcy-vampire-hunter/victory.wav"),
+        turn: withBasePath("/game-assets/marcy-vampire-hunter/turn.wav"),
+        credit: withBasePath("/game-assets/marcy-vampire-hunter/credit.wav"),
+      },
+      volume: 0.2,
+    },
+    touch: {
+      // left / right / up / down move (up = interact, up + attack = attack up, down = crouch);
+      // A jumps (hold = higher); B attacks; X special art; Y dash. The MENU tag in the canvas opens the menu.
+      pad: [
+        { code: "ArrowLeft", label: "◀", slot: "left", hold: true },
+        { code: "ArrowRight", label: "▶", slot: "right", hold: true },
+        { code: "ArrowUp", label: "▲", slot: "up", hold: true },
+        { code: "ArrowDown", label: "▼", slot: "down", hold: true },
+        { code: "Space", label: "JUMP", slot: "a", hold: true },
+        { code: "KeyX", label: "ATTACK", slot: "b", hold: true },
+        { code: "KeyC", label: "SPECIAL", slot: "x" },
+        { code: "KeyZ", label: "DASH", slot: "y" },
+      ],
+      hint: [
+        { keys: ["◀", "▶"], label: "MOVE" },
+        { keys: ["JUMP"], label: "HOLD = HIGHER" },
+        { keys: ["ATTACK"], label: "HOLD = REPEAT" },
+        { keys: ["▲"], label: "INTERACT" },
+        { keys: ["SPECIAL", "DASH"], label: "ARTS" },
+        { keys: ["MENU TAG"], label: "OPEN MENU" },
       ],
     },
   },

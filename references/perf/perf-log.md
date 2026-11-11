@@ -350,3 +350,59 @@ Trade-off: the filter now costs about 3 to 4 ms of main-thread time per frame in
 - Contract: no react / next imports, no module-level state, callbacks unchanged. `npm run lint` and `npm run build` clean.
 
 Captures: `.pwScreencaps/perf-robo-vault-*.png`. The 60 Hz cap means the proxy shows "fits in a frame", not exact cost; confirm on real hardware, in particular a filter skin (NEON, GOTHIC, NEGATIVE) on a weak GPU.
+
+## marcy-vampire-hunter (2026-11-11, game-perf-booster)
+
+Verdict: within target, no change. No code touched (the temporary engine hook used to jump to rooms was removed).
+
+### Environment
+
+- Chrome 64-bit (system install) via playwright-core, headless, `--disable-gpu --disable-gpu-compositing` (`chrome-software`); default headless Chrome for `taskMs` / `scriptMs` split. Production build served from `out/` with a Node static server.
+- Single palette set (no skins by design). Viewports 1280x1100 and 375x812 (touch UI, pad shown), CPU throttle x1 and x4 via CDP.
+- Method: load play page, wait 1.5 s, jump into the room (engine `beginRun` + `enterRoom` through a temporary `window` hook, removed afterwards), hero HP refilled every 100 ms so the run stays active, 1.5 s settle, then 10 s recorded with a fixed pattern (ArrowRight / ArrowLeft alternating every ~0.5 s, `KeyX` attack taps, `Space` jump), first second dropped (about 540 frames kept).
+- Rooms: z9-1 (busy main castle, 48 cols, 6 enemies), z4-1 (dark main, 48 cols, 6 enemies), t4-0 and t2-1 (Turned, 48 cols, 7 enemies), z9-7 (main boss room, Crimson Herald), t9-1 (Hollow King). Enemies stayed alive and bosses were active (intro, patterns, shots) during the recordings.
+
+### Baseline table (chrome-software, x1)
+
+| Room | Viewport | avgFrameMs | p95FrameMs | longFrames | taskMs | scriptMs |
+| ---- | -------- | ---------- | ---------- | ---------- | ------ | -------- |
+| z9-1 busy | 1280 | 16.67 / 16.67 | 16.7 / 16.8 | 0 / 0 | 1.43 / 1.35 | 0.21 / 0.18 |
+| z4-1 dark | 1280 | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0 | 1.71 / 1.60 | 0.18 / 0.18 |
+| t4-0 turned | 1280 | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0 | 1.40 / 1.53 | 0.19 / 0.19 |
+| t2-1 turned | 1280 | 16.67 / 16.67 | 16.8 / 16.7 | 0 / 0 | 1.32 / 1.25 | 0.16 / 0.16 |
+| z9-7 boss | 1280 | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0 | 1.15 / 1.22 | 0.16 / 0.17 |
+| t9-1 boss | 1280 | 16.67 / 16.67 | 16.8 / 16.7 | 0 / 0 | 1.48 / 1.19 | 0.20 / 0.17 |
+| z9-1 | 375 | 16.67 | 16.7 | 0 | 0.87 | 0.19 |
+| z4-1 | 375 | 16.67 | 16.7 | 0 | 1.07 | 0.17 |
+| t4-0 | 375 | 16.67 | 16.7 | 0 | 1.13 | 0.19 |
+| t2-1 | 375 | 16.67 | 16.8 | 0 | 1.03 | 0.19 |
+| z9-7 | 375 | 16.67 | 16.7 | 0 | 0.86 | 0.17 |
+| t9-1 | 375 | 16.67 | 16.7 | 0 | 1.00 | 0.20 |
+
+Two values per cell = two runs. Every row sits on the 60 Hz cap (16.67 ms) with 0 long frames (target: avg below 16.7 and at most 1 percent long at 1280; p95 no worse than baseline and under 5 percent long at 375). No baseline exists for 375 (new game), so p95 16.7 is the baseline.
+
+### Extra rows (stress, outside the SPEC 12 target)
+
+| Config | Viewport | CPU | Rooms | avgFrameMs | longFrames | taskMs |
+| ------ | -------- | --- | ----- | ---------- | ---------- | ------ |
+| chrome-software | 1280 | x4 | all six | 16.67 (t9-1 16.70) | 0 (t9-1 1) | 4.5 to 6.6 |
+| chrome-software | 375 | x4 | all six | 16.67 | 0 | 3.0 to 4.4 |
+| headless | 1280 | x1 | all six | 10.00 (pinned by the 10 ms rAF) | 0 | 0.35 to 0.57 |
+
+One outlier: a run of t9-1 during a split-instrumented pass gave 17.51 ms and 25 long frames (taskMs 2.0) while other work was running on the machine; three clean repeats gave 0, 0 and 1 long frames. Treated as noise.
+
+### Diagnosis
+
+- Engine cost is tiny: with `update` / `draw` wrapped by `performance.now()` marks, `update` is 0.02 to 0.06 ms and `draw` 0.10 to 0.23 ms per frame (headless and software), `scriptMs` about 0.2 ms of a `taskMs` of 1 to 1.7 ms. The rest of the task time is canvas raster / composite, which also fits in the frame at x4.
+- Per-room static drawing is already cached: `layerFor()` pre-renders the room background and tiles to an offscreen canvas (LRU of 6 rooms) and `draw` copies the visible 768x576 window; sprites go through the `sprite()` cache. The dark room is plain alpha (`rgba(0,0,0,.9)` with an even-odd hole), no blend mode, no shadowBlur or filter. No skins, so no CSS filter on the canvas.
+- Shared layers were not tested (A/B not needed: the baseline already meets the target).
+
+### Fixes
+
+None. No fix landed because no number showed one was needed.
+
+### Verification
+
+No code changed, so the canvas hash, game-speed and walkthrough checks were skipped. No console errors beyond the known `__next.*.txt` 404s during the runs. Captures: `.pwScreencaps/perf-marcy-vampire-hunter-1280-turned.png`, `.pwScreencaps/perf-marcy-vampire-hunter-375-dark.png`.
+
+Confirm on real hardware, in particular a weak GPU or phone with the Turned Castle (flipped decor) and a boss room active: a software-rendering proxy is not the user's machine.

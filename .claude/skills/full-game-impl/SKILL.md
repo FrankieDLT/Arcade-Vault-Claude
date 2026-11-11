@@ -1,6 +1,6 @@
 ---
 name: full-game-impl
-description: Full pipeline for a new real game. Implements an approved game spec with the /spec-impl flow, then runs the mobile-porter agent, then the skin-designer agent (phase A, user approval, phase B), then the game-perf-booster agent (measure, fix only if off target).
+description: Full pipeline for a new real game. Implements an approved game spec with the /spec-impl flow, then runs the mobile-porter agent, then the skin-designer agent (phase A, user approval, phase B), then the game-perf-booster agent (measure, fix only if off target). A spec can declare `## Pipeline overrides` with `skip: skin-designer` to skip the skin stage.
 disable-model-invocation: true
 argument-hint: <NN-spec-name>
 ---
@@ -37,11 +37,18 @@ The received argument is: `$ARGUMENTS`
 
 Do not go to Stage 2 until every step of the plan is implemented.
 
+## Pipeline overrides
+
+After Stage 1, read the spec's `## Pipeline overrides` section if it has one. It holds a small yaml block. The only supported key is `skip`, and the only allowed value is `skin-designer`.
+
+- `skip: skin-designer`: do not run Stage 3 (neither phase A nor phase B, and no skin approval question). Remove `skin-designer` from the gate question below. In Stage 4, tell `game-perf-booster` that skins are absent by design instead of "all skins are in place". In the final report, say that the skin-designer stage was skipped by the spec.
+- A spec without the section keeps the full pipeline, unchanged.
+
 ## Gate before the agents
 
 1. Run `npm run lint` and `npm run build`. If either fails, fix the failure (within the spec's scope) and re-run.
 2. Check the spec sets `origin` (`ai`, `human` or `assisted`) on the new `GAMES` entry and in its `games` migration insert; if not, fix it within the spec's scope. Then find the game id the spec added (the `gameId` key of the new entry in `components/game-registry.tsx`; confirm with Grep). If the spec did not add a real game, say so and stop: the agents only work on real games.
-3. Use AskUserQuestion: "Spec implemented. Continue with mobile-porter, skin-designer and game-perf-booster for `<game-id>`?" Options: continue / stop here. Stop if the user chooses stop.
+3. Use AskUserQuestion: "Spec implemented. Continue with mobile-porter, skin-designer and game-perf-booster for `<game-id>`?" Options: continue / stop here. Stop if the user chooses stop. (With `skip: skin-designer`, name only the agents that will run.)
 
 ## Stage 2 — mobile-porter
 
@@ -50,6 +57,8 @@ Launch the Agent tool with `subagent_type: "mobile-porter"`. Prompt: the game id
 Wait for it to finish. Relay its reply: style chosen, pad layout, haptics, lint/build result, walkthrough results, known gaps and the manual real-device follow-up. If it reports that shared code needs a change or that it needs `/frontend-design` work, stop and ask the user before Stage 3.
 
 ## Stage 3 — skin-designer
+
+If the spec has `skip: skin-designer` (see Pipeline overrides), skip this whole stage and go to Stage 4.
 
 Start only after Stage 2 has finished.
 
@@ -60,7 +69,7 @@ Start only after Stage 2 has finished.
 
 ## Stage 4 — game-perf-booster
 
-Start only after Stage 3 has finished (all skins built), so the agent measures every final skin and the touch pad.
+Start only after Stage 3 has finished (all skins built), so the agent measures every final skin and the touch pad. With `skip: skin-designer`, start after Stage 2 and say skins are absent by design.
 
 1. Launch the Agent tool with `subagent_type: "game-perf-booster"`. Prompt: `Game id: <game-id>. New real game from spec specs/NN-slug.md; all skins and touch controls are in place. Measure and fix only if the numbers miss the SPEC 12 target.`
 2. Wait for it to finish. Relay: verdict (within target / fixed / shared cause reported), before and after numbers, fixes kept and rejected, files changed, lint/build result, skin and game-speed checks, and the section added to `references/perf/perf-log.md`.
