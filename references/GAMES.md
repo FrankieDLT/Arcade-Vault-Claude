@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 9 rows, one per entry of `GAMES` (`lib/games.ts`). All nine are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
+The `games` table in Supabase holds 10 rows, one per entry of `GAMES` (`lib/games.ts`). All ten are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
 
 ## Implemented games
 
@@ -15,6 +15,7 @@ The `games` table in Supabase holds 9 rows, one per entry of `GAMES` (`lib/games
 | Pong      | `pong`      | ai     | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
 | Space Invaders | `space-invaders` | ai     | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
 | Galactic DogFight | `galactic-dogfight` | ai     | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
+| Robo Vault | `robo-vault` | ai     | ARCADE  | green  | `lib/robo-vault/` | `retro neon pastel gothic negative lcd-handheld sepia-reel` (CSS filters on the canvas; one palette per stage underneath) | Platformer, 4 Robot Masters with a weakness cycle, Sam's castle, dot-grid password save, music and sound effects |
 
 ### Asteroids
 
@@ -100,9 +101,20 @@ The `games` table in Supabase holds 9 rows, one per entry of `GAMES` (`lib/games
 - **Sound:** 12 effects (`shoot`, `hit`, `bossHit`, `death`, `gameover`, `stageStart`, `beam`, `capture`, `rescue`, `challenge`, `perfect`, `extraLife`, volume 0.2) and a 12 s music loop (volume 0.12), all generated `.wav` files in `public/game-assets/galactic-dogfight/`. The mute button under the CRT is the only toggle.
 - **HUD:** score, lives (total fighters), level (stage). The canvas also draws banners, reserve fighters and stage badges.
 
+### Robo Vault
+
+- **Description:** Beat four bosses, steal their weapons, storm Sam's castle.
+- **Details:** A run-and-gun platformer in the style of the 8-bit classics, with our own art, names and audio (nothing from the original series, and the UI never uses its name). Pick one of four Robot Master stages, defeat the boss and take its weapon. Every Master is weak to another Master's weapon. After the four Masters, Sam's castle opens.
+- **Rules:** 768x576 canvas, 16x12 tiles of 48 px, hero BOLT (14 energy). Masters: FROSTBYTE (Frost Shard, weak to Tide Burst), EMBERCORE (Ember Orb, weak to Frost Shard), GALEFORCE (Gale Cutter, weak to Ember Orb), TIDEBREAKER (Tide Burst, weak to Gale Cutter). Boss HP 20: buster 1, matching weapon 5, any other weapon 2. Weapons have 28 energy (shot costs 1, Tide Burst 2); with 0 energy the buster fires. The castle has 3 rooms (hazards, a rematch of the 4 Masters at half HP, a turret corridor) and Sam in 2 phases (saucer, then mech, HP 30 each). 3 lives per run, extra life every 20,000 points (max 5). Scoring: enemy 100, Master 2,000, castle room 1,500, Sam 10,000. Each defeated Master makes you take 10% less damage (stacks, up to 40%). Every boss defeated earns a signed-in player 1 credit (9 per full run: 4 Masters, 4 rematch bosses, Sam), rate-limited by the server. Entering a boss room removes every other enemy and projectile, and dying there restarts the boss fight from its beginning.
+- **Password:** the only save. A 5x5 dot grid (cells `A1` to `E5`, 25 bits: 4 Masters, 2 castle-room bits, cleared, 12-bit score in steps of 10, 6-bit checksum, XOR mask and cell permutation). Shown on the stage-select screen and after each Master, room and the victory. The title screen has `PASSWORD` to type one in; a wrong grid shows `WRONG PASSWORD`. A password stores at most 40,950 points. `DELETE PROGRESS` (NO by default) wipes Masters, weapons, castle and score back to 0. Nothing is stored in the browser or the database.
+- **Controls:** `←` `→` or `A` `D` move, `SPACE` jumps (hold = higher), `X` / `J` shoot (hold = auto-fire), `↑` / `W` held with shoot fires straight up and the hero looks up with the buster raised (up is not jump), `↓` / `S` held crouches and shoots low (hits small enemies like walkers; you cannot move while crouched), `Q` / `E` change weapon. Menus: arrows move, `SPACE` confirms, `X` goes back (clears the grid on the password entry screen). The password screens have a `COPY` button that copies the filled cells (for example `A2 A3 B1`) to the clipboard.
+- **Touch (below 768px):** pad under the CRT: ◀ ▶ (hold), ▲ (hold, with SHOOT fires up; menu cursor) ▼ (menu cursor), `A` = JUMP (hold), `B` = SHOOT (hold), `X` / `Y` = previous / next weapon. Haptics: `death` (life lost), `clear` (Master, room or Sam cleared). The pad's ▼ button is a hold button (crouch).
+- **Sound:** 13 effects (`shoot`, `jump`, `hit`, `enemyDie`, `bossHit`, `bossDie`, `pickup`, `weapon`, `death`, `gameover`, `select`, `victory`, `bossTick` (one per segment while a boss health bar fills), volume 0.2), a 16 s stage music loop (volume 0.12) and a 22 s heavy-metal inspired boss-fight loop (`music-boss.wav`, volume 0.18, replaces the stage music in every boss room and restarts at each one), all generated `.wav` files in `public/game-assets/robo-vault/`. The mute button under the CRT is the only toggle.
+- **HUD:** score, lives, level (stages cleared + 1, 1 to 9). The canvas also draws hero, weapon and boss energy bars.
+
 ## Touch controls and haptics
 
-Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong, Space Invaders and Galactic DogFight). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
+Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong, Space Invaders and Galactic DogFight and Robo Vault). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Adding a game
 

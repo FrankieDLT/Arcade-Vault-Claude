@@ -14,6 +14,38 @@ export type Database = {
   }
   public: {
     Tables: {
+      boss_awards: {
+        Row: {
+          awarded_at: string
+          boss: string
+          game_id: string
+          id: number
+          user_id: string
+        }
+        Insert: {
+          awarded_at?: string
+          boss: string
+          game_id: string
+          id?: never
+          user_id: string
+        }
+        Update: {
+          awarded_at?: string
+          boss?: string
+          game_id?: string
+          id?: never
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "boss_awards_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       credits: {
         Row: {
           balance: number
@@ -193,6 +225,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      award_boss_credit: {
+        Args: { p_boss: string; p_game_id: string }
+        Returns: Json
+      }
       award_credit: {
         Args: { p_game_id: string; p_score: number; p_seconds: number }
         Returns: Json

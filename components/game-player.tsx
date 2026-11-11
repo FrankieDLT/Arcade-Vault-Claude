@@ -19,7 +19,7 @@ import {
   type HapticKind,
 } from "@/lib/haptics";
 import { rememberNextPath } from "@/lib/auth-redirect";
-import { awardCredit } from "@/lib/pins-db";
+import { awardBossCredit, awardCredit } from "@/lib/pins-db";
 import {
   insertScore,
   ScoreSaveError,
@@ -61,6 +61,8 @@ export function GamePlayer({
   const [over, setOver] = useState(false);
   // In memory only: resets on reload, kept by PLAY AGAIN.
   const [muted, setMuted] = useState(false);
+  // Run id for which the engine asked for the `music.alt` track (boss fight); a new run starts on the main track.
+  const [altRun, setAltRun] = useState<number | null>(null);
   // Games with `modes` start on a mode picker (mode = null); the mode is fixed per run.
   const [mode, setMode] = useState<string | null>(
     definition?.modes ? null : "default",
@@ -103,6 +105,10 @@ export function GamePlayer({
   const [saveFailure, setSaveFailure] = useState<ScoreSaveFailure | null>(null);
   // SPEC 18: +1 credit at Game Over, asked once per run. The server decides (score > 0, ban, cooldown).
   const [creditsEarned, setCreditsEarned] = useState(0);
+  // Robo Vault: +1 credit per boss defeated. Total for the run, and a short on-screen notice.
+  const [bossCredits, setBossCredits] = useState(0);
+  const [bossToast, setBossToast] = useState(false);
+  const bossToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const awardedRun = useRef<number | null>(null);
   // Active play time of the run in ms: not while paused, over, hidden or on the mode picker.
   const playedMs = useRef(0);
@@ -119,6 +125,8 @@ export function GamePlayer({
     active: !!definition?.music && !paused && !over,
     muted,
     restartKey: runId,
+    // Boss fight: the alt track replaces the main one (both are preloaded).
+    useAlt: !!definition?.music?.alt && altRun === runId,
   });
 
   const playSound = useSoundEffects(definition?.sfx, { muted });
@@ -169,6 +177,30 @@ export function GamePlayer({
       });
   }, [over, signedIn, score, runId, gameId, setBalance]);
 
+  // Signed-in players earn 1 credit per boss defeated; the server rate-limits and decides.
+  const onBossDefeated = (boss: string) => {
+    if (!signedIn) return;
+    awardBossCredit(gameId, boss)
+      .then((result) => {
+        setBalance(result.balance);
+        if (!result.awarded) return;
+        setBossCredits((n) => n + result.credits);
+        setBossToast(true);
+        if (bossToastTimer.current) clearTimeout(bossToastTimer.current);
+        bossToastTimer.current = setTimeout(() => setBossToast(false), 2500);
+      })
+      .catch(() => {
+        // A failed award shows nothing.
+      });
+  };
+
+  useEffect(
+    () => () => {
+      if (bossToastTimer.current) clearTimeout(bossToastTimer.current);
+    },
+    [],
+  );
+
   const endRun = () => {
     setEndSignal((n) => n + 1);
   };
@@ -187,6 +219,8 @@ export function GamePlayer({
     setSaving(false);
     setSaveFailure(null);
     setCreditsEarned(0);
+    setBossCredits(0);
+    setBossToast(false);
     playedMs.current = 0;
   };
 
@@ -325,6 +359,12 @@ export function GamePlayer({
               onLevel={definition.stats.level ? setEngineLevel : undefined}
               skin={appearance ? skin : undefined}
               theme={appearance?.themes ? theme : undefined}
+              onBossDefeated={onBossDefeated}
+              onMusic={
+                definition.music?.alt
+                  ? (t) => setAltRun(t === "boss" ? runId : null)
+                  : undefined
+              }
               onSound={
                 definition.sfx
                   ? (sound) => {
@@ -346,6 +386,11 @@ export function GamePlayer({
               }}
             />
           ) : null}
+          {bossToast && (
+            <div className="boss-credit" role="status">
+              BOSS DEFEATED +1 CREDIT
+            </div>
+          )}
           {paused && (
             <div
               className="crt-content"
@@ -535,9 +580,10 @@ export function GamePlayer({
             <h2>GAME OVER</h2>
             <div className="final-label">FINAL SCORE</div>
             <div className="final">{score.toLocaleString("en-US")}</div>
-            {creditsEarned > 0 && (
+            {creditsEarned + bossCredits > 0 && (
               <div className="credit-earned" role="status">
-                +{creditsEarned} {creditsEarned === 1 ? "CREDIT" : "CREDITS"}
+                +{creditsEarned + bossCredits}{" "}
+                {creditsEarned + bossCredits === 1 ? "CREDIT" : "CREDITS"}
               </div>
             )}
             {saved ? (

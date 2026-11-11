@@ -5,6 +5,7 @@ import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
 import { FroggerCanvas } from "@/components/frogger-canvas";
 import { GalacticDogfightCanvas } from "@/components/galactic-dogfight-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
+import { RoboVaultCanvas } from "@/components/robo-vault-canvas";
 import { PongCanvas } from "@/components/pong-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
 import { SpaceInvadersCanvas } from "@/components/space-invaders-canvas";
@@ -27,6 +28,10 @@ export interface GameCanvasProps {
   theme?: TetrisTheme;
   /** Sound events from the engine; the platform plays them. */
   onSound?: (sound: string) => void;
+  /** Robo Vault: a boss was defeated (`frostbyte`, `rematch:frostbyte`, `sam`, ...). Signed-in players earn 1 credit each. */
+  onBossDefeated?: (boss: string) => void;
+  /** Track switch for entries whose `music` has an `alt` track: "boss" = alt, "stage" = main. */
+  onMusic?: (track: "stage" | "boss") => void;
   /** Haptic events from the engine ("clear", "tetris", "split", "fruit", "bonus"); the platform vibrates. */
   onHaptic?: (name: string) => void;
   /** A change of `id` asks the engine to jump to `level` (level select in the PAUSED overlay). */
@@ -56,7 +61,12 @@ export interface GameDefinition {
   /** Label of the lines slot when `stats.lines` is on (default "Lines"). */
   linesLabel?: string;
   /** Optional background track. Absent = no audio and no mute button. */
-  music?: { src: string; volume: number };
+  music?: {
+    src: string;
+    volume: number;
+    /** Optional second track (Robo Vault: boss fights). The engine picks it with `onMusic`. */
+    alt?: { src: string; volume: number };
+  };
   /** Optional SKIN / THEME buttons under the CRT. They only change what the canvas draws. */
   appearance?: { skins: { id: string; label: string }[]; themes: boolean };
   /** Optional sound effects, played by the platform on engine `onSound` events. */
@@ -436,6 +446,79 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       hint: [
         { keys: ["◀", "▶"], label: "MOVE" },
         { keys: ["FIRE"], label: "SHOOT" },
+      ],
+    },
+  },
+  "robo-vault": {
+    Canvas: RoboVaultCanvas,
+    controls: [
+      { keys: ["←", "→"], label: "MOVE" },
+      { keys: ["SPACE"], label: "JUMP" },
+      { keys: ["X"], label: "SHOOT" },
+      { keys: ["↑", "X"], label: "SHOOT UP" },
+      { keys: ["↓", "X"], label: "CROUCH SHOOT" },
+      { keys: ["Q", "E"], label: "WEAPON" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "lcd-handheld", label: "LCD HANDHELD" },
+        { id: "sepia-reel", label: "SEPIA REEL" },
+      ],
+      themes: false,
+    },
+    music: {
+      src: withBasePath("/game-assets/robo-vault/music.wav"),
+      volume: 0.12,
+      // Heavy-metal inspired track for boss fights.
+      alt: {
+        src: withBasePath("/game-assets/robo-vault/music-boss.wav"),
+        volume: 0.18,
+      },
+    },
+    sfx: {
+      sounds: {
+        shoot: withBasePath("/game-assets/robo-vault/shoot.wav"),
+        jump: withBasePath("/game-assets/robo-vault/jump.wav"),
+        hit: withBasePath("/game-assets/robo-vault/hit.wav"),
+        enemyDie: withBasePath("/game-assets/robo-vault/enemy-die.wav"),
+        bossHit: withBasePath("/game-assets/robo-vault/boss-hit.wav"),
+        bossDie: withBasePath("/game-assets/robo-vault/boss-die.wav"),
+        pickup: withBasePath("/game-assets/robo-vault/pickup.wav"),
+        weapon: withBasePath("/game-assets/robo-vault/weapon.wav"),
+        death: withBasePath("/game-assets/robo-vault/death.wav"),
+        gameover: withBasePath("/game-assets/robo-vault/gameover.wav"),
+        select: withBasePath("/game-assets/robo-vault/select.wav"),
+        victory: withBasePath("/game-assets/robo-vault/victory.wav"),
+        bossTick: withBasePath("/game-assets/robo-vault/boss-tick.wav"),
+      },
+      volume: 0.2,
+    },
+    touch: {
+      // left / right move; A jumps (hold = higher); B shoots (hold = auto-fire);
+      // X / Y cycle weapons; up / down also move the menu cursor.
+      pad: [
+        { code: "ArrowLeft", label: "◀", slot: "left", hold: true },
+        { code: "ArrowRight", label: "▶", slot: "right", hold: true },
+        { code: "ArrowUp", label: "▲", slot: "up", hold: true },
+        { code: "ArrowDown", label: "▼", slot: "down", hold: true },
+        { code: "Space", label: "JUMP", slot: "a", hold: true },
+        { code: "KeyX", label: "SHOOT", slot: "b", hold: true },
+        { code: "KeyQ", label: "◀ W", slot: "x" },
+        { code: "KeyE", label: "W ▶", slot: "y" },
+      ],
+      hint: [
+        { keys: ["◀", "▶"], label: "MOVE" },
+        { keys: ["JUMP"], label: "HOLD = HIGHER" },
+        { keys: ["SHOOT"], label: "HOLD = AUTO-FIRE" },
+        { keys: ["▲", "SHOOT"], label: "SHOOT UP" },
+        { keys: ["▼", "SHOOT"], label: "CROUCH SHOOT" },
+        { keys: ["◀ W", "W ▶"], label: "WEAPON" },
       ],
     },
   },

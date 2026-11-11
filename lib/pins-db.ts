@@ -79,6 +79,31 @@ export async function awardCredit(
   return data as unknown as AwardResult;
 }
 
+export interface BossAwardResult {
+  awarded: boolean;
+  /** Credits added by this call (1 per boss defeated). */
+  credits: number;
+  balance: number;
+  reason: "ok" | "banned" | "too_soon" | "daily_cap";
+}
+
+/**
+ * Robo Vault: +1 credit for a boss defeated (`frostbyte`, `rematch:frostbyte`, `sam`, ...).
+ * The server cannot verify a fight, so it rate-limits: at least 3 s between boss awards and
+ * at most 30 per 24 hours per user; banned users get nothing.
+ */
+export async function awardBossCredit(
+  gameId: string,
+  boss: string,
+): Promise<BossAwardResult> {
+  const { data, error } = await getSupabase().rpc("award_boss_credit", {
+    p_game_id: gameId,
+    p_boss: boss,
+  });
+  if (error) throw toPinsError(error);
+  return data as unknown as BossAwardResult;
+}
+
 export interface PullResult {
   pinId: string;
   rarity: PinRarity;
