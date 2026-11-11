@@ -459,3 +459,56 @@ None. No fix landed because no number showed one was needed.
 No code changed, so the canvas hash, game-speed and walkthrough checks were skipped. No console errors during the runs (the known `__next.*.txt` 404s were filtered). Capture: `.pwScreencaps/perf-wingshot-1280-retro.png`.
 
 Confirm on real hardware, in particular a weak GPU or phone with a filter-heavy skin: a software-rendering proxy is not the user's machine.
+
+## dot-catcher (2026-11-11, game-perf-booster)
+
+Verdict: within target, no change. No code touched (Java engine, bridge and wrapper untouched, `dot-catcher.js` not rebuilt).
+
+### Environment
+
+- Chrome 64-bit (system install) via playwright-core, headless, `--disable-gpu --disable-gpu-compositing` (`chrome-software`); default headless Chrome for the `taskMs` / `scriptMs` check. Production build (`out/`, built 2026-11-11) served by a Node static server.
+- All 7 skins (retro, neon, pastel, gothic, negative, amber-crt, blueprint). Viewports 1280x1100 and 375x812 (touch UI, pad), CPU x1 and x4 via CDP.
+- Method: load play page, select the skin with the SKIN button, scroll to top, wait 1.5 s, record 10 s, first second dropped (about 540 frames kept). The run ends in about 4 s without input, so an in-page driver alternated `ArrowLeft` / `ArrowRight` keydown/keyup every 350 ms and clicked PLAY AGAIN every 60 ms when the GAME OVER modal showed. A `fillRect` counter showed the engine drew on 99.3 to 100 percent of rAF frames (idle frames in game over: 0 to 0.7 percent), so the numbers describe an active game. `taskMs` and `scriptMs` are per rAF frame.
+
+### Baseline table (chrome-software, x1, 1280)
+
+| Skin | avgFrameMs | p95FrameMs | longFrames | taskMs | scriptMs |
+| ---- | ---------- | ---------- | ---------- | ------ | -------- |
+| retro | 16.67 / 16.67 | 16.8 / 16.7 | 0 / 0 | 0.55 / 0.49 | 0.07 / 0.06 |
+| neon | 16.67 / 16.67 | 16.7 / 16.8 | 0 / 0 | 0.48 / 0.46 | 0.06 / 0.06 |
+| pastel | 16.67 / 16.67 | 16.7 / 16.8 | 0 / 0 | 0.53 / 0.53 | 0.06 / 0.05 |
+| gothic | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0 | 0.54 / 0.44 | 0.05 / 0.05 |
+| negative | 16.67 / 16.67 | 16.8 / 16.8 | 0 / 0 | 0.51 / 0.50 | 0.06 / 0.06 |
+| amber-crt | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0 | 0.51 / 0.47 | 0.05 / 0.05 |
+| blueprint | 16.67 / 16.67 | 16.8 / 16.7 | 0 / 0 | 0.46 / 0.46 | 0.05 / 0.05 |
+
+Spec 27 target (1280, x1: `taskMs` at most 1.0, `longFrames` 0) and SPEC 12 target (avg below 16.7 is the 60 Hz cap here, long frames at most 1 percent) are met by every skin.
+
+### Other configs
+
+| Config | Viewport | CPU | Skins | avgFrameMs | p95FrameMs | longFrames | taskMs |
+| ------ | -------- | --- | ----- | ---------- | ---------- | ---------- | ------ |
+| chrome-software | 1280 | x4 | all 7 | 16.67 to 16.88 | 16.7 to 16.8 | 0 to 7 (negative 7 = 1.3 %, blueprint 4, pastel 1, others 0) | 1.88 to 3.03 |
+| chrome-software | 375 | x1 | all 7 | 16.67 | 16.7 to 16.8 | 0 | 0.37 to 0.44 |
+| chrome-software | 375 | x4 | all 7 | 16.67 | 16.7 to 16.8 | 0 | 1.43 to 1.51 |
+| headless default | 1280 | x1 | retro, neon, blueprint | 10.00 (pinned by the 10 ms rAF) | 10.1 | 0 | 0.18 to 0.19 (scriptMs 0.04) |
+
+375px: long frames 0 percent (target below 5 percent); no earlier baseline for this new game, p95 16.7 to 16.8 is the baseline. The x4 rows at 1280 are a stress case beyond the target; the few long frames (single run each) are in the 1 percent range at worst.
+
+### Per-skin
+
+At x1 the avg is 16.67 for all seven skins (spread 0 percent, limit 10 percent). `taskMs` ranges 0.44 to 0.55 at 1280 with no skin standing out (difference is noise between repeats).
+
+### Diagnosis
+
+Engine cost is tiny: `scriptMs` 0.05 to 0.07 ms per frame at x1 (0.16 to 0.37 at x4), including the JSO calls from Java to Canvas 2D. The rest of `taskMs` is canvas raster and composite. The split `update` / `draw` marks and the shared-layer A/B were not run: the baseline meets the target, so no number points at a cause. The Java-to-JS bridge adds no visible per-frame overhead for this game.
+
+### Fixes
+
+None. No fix landed because no number showed one was needed.
+
+### Verification
+
+No code changed, so the canvas hash, game-speed and walkthrough checks were skipped. No console errors during the runs (the known `__next.*.txt` 404s filtered). Capture: `.pwScreencaps/perf-dot-catcher-1280-retro.png`.
+
+Confirm on real hardware, in particular a weak GPU or phone: a software-rendering proxy is not the user's machine.

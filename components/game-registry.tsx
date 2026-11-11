@@ -1,5 +1,6 @@
 import { withBasePath } from "@/lib/base-path";
 import type { ComponentType } from "react";
+import { DotCatcherCanvas } from "@/components/dot-catcher-canvas";
 import { SpaceVoyageCanvas } from "@/components/space-voyage-canvas";
 import { WallWreckerCanvas } from "@/components/wall-wrecker-canvas";
 import { StreetJumperCanvas } from "@/components/street-jumper-canvas";
@@ -645,6 +646,43 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { keys: ["TAP"], label: "SHOOT" },
         { keys: ["3 SHOTS"], label: "PER WAVE" },
       ],
+    },
+  },
+  "dot-catcher": {
+    // Java engine (java/dot-catcher/), compiled to JavaScript with TeaVM.
+    Canvas: DotCatcherCanvas,
+    controls: [
+      { keys: ["←", "→"], label: "MOVE" },
+      { keys: ["A", "D"], label: "MOVE" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    levelSelect: { min: 1, max: 99 },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "amber-crt", label: "AMBER CRT" },
+        { id: "blueprint", label: "BLUEPRINT" },
+      ],
+      themes: false,
+    },
+    sfx: {
+      sounds: {
+        catch: withBasePath("/game-assets/dot-catcher/catch.wav"),
+        miss: withBasePath("/game-assets/dot-catcher/miss.wav"),
+        gameover: withBasePath("/game-assets/dot-catcher/gameover.wav"),
+      },
+      volume: 0.2,
+    },
+    touch: {
+      pad: [
+        { code: "ArrowLeft", label: "◀", hold: true, slot: "left" },
+        { code: "ArrowRight", label: "▶", hold: true, slot: "right" },
+      ],
+      hint: [{ keys: ["◀", "▶"], label: "MOVE" }],
     },
   },
 };

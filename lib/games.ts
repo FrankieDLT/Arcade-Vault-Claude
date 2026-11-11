@@ -135,6 +135,16 @@ export const GAMES: Game[] = [
     color: "yellow",
     origin: "ai",
   },
+  {
+    id: "dot-catcher",
+    title: "DOT CATCHER",
+    short: "Slide the paddle and catch every falling dot.",
+    long: "Dots rain from the top of the screen. Slide your paddle left and right to catch them and score points. Miss three and the run is over. Every ten catches the dots fall faster and the rain gets thicker.",
+    cat: "ARCADE",
+    cover: "cover-dot-catcher",
+    color: "cyan",
+    origin: "ai",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [

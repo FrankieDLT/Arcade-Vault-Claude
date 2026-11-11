@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/games.ts`). All eleven are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
+The `games` table in Supabase holds 13 rows, one per entry of `GAMES` (`lib/games.ts`). All thirteen are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
 
 ## Implemented games
 
@@ -17,6 +17,8 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 | Galactic DogFight | `galactic-dogfight` | ai     | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
 | Robo Vault | `robo-vault` | ai     | ARCADE  | green  | `lib/robo-vault/` | `retro neon pastel gothic negative lcd-handheld sepia-reel` (CSS filters on the canvas; one palette per stage underneath) | Platformer, 4 Robot Masters with a weakness cycle, Sam's castle, dot-grid password save, music and sound effects |
 | Marcy the Vampire Hunter | `marcy-vampire-hunter` | ai | ARCADE | magenta | `lib/vampire-hunter/` | None by decision (SPEC 24): one palette per zone | Castle platformer with a map, relics, RPG levels and gear, two heroes, Turned Castle, 12x12 dot-grid password, Credit Coin, music and sound effects |
+| Wingshot | `wingshot` | ai | SHOOTER | yellow | `lib/wingshot/` | Retro, Neon, Pastel, Gothic, Negative, Golden Hour, Ink Wash (each skin is a scene) | Aim-and-shoot gallery, click or tap only, companion figures, sound effects |
+| Dot Catcher | `dot-catcher` | ai | ARCADE | cyan | `java/dot-catcher/` (Java, TeaVM) + `lib/dot-catcher/` (TypeScript glue) | Retro, Neon, Pastel, Gothic, Negative, Amber CRT, Blueprint | The first Java game: level select while paused, sound effects, touch pad |
 
 ### Space Voyage
 
@@ -134,10 +136,21 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 - **Sound:** 11 effects (`shot`, `hit`, `rare`, `escape`, `decoy`, `roundStart`, `roundClear`, `perfect`, `gameover`, `cheer`, `blooper`, volume 0.2), generated `.wav` in `public/game-assets/wingshot/`, no music.
 - **HUD:** score, hits in the round (label `Hits`), round (Level slot), no lives. The canvas draws the 10 quota ticks, ammo pips, the round banner and the result card.
 
+### Dot Catcher
+
+- **Description:** Slide the paddle and catch every falling dot.
+- **Details:** Dots rain from the top of the screen. Slide your paddle left and right to catch them and score points. Miss three and the run is over. Every ten catches the dots fall faster and the rain gets thicker. The engine is written in **Java** (`java/dot-catcher/`), compiled to JavaScript with TeaVM; it is the worked example of `JAVA-GAME-INTEGRATION-GUIDE.md`.
+- **Rules:** 800x600 canvas, paddle 110x16 at 520 px/s, dot radius 12, 10 points per catch, 3 lives, level `1 + floor(caught / 10)`, dots fall at `min(480, 160 + 30 * (level - 1))` px/s and spawn every `max(0.35, 1.1 - 0.07 * (level - 1))` s.
+- **Controls:** `←` `→` or `A` `D` move the paddle.
+- **Level select:** while paused, `LEVEL − NN +` (1 to 99). Score and lives are kept, the falling dots are cleared.
+- **Touch (below 768px):** pad under the CRT with ◀ ▶ (hold). Haptic `death` on a miss.
+- **Sound:** 3 effects (`catch`, `miss`, `gameover`, volume 0.2), generated `.wav` in `public/game-assets/dot-catcher/`, no music.
+- **HUD:** score, lives, level.
+
 ## Touch controls and haptics
 
 Space Voyage, Block Rain, Wall Wrecker and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Block Rain, Space Voyage, Glowmaw, Street Jumper, Super Tennis, Alien Attack and Galactic DogFight and Robo Vault). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
 ## Adding a game
 
-A new real game needs an engine under `lib/<game>/`, a canvas wrapper in `components/`, an entry in `components/game-registry.tsx`, and a migration that inserts its `games` row (including `origin`: `ai`, `human` or `assisted`). Without that row, saving a score fails on the foreign key. The new `GAMES` entry must set `origin` too; the type requires it.
+A new real game needs an engine under `lib/<game>/` (or, for a Java game, `java/<id>/` compiled to `public/game-assets/<id>/<id>.js`: see `JAVA-GAME-INTEGRATION-GUIDE.md`), a canvas wrapper in `components/`, an entry in `components/game-registry.tsx`, and a migration that inserts its `games` row (including `origin`: `ai`, `human` or `assisted`). Without that row, saving a score fails on the foreign key. The new `GAMES` entry must set `origin` too; the type requires it.

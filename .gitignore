@@ -44,3 +44,6 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 !.env.example
+
+# java games (compiled output public/game-assets/<id>/<id>.js IS committed)
+java/**/target/
