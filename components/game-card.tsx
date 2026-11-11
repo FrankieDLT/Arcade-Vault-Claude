@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef, type MouseEvent } from "react";
 import { BestScore } from "@/components/best-score";
+import { OriginEmoji } from "@/components/origin-emoji";
 import type { Game } from "@/lib/types";
 
 export function GameCard({ game }: { game: Game }) {
@@ -53,7 +54,10 @@ export function GameCard({ game }: { game: Game }) {
             </b>
           </div>
           {/* Visual only: the whole card is the link, so no nested anchor. */}
-          <span className={"btn" + btnColor}>PLAY</span>
+          <div className="row-actions">
+            <OriginEmoji origin={game.origin} />
+            <span className={"btn" + btnColor}>PLAY</span>
+          </div>
         </div>
       </div>
     </Link>

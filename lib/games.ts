@@ -1,86 +1,20 @@
-import type { Category, Game } from "./types";
+import type { Category, Game, Origin } from "./types";
+
+/** emoji: one entry = plain emoji; two entries = split (first = left half, second = right half). */
+export const ORIGINS: Record<
+  Origin,
+  { emoji: [string] | [string, string]; tag: string; name: string }
+> = {
+  ai: { emoji: ["🤖"], tag: "A.I MADE", name: "A.I Made" },
+  human: { emoji: ["🧑"], tag: "HUMAN MADE", name: "Human Made" },
+  assisted: {
+    emoji: ["🤖", "🧑"],
+    tag: "A.I. ASSISTED",
+    name: "A.I. Assisted",
+  },
+};
 
 export const GAMES: Game[] = [
-  {
-    id: "brick-buster",
-    title: "BRICK BUSTER",
-    short: "Bounce the ball and smash neon walls.",
-    long: "Pilot a paddle-ship and bounce a plasma core to pulverize walls of chromatic bricks. Every level rearranges the grid into impossible patterns. How far will your streak go?",
-    cat: "ARCADE",
-    cover: "cover-bricks",
-    color: "cyan",
-    plays: "12.4K",
-  },
-  {
-    id: "drop",
-    title: "DROP",
-    short: "Fit the pieces before the ceiling crushes you.",
-    long: "Geometric pieces fall from the darkness. Rotate them, lock them in and clear lines to survive. The speed ramps up mercilessly every 10 lines.",
-    cat: "PUZZLE",
-    cover: "cover-tetro",
-    color: "magenta",
-    plays: "31.8K",
-  },
-  {
-    id: "serpentine",
-    title: "SERPENTINE",
-    short: "Grow without biting your own tail.",
-    long: "A snake of light roams the grid hunting magenta cores. Every bite makes it longer and faster. One wrong move and it devours itself.",
-    cat: "ARCADE",
-    cover: "cover-snake",
-    color: "green",
-    plays: "9.1K",
-  },
-  {
-    id: "chomper",
-    title: "CHOMPER",
-    short: "Gobble dots and escape the ghosts.",
-    long: "A hungry circle patrols a maze collecting glowing dots. Four specters chase it, but every so often a power pill appears and turns the tables.",
-    cat: "ARCADE",
-    cover: "cover-glot",
-    color: "yellow",
-    plays: "27.2K",
-  },
-  {
-    id: "invaders",
-    title: "INVADERS",
-    short: "Defend the planet from rows of aliens.",
-    long: "Waves of hostile pixels descend, formation after formation. Slide your cannon sideways and fire with precision before they touch the surface.",
-    cat: "SHOOTER",
-    cover: "cover-invaders",
-    color: "green",
-    plays: "18.0K",
-  },
-  {
-    id: "rocks",
-    title: "ROCKS",
-    short: "Pulverize asteroids in zero gravity.",
-    long: "Your triangular ship drifts in absolute vacuum. Shoot and rotate to split rocks into ever smaller fragments. Watch out for UFOs on the horizon.",
-    cat: "SHOOTER",
-    cover: "cover-rocas",
-    color: "yellow",
-    plays: "15.6K",
-  },
-  {
-    id: "hopper",
-    title: "HOPPER",
-    short: "Cross the pixel highway.",
-    long: "Leap between lanes of speeding cars and drifting logs on the river. Reach the lily pads before time runs out.",
-    cat: "ARCADE",
-    cover: "cover-rana",
-    color: "green",
-    plays: "6.4K",
-  },
-  {
-    id: "pixel-duel",
-    title: "PIXEL DUEL",
-    short: "Two paddles. One ball. Maximum reflexes.",
-    long: "The purest duel: two vertical paddles fight over a glowing ball. Play solo against the CPU or local two-player.",
-    cat: "VERSUS",
-    cover: "cover-duelo",
-    color: "cyan",
-    plays: "4.2K",
-  },
   {
     id: "asteroids",
     title: "ASTEROIDS",
@@ -90,6 +24,7 @@ export const GAMES: Game[] = [
     cover: "cover-asteroids",
     color: "cyan",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "tetris",
@@ -100,6 +35,7 @@ export const GAMES: Game[] = [
     cover: "cover-tetris",
     color: "green",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "arkanoid",
@@ -110,6 +46,7 @@ export const GAMES: Game[] = [
     cover: "cover-arkanoid",
     color: "magenta",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "snake",
@@ -120,6 +57,7 @@ export const GAMES: Game[] = [
     cover: "cover-snake-game",
     color: "yellow",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "glowmaw",
@@ -130,6 +68,7 @@ export const GAMES: Game[] = [
     cover: "cover-glowmaw",
     color: "cyan",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "frogger",
@@ -140,6 +79,7 @@ export const GAMES: Game[] = [
     cover: "cover-frogger",
     color: "green",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "pong",
@@ -150,6 +90,7 @@ export const GAMES: Game[] = [
     cover: "cover-pong",
     color: "magenta",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "space-invaders",
@@ -160,6 +101,7 @@ export const GAMES: Game[] = [
     cover: "cover-space-invaders",
     color: "cyan",
     plays: "0",
+    origin: "ai",
   },
   {
     id: "galactic-dogfight",
@@ -170,6 +112,7 @@ export const GAMES: Game[] = [
     cover: "cover-galactic-dogfight",
     color: "yellow",
     plays: "0",
+    origin: "ai",
   },
 ];
 

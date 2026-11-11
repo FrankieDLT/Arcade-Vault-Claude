@@ -4,7 +4,8 @@ import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { BestScore } from "@/components/best-score";
 import { Leaderboard } from "@/components/leaderboard";
-import { GAMES } from "@/lib/games";
+import { OriginEmoji } from "@/components/origin-emoji";
+import { GAMES, ORIGINS } from "@/lib/games";
 
 export function generateStaticParams() {
   return GAMES.map((g) => ({ id: g.id }));
@@ -43,6 +44,10 @@ async function GameDetail({
         </div>
         <div style={{ marginTop: 20 }} className="detail-info">
           <div className="detail-tags">
+            <span className="origin-tag">
+              <OriginEmoji origin={game.origin} decorative />
+              {ORIGINS[game.origin].tag}
+            </span>
             <span>{game.cat}</span>
             <span>1 PLAYER</span>
             <span>KEYBOARD / TOUCH</span>

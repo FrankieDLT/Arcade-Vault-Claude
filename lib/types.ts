@@ -1,6 +1,8 @@
 export type Category = "ARCADE" | "PUZZLE" | "SHOOTER" | "VERSUS";
 export type GameColor = "cyan" | "magenta" | "yellow" | "green";
 
+export type Origin = "ai" | "human" | "assisted";
+
 export interface Game {
   /** URL slug, e.g. "brick-buster" */
   id: string;
@@ -17,6 +19,8 @@ export interface Game {
   color: GameColor;
   /** Formatted plays count, e.g. "12.4K" */
   plays: string;
+  /** Who made the game. Shown as a tag (detail) and an emoji (library card). */
+  origin: Origin;
 }
 
 export interface ScoreRow {

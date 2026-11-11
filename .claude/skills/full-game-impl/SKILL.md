@@ -40,7 +40,7 @@ Do not go to Stage 2 until every step of the plan is implemented.
 ## Gate before the agents
 
 1. Run `npm run lint` and `npm run build`. If either fails, fix the failure (within the spec's scope) and re-run.
-2. Find the game id the spec added (the `gameId` key of the new entry in `components/game-registry.tsx`; confirm with Grep). If the spec did not add a real game, say so and stop: the agents only work on real games.
+2. Check the spec sets `origin` (`ai`, `human` or `assisted`) on the new `GAMES` entry and in its `games` migration insert; if not, fix it within the spec's scope. Then find the game id the spec added (the `gameId` key of the new entry in `components/game-registry.tsx`; confirm with Grep). If the spec did not add a real game, say so and stop: the agents only work on real games.
 3. Use AskUserQuestion: "Spec implemented. Continue with mobile-porter, skin-designer and game-perf-booster for `<game-id>`?" Options: continue / stop here. Stop if the user chooses stop.
 
 ## Stage 2 — mobile-porter
