@@ -14,6 +14,24 @@ export type Database = {
   }
   public: {
     Tables: {
+      credits: {
+        Row: {
+          balance: number
+          last_award_at: string | null
+          user_id: string
+        }
+        Insert: {
+          balance?: number
+          last_award_at?: string | null
+          user_id: string
+        }
+        Update: {
+          balance?: number
+          last_award_at?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       games: {
         Row: {
           cat: string
@@ -46,6 +64,41 @@ export type Database = {
           title?: string
         }
         Relationships: []
+      }
+      pins: {
+        Row: {
+          game_id: string
+          id: string
+          kind: string
+          name: string
+          number: number
+          rarity: string
+        }
+        Insert: {
+          game_id: string
+          id: string
+          kind: string
+          name: string
+          number: number
+          rarity: string
+        }
+        Update: {
+          game_id?: string
+          id?: string
+          kind?: string
+          name?: string
+          number?: number
+          rarity?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pins_game_id_fkey"
+            columns: ["game_id"]
+            isOneToOne: false
+            referencedRelation: "games"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -106,11 +159,42 @@ export type Database = {
           },
         ]
       }
+      user_pins: {
+        Row: {
+          obtained_at: string
+          pin_id: string
+          user_id: string
+        }
+        Insert: {
+          obtained_at?: string
+          pin_id: string
+          user_id: string
+        }
+        Update: {
+          obtained_at?: string
+          pin_id?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_pins_pin_id_fkey"
+            columns: ["pin_id"]
+            isOneToOne: false
+            referencedRelation: "pins"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
+      award_credit: {
+        Args: { p_game_id: string; p_score: number; p_seconds: number }
+        Returns: Json
+      }
+      pull_pin: { Args: { p_cost: number }; Returns: Json }
       royalty_of_games: {
         Args: { p_limit?: number }
         Returns: {
