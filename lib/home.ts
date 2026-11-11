@@ -8,7 +8,7 @@ export interface Feature {
 }
 
 export interface HomeStat {
-  /** "12+", "THOUSANDS", "GLOBAL" */
+  /** "9+", "THOUSANDS", "GLOBAL" */
   value: string;
   unit: string;
   sub: string;
@@ -42,7 +42,7 @@ export const FEATURES: Feature[] = [
 ];
 
 export const HOME_STATS: HomeStat[] = [
-  { value: "12+", unit: "GAMES", sub: "AND COUNTING" },
+  { value: "9+", unit: "GAMES", sub: "AND COUNTING" },
   { value: "THOUSANDS", unit: "OF PLAYS", sub: "EVERY DAY" },
   { value: "GLOBAL", unit: "RANKING", sub: "COMPETE WITH THE WORLD" },
 ];

@@ -47,15 +47,9 @@ Use in phase 2 of `/add-game`. Fill the inventory from the code, not from the RE
 | `Math.random` seeded generators             | Copy the generator unchanged; seed lives in the engine                                                                                                                               |
 | Page `<title>`, favicon, body styles        | Dropped                                                                                                                                                                              |
 
-## Placeholder matching
+## Duplicate matching
 
-Compare the game against each catalog entry by genre (`cat`), title and `long` text. Known matches in the current catalog:
-
-- Tetris-like -> `drop` (cover `cover-tetro`)
-- Arkanoid / breakout -> `brick-buster` (cover `cover-bricks`)
-- Asteroids -> `rocks` is a placeholder, but `asteroids` already exists (SPEC 05)
-
-Re-check against the live `lib/games.ts`; this list can be outdated.
+Compare the game against each catalog entry by genre (`cat`), title and `long` text. The catalog has no placeholder games since SPEC 19: a match means the game already exists (for example Asteroids, SPEC 05). Check the live `lib/games.ts`.
 
 ## Notes on the starter games (verify against the code)
 

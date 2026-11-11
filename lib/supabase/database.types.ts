@@ -40,6 +40,7 @@ export type Database = {
           created_at: string
           id: string
           long: string
+          origin: string
           short: string
           title: string
         }
@@ -50,6 +51,7 @@ export type Database = {
           created_at?: string
           id: string
           long: string
+          origin: string
           short: string
           title: string
         }
@@ -60,6 +62,7 @@ export type Database = {
           created_at?: string
           id?: string
           long?: string
+          origin?: string
           short?: string
           title?: string
         }

@@ -47,7 +47,7 @@ export function GamePlayer({
   const { user, status } = useSession();
   const { setBalance } = useCredits();
   const pathname = usePathname();
-  // Games with a real engine are in the registry; every other game keeps the fake simulation.
+  // Every catalog game has a real engine registered in game-registry.
   const definition = getGameDefinition(gameId);
   const Canvas = definition?.Canvas;
   const [score, setScore] = useState(0);
@@ -137,15 +137,6 @@ export function GamePlayer({
     e.currentTarget.blur();
   };
 
-  useEffect(() => {
-    if (definition || over || paused) return;
-    const t = setInterval(
-      () => setScore((s) => s + Math.floor(10 + Math.random() * 90)),
-      220,
-    );
-    return () => clearInterval(t);
-  }, [definition, over, paused]);
-
   // Counts play time. Its cleanup runs before the award effect below in the same commit, so the
   // last slice is already added when the run ends.
   useEffect(() => {
@@ -179,8 +170,7 @@ export function GamePlayer({
   }, [over, signedIn, score, runId, gameId, setBalance]);
 
   const endRun = () => {
-    if (definition) setEndSignal((n) => n + 1);
-    else setOver(true);
+    setEndSignal((n) => n + 1);
   };
 
   const restart = () => {
@@ -355,15 +345,7 @@ export function GamePlayer({
                 fireHaptic("gameover");
               }}
             />
-          ) : (
-            <div className="game-arena">
-              <div className="grid-floor"></div>
-              <div className="enemy e1"></div>
-              <div className="enemy e2"></div>
-              <div className="enemy e3"></div>
-              <div className="player-ship"></div>
-            </div>
-          )}
+          ) : null}
           {paused && (
             <div
               className="crt-content"

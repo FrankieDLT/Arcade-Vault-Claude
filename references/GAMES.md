@@ -1,20 +1,20 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 17 rows. Nine of them are real, playable games with their own engine. The other eight are catalog entries that still run a fake simulation (a random score timer and a fake arena) in `components/game-player.tsx`.
+The `games` table in Supabase holds 9 rows, one per entry of `GAMES` (`lib/games.ts`). All nine are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
 
 ## Implemented games
 
-| Game      | Id          | Category | Accent  | Engine           | Skins                                                  | Extras                                              |
-| --------- | ----------- | -------- | ------- | ---------------- | ------------------------------------------------------ | --------------------------------------------------- |
-| Asteroids | `asteroids` | SHOOTER  | cyan    | `lib/asteroids/` | Retro, Neon, Pastel, Gothic, Negative, Amber CRT, Deep Sea | Power-ups: Bomb, Hyper, Shield, SlowMo, Triple shot |
-| Tetris    | `tetris`    | PUZZLE   | green   | `lib/tetris/`    | Retro, Neon, Pastel, Pixel Art (plus dark/light theme) | Background music, hold piece, ghost piece           |
-| Arkanoid  | `arkanoid`  | ARCADE   | magenta | `lib/arkanoid/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
-| Snake     | `snake`     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
-| Glowmaw   | `glowmaw`   | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
-| Frogger   | `frogger`   | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
-| Pong      | `pong`      | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
-| Space Invaders | `space-invaders` | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
-| Galactic DogFight | `galactic-dogfight` | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
+| Game      | Id          | Origin | Category | Accent  | Engine           | Skins                                                  | Extras                                              |
+| --------- | ----------- | ------ | -------- | ------- | ---------------- | ------------------------------------------------------ | --------------------------------------------------- |
+| Asteroids | `asteroids` | ai     | SHOOTER  | cyan    | `lib/asteroids/` | Retro, Neon, Pastel, Gothic, Negative, Amber CRT, Deep Sea | Power-ups: Bomb, Hyper, Shield, SlowMo, Triple shot |
+| Tetris    | `tetris`    | ai     | PUZZLE   | green   | `lib/tetris/`    | Retro, Neon, Pastel, Pixel Art (plus dark/light theme) | Background music, hold piece, ghost piece           |
+| Arkanoid  | `arkanoid`  | ai     | ARCADE   | magenta | `lib/arkanoid/`  | Retro, Pastel, Neon                                    | Sound effects, level select while paused, power-ups |
+| Snake     | `snake`     | ai     | ARCADE   | yellow  | `lib/snake/`     | Retro, Neon, Pastel, Gothic, Negative, LCD Brick, Magma | Golden bonus fruit, 22 fruit sprites                |
+| Glowmaw   | `glowmaw`   | ai     | ARCADE   | cyan    | `lib/glowmaw/`   | Abyss, Retro, Neon, Pastel, Gothic, Negative, Coral, Sunken Ruin, Paper Lantern | Gulp-streak multiplier, level select while paused, extra lives |
+| Frogger   | `frogger`   | ai     | ARCADE   | green   | `lib/frogger/`   | Retro, Neon, Pastel, Gothic, Negative, Tide Poster, Midnight Toll                                                 | 5 goal slots, diving turtles, round timer           |
+| Pong      | `pong`      | ai     | VERSUS   | magenta | `lib/pong/`      | Retro, Neon, Pastel, Gothic, Negative, Phosphor, Clay Court | PvE (CPU, 3 difficulties) and local PvP, mode picker, sound effects |
+| Space Invaders | `space-invaders` | ai     | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
+| Galactic DogFight | `galactic-dogfight` | ai     | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
 
 ### Asteroids
 
@@ -72,7 +72,7 @@ The `games` table in Supabase holds 17 rows. Nine of them are real, playable gam
 ### Pong
 
 - **Description:** Two paddles, one ball. Beat the CPU or a friend.
-- **Details:** The arcade classic: bounce the ball past your rival's paddle. Longer rallies are worth more points, and three missed balls end the match. `pixel-duel` stays a fake catalog entry.
+- **Details:** The arcade classic: bounce the ball past your rival's paddle. Longer rallies are worth more points, and three missed balls end the match.
 - **Rules:** 800x600 canvas, paddles 12x100 px, ball 14 px. The ball starts at 420 px/s and gains 5% per paddle hit (cap 900); a hit near the paddle edge bounces up to 55 degrees. Each time a human returns the ball they get +5 (the CPU gets nothing for hits). A goal is worth `10 x rally hits` (min 10) and costs the conceder 1 of 3 lives. PvE: only the human has lives, so the run is endless until 3 misses. PvP: the run ends when either player reaches 0 lives. The leaderboard record is the human score (PvE) or the higher of the two scores (PvP); both modes share one leaderboard.
 - **Modes:** a picker on the CRT before the run (`PVE`, `PVP`). PLAY AGAIN keeps the mode; `CHANGE MODE` in the GAME OVER modal returns to the picker. In PvE the PAUSED overlay has an `EASY` / `NORMAL` (default) / `HARD` CPU selector (`CPU` table in `lib/pong/constants.ts`). Choosing a different difficulty restarts the match (score, lives and positions reset). The human's points are multiplied by x0.75 / x1 / x1.5 (rounded), and in PvE every 3 goals the human scores add 1 unit to that multiplier (max +10 units, kept when a life is lost, reset by a new match); the `P1` tag shows it.
 - **Controls:** Player 1 `W` `S`, Player 2 `↑` `↓`. In PvE the human accepts both pairs.
@@ -83,7 +83,7 @@ The `games` table in Supabase holds 17 rows. Nine of them are real, playable gam
 ### Space Invaders
 
 - **Description:** Hold the line. Stop the invasion.
-- **Details:** A fleet of invaders marches down the screen, faster with every ship you destroy. Move your cannon, shoot them one by one and dodge their bombs. Clear the wave to face a faster one. `invaders` stays a fake catalog entry.
+- **Details:** A fleet of invaders marches down the screen, faster with every ship you destroy. Move your cannon, shoot them one by one and dodge their bombs. Clear the wave to face a faster one.
 - **Rules:** 800x600 canvas, 11x5 fleet (55 invaders, 32x24 hit boxes), cannon 44x22 at 360 px/s, one player bullet on screen at a time (600 px/s). The fleet moves 16 px per step and drops 24 px at each edge; `stepInterval(alive, level)` shortens as invaders die and as the level rises (cap 2.5x). Up to 3 bombs (240 px/s) fall from the lowest invader of a random column. Points by row: 30 / 20 / 20 / 10 / 10; wave clear +`100 x level`. 3 lives; a bomb hit pauses the game for 1.2 s and the cannon respawns at center. The run also ends at once if an invader reaches the cannon row. Waves are endless; a later wave starts lower (start row capped at level 9).
 - **Controls:** `←` `→` or `A` `D` move, `SPACE` fires (hold to keep firing). While paused, `LEVEL - NN +` restarts the wave at that level (score and lives kept).
 - **Touch (below 768px):** pad under the CRT with ◀ ▶ (hold) and `A` = FIRE (hold). Haptics: `death` (life lost), `clear` (wave cleared).
@@ -104,23 +104,6 @@ The `games` table in Supabase holds 17 rows. Nine of them are real, playable gam
 
 Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong, Space Invaders and Galactic DogFight). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
 
-## Catalog-only games (fake simulation)
-
-These rows exist in the `games` table and in `GAMES` (`lib/games.ts`), but have no engine yet.
-
-| Game         | Id             | Category | Description                                    |
-| ------------ | -------------- | -------- | ---------------------------------------------- |
-| Brick Buster | `brick-buster` | ARCADE   | Bounce the ball and smash neon walls.          |
-| Drop         | `drop`         | PUZZLE   | Fit the pieces before the ceiling crushes you. |
-| Serpentine   | `serpentine`   | ARCADE   | Grow without biting your own tail.             |
-| Chomper      | `chomper`      | ARCADE   | Gobble dots and escape the ghosts.             |
-| Invaders     | `invaders`     | SHOOTER  | Defend the planet from rows of aliens.         |
-| Rocks        | `rocks`        | SHOOTER  | Pulverize asteroids in zero gravity.           |
-| Hopper       | `hopper`       | ARCADE   | Cross the pixel highway.                       |
-| Pixel Duel   | `pixel-duel`   | VERSUS   | Two paddles. One ball. Maximum reflexes.       |
-
-Brick Buster, Drop, Serpentine and Rocks overlap with the real Arkanoid, Tetris, Snake and Asteroids. Pixel Duel overlaps with the real Pong. Invaders overlaps with the real Space Invaders.
-
 ## Adding a game
 
-A new real game needs an engine under `lib/<game>/`, a canvas wrapper in `components/`, an entry in `components/game-registry.tsx`, and a migration that inserts its `games` row. Without that row, saving a score fails on the foreign key.
+A new real game needs an engine under `lib/<game>/`, a canvas wrapper in `components/`, an entry in `components/game-registry.tsx`, and a migration that inserts its `games` row (including `origin`: `ai`, `human` or `assisted`). Without that row, saving a score fails on the foreign key. The new `GAMES` entry must set `origin` too; the type requires it.
