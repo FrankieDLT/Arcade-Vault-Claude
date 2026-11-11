@@ -6,6 +6,7 @@ import { FroggerCanvas } from "@/components/frogger-canvas";
 import { GalacticDogfightCanvas } from "@/components/galactic-dogfight-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { RoboVaultCanvas } from "@/components/robo-vault-canvas";
+import { WingshotCanvas } from "@/components/wingshot-canvas";
 import { VampireHunterCanvas } from "@/components/vampire-hunter-canvas";
 import { PongCanvas } from "@/components/pong-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
@@ -553,9 +554,13 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         whip: withBasePath("/game-assets/marcy-vampire-hunter/whip.wav"),
         slash: withBasePath("/game-assets/marcy-vampire-hunter/slash.wav"),
         hit: withBasePath("/game-assets/marcy-vampire-hunter/hit.wav"),
-        enemyDie: withBasePath("/game-assets/marcy-vampire-hunter/enemy-die.wav"),
+        enemyDie: withBasePath(
+          "/game-assets/marcy-vampire-hunter/enemy-die.wav",
+        ),
         bossHit: withBasePath("/game-assets/marcy-vampire-hunter/boss-hit.wav"),
-        bossTick: withBasePath("/game-assets/marcy-vampire-hunter/boss-tick.wav"),
+        bossTick: withBasePath(
+          "/game-assets/marcy-vampire-hunter/boss-tick.wav",
+        ),
         bossDie: withBasePath("/game-assets/marcy-vampire-hunter/boss-die.wav"),
         pickup: withBasePath("/game-assets/marcy-vampire-hunter/pickup.wav"),
         relic: withBasePath("/game-assets/marcy-vampire-hunter/relic.wav"),
@@ -564,7 +569,9 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         dash: withBasePath("/game-assets/marcy-vampire-hunter/dash.wav"),
         save: withBasePath("/game-assets/marcy-vampire-hunter/save.wav"),
         death: withBasePath("/game-assets/marcy-vampire-hunter/death.wav"),
-        gameover: withBasePath("/game-assets/marcy-vampire-hunter/gameover.wav"),
+        gameover: withBasePath(
+          "/game-assets/marcy-vampire-hunter/gameover.wav",
+        ),
         select: withBasePath("/game-assets/marcy-vampire-hunter/select.wav"),
         victory: withBasePath("/game-assets/marcy-vampire-hunter/victory.wav"),
         turn: withBasePath("/game-assets/marcy-vampire-hunter/turn.wav"),
@@ -592,6 +599,51 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
         { keys: ["▲"], label: "INTERACT" },
         { keys: ["SPECIAL", "DASH"], label: "ARTS" },
         { keys: ["MENU TAG"], label: "OPEN MENU" },
+      ],
+    },
+  },
+  wingshot: {
+    Canvas: WingshotCanvas,
+    controls: [
+      { keys: ["CLICK", "TAP"], label: "SHOOT" },
+      { keys: ["3 SHOTS"], label: "PER WAVE" },
+      { keys: ["QUOTA"], label: "CLEARS THE ROUND" },
+    ],
+    stats: { lives: false, lines: true, level: true },
+    linesLabel: "Hits",
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "golden-hour", label: "GOLDEN HOUR" },
+        { id: "ink-wash", label: "INK WASH" },
+      ],
+      themes: false,
+    },
+    sfx: {
+      sounds: {
+        shot: withBasePath("/game-assets/wingshot/shot.wav"),
+        hit: withBasePath("/game-assets/wingshot/hit.wav"),
+        rare: withBasePath("/game-assets/wingshot/rare.wav"),
+        escape: withBasePath("/game-assets/wingshot/escape.wav"),
+        decoy: withBasePath("/game-assets/wingshot/decoy.wav"),
+        roundStart: withBasePath("/game-assets/wingshot/roundStart.wav"),
+        roundClear: withBasePath("/game-assets/wingshot/roundClear.wav"),
+        perfect: withBasePath("/game-assets/wingshot/perfect.wav"),
+        gameover: withBasePath("/game-assets/wingshot/gameover.wav"),
+        cheer: withBasePath("/game-assets/wingshot/cheer.wav"),
+        blooper: withBasePath("/game-assets/wingshot/blooper.wav"),
+      },
+      volume: 0.2,
+    },
+    touch: {
+      // No pad: the whole game is a tap on the canvas.
+      hint: [
+        { keys: ["TAP"], label: "SHOOT" },
+        { keys: ["3 SHOTS"], label: "PER WAVE" },
       ],
     },
   },

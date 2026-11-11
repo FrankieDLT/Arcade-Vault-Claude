@@ -136,6 +136,17 @@ export const GAMES: Game[] = [
     plays: "0",
     origin: "ai",
   },
+  {
+    id: "wingshot",
+    title: "WINGSHOT",
+    short: "Aim, click, shoot. Hit the flock before it escapes.",
+    long: "Targets burst into the sky and you only get three shots per wave. Click or tap to fire, hit enough of each round to move on, and watch out for the decoys. Switch the skin and the whole scene changes: a lake, a haunted moor, deep space or a paper dusk.",
+    cat: "SHOOTER",
+    cover: "cover-wingshot",
+    color: "yellow",
+    plays: "0",
+    origin: "ai",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [
