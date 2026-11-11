@@ -1,6 +1,6 @@
 # SPEC 24 — Marcy the Vampire Hunter: one /full-game-impl run for SPEC 21, 22 and 23 (no skins)
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 20, SPEC 21, SPEC 22, SPEC 23
 > **Date:** 2026-11-10
 > **Objective:** Define one merged implementation plan that builds SPEC 21 (main castle), SPEC 22 (Turned Castle) and SPEC 23 (Credit Coin) of Marcy the Vampire Hunter in a single `/full-game-impl` run, with the skin-designer stage skipped for this game only.

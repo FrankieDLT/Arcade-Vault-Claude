@@ -1,6 +1,6 @@
 # SPEC 23 — Marcy the Vampire Hunter: the Credit Coin drop (Pin Collection credits)
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 13, SPEC 18, SPEC 20, SPEC 21, SPEC 22
 > **Date:** 2026-11-10
 > **Objective:** Add a rare item to Marcy the Vampire Hunter, the Credit Coin, with a flat 0.1% chance on every enemy kill, breakable, chest and boss death, that gives a signed-in player 1 Pin Collection credit through the existing `award_boss_credit` RPC.

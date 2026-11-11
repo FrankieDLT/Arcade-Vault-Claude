@@ -65,3 +65,10 @@
 | 2026-11-10 | robo-vault | negative | NEGATIVE | mandatory | built | canvas filter invert(1) hue-rotate(200deg) contrast(1.4) saturate(1.2) brightness(.85) |
 | 2026-11-10 | robo-vault | lcd-handheld | LCD HANDHELD | fresh | built | filter grayscale(1) sepia(1) hue-rotate(40deg) saturate(1.6) contrast(1.1): green handheld LCD |
 | 2026-11-10 | robo-vault | sepia-reel | SEPIA REEL | fresh | built | filter sepia(1) contrast(1.1) brightness(.95): old film tint |
+| 2026-11-11 | wingshot | retro | RETRO | mandatory | built | scene lake, daylight palette; hudPanel raised to 0.6 black for the red miss tick (3.1:1) |
+| 2026-11-11 | wingshot | neon | NEON | mandatory | built | scene orbit, dark navy with cyan/magenta/yellow |
+| 2026-11-11 | wingshot | pastel | PASTEL | mandatory | built | scene origami, soft pinks/lilac; accent darkened to #b82f5c, light hudPanel/platePanel/plateTitle so HUD passes |
+| 2026-11-11 | wingshot | gothic | GOTHIC | mandatory | built | scene moors, near-black, violet, bone ink |
+| 2026-11-11 | wingshot | negative | NEGATIVE | mandatory | built | scene origami, computed inverse of PASTEL (dark panels by default) |
+| 2026-11-11 | wingshot | golden-hour | GOLDEN HOUR | fresh | built | new scene mine + coal-miner companion (beyond the original four scenes by user decision 2026-11-11); cavern plums and browns, gold ffd23f, ember ff9a3c, cream ink fff4e0; rocks lightened to hold 3:1 on the wall |
+| 2026-11-11 | wingshot | ink-wash | INK WASH | fresh | built | new scene cartoon + original rubber-hose deckhand companion (beyond the original four scenes by user decision 2026-11-11); black, white, grey, gold note the only tint; dark opaque HUD panels, outlines carry sprite contrast |

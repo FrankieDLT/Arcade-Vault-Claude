@@ -406,3 +406,56 @@ None. No fix landed because no number showed one was needed.
 No code changed, so the canvas hash, game-speed and walkthrough checks were skipped. No console errors beyond the known `__next.*.txt` 404s during the runs. Captures: `.pwScreencaps/perf-marcy-vampire-hunter-1280-turned.png`, `.pwScreencaps/perf-marcy-vampire-hunter-375-dark.png`.
 
 Confirm on real hardware, in particular a weak GPU or phone with the Turned Castle (flipped decor) and a boss room active: a software-rendering proxy is not the user's machine.
+
+## wingshot (2026-11-11, game-perf-booster)
+
+Verdict: within target, no change. No code touched.
+
+### Environment
+
+- Chrome 64-bit (system install) via playwright-core, headless, `--disable-gpu --disable-gpu-compositing` (`chrome-software`); default headless Chrome for the `taskMs` / `scriptMs` check. Production build (`npm run build`) served from `out/` with a Node static server.
+- All 7 skins (retro, neon, pastel, gothic, negative, golden-hour, ink-wash). Viewports 1280x1100 and 375x812 (touch UI, hint only, no pad), CPU throttle x1 and x4 via CDP.
+- Method: load play page, select the skin, scroll to top, END then PLAY AGAIN for a fresh run, wait 1.5 s, record 10 s with one canvas click every 600 ms at moving positions (spends ammo, so banner, wave, escape and companion phases all occur inside the window), first second dropped (about 540 frames kept). A `drawImage` counter confirmed the engine drew on every rAF frame (no run ended early).
+
+### Baseline table (chrome-software, x1, 1280)
+
+| Skin | avgFrameMs | p95FrameMs | longFrames | taskMs | scriptMs |
+| ---- | ---------- | ---------- | ---------- | ------ | -------- |
+| retro | 16.67 / 16.67 | 16.8 / 16.7 | 0 / 0 | 0.90 / 0.73 | 0.09 / 0.08 |
+| neon | 16.67 / 16.67 | 16.8 / 16.7 | 0 / 0 | 0.80 / 0.78 | 0.07 / 0.07 |
+| pastel | 16.67 / 16.67 | 16.7 / 16.8 | 0 / 0 | 1.08 / 0.85 | 0.10 / 0.08 |
+| gothic | 16.67 / 17.47 (outlier) / 16.67 / 16.67 | 16.8 / 16.8 / 16.7 / 16.8 | 0 / 25 / 0 / 0 | 0.89 / 1.33 / 0.95 / 0.84 | 0.08 / 0.11 / 0.10 / 0.08 |
+| negative | 16.67 / 16.67 | 16.7 / 16.8 | 0 / 0 | 0.83 / 0.70 | 0.08 / 0.08 |
+| golden-hour | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0 | 0.84 / 0.97 | 0.08 / 0.08 |
+| ink-wash | 16.67 / 16.67 | 16.7 / 16.8 | 0 / 0 | 0.92 / 0.97 | 0.09 / 0.09 |
+
+Cells with several values = repeated runs. One gothic run showed 25 long frames (a hitch cluster, same pattern seen once in the robo-vault and marcy runs while the machine was busy); three clean repeats gave 0 long frames, so it is noise. Every other row sits on the 60 Hz cap (16.67 ms) with 0 long frames. Target at 1280 (avg below 16.7 and at most 1 percent long) is met by every skin.
+
+### Other configs
+
+| Config | Viewport | CPU | Skins | avgFrameMs | p95FrameMs | longFrames | taskMs |
+| ------ | -------- | --- | ----- | ---------- | ---------- | ---------- | ------ |
+| chrome-software | 1280 | x4 | all 7 | 16.67 (retro 16.70) | 16.7 to 16.8 | 0 (retro 1) | 3.1 to 4.4 |
+| chrome-software | 375 | x1 | all 7 | 16.67 | 16.7 to 16.8 | 0 | 0.52 to 0.63 |
+| chrome-software | 375 | x4 | all 7 | 16.67 | 16.7 to 16.8 | 0 | 1.95 to 3.05 |
+| headless default | 1280 | x1 | retro, gothic, golden-hour | 10.00 (pinned by the 10 ms rAF) | 10.1 | 0 | 0.24 to 0.28 |
+
+375px: long frames 0 percent (target below 5 percent); no earlier baseline exists for this new game, so p95 16.7 to 16.8 is the baseline.
+
+### Per-skin
+
+At x1 the avg is 16.67 for all seven skins (spread 0 percent, limit 10 percent, below 16.7). `taskMs` ranges 0.70 to 1.08 per frame at 1280 and stays under 1.1 for every skin; at x4 it ranges 3.1 to 4.4 with no skin standing out.
+
+### Diagnosis
+
+Engine cost is small: `scriptMs` 0.05 to 0.11 ms per frame at x1 (0.2 to 0.55 at x4), the rest of `taskMs` is canvas raster and composite, which still fits the frame at x4. Scenes are one offscreen `drawImage` per frame and sprites are pre-rasterized, so `draw` has no per-frame path building beyond the HUD ticks and pips. The split `update` / `draw` marks and the shared-layer A/B (hide `.av-bg`, `.av-noise`, CRT overlays) were not run: the baseline already meets the target, so no number points at a cause.
+
+### Fixes
+
+None. No fix landed because no number showed one was needed.
+
+### Verification
+
+No code changed, so the canvas hash, game-speed and walkthrough checks were skipped. No console errors during the runs (the known `__next.*.txt` 404s were filtered). Capture: `.pwScreencaps/perf-wingshot-1280-retro.png`.
+
+Confirm on real hardware, in particular a weak GPU or phone with a filter-heavy skin: a software-rendering proxy is not the user's machine.

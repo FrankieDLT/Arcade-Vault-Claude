@@ -1,6 +1,6 @@
 # SPEC 22 — Marcy the Vampire Hunter: the Turned Castle (upside-down castle)
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 20, SPEC 21
 > **Date:** 2026-11-10
 > **Objective:** Add the Turned Castle (the main castle turned upside down: 8 new zones, a harder bestiary, 8 new bosses, equipment tiers 11 to 15, level cap 63 and a final boss called the Hollow King) to Marcy the Vampire Hunter, unlocked when Count Faust is defeated and saved in the same 12x12 password.

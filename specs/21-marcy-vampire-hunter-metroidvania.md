@@ -1,6 +1,6 @@
 # SPEC 21 — Marcy the Vampire Hunter (gothic castle platformer with password save)
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 05, SPEC 06, SPEC 10, SPEC 12, SPEC 13, SPEC 17, SPEC 19, SPEC 20 (Robo Vault)
 > **Date:** 2026-11-10
 > **Objective:** Build an original gothic exploration platformer (a big castle with a map, relics that open new routes, RPG levels and equipment, two playable heroes, Marcy Delrre with a whip and Frankford Delrre with a sword, and a final boss named Count Faust) as a TypeScript engine plus a canvas component, where progress is saved only as a 12x12 dot-grid password that the player writes down, copies or pastes back in.

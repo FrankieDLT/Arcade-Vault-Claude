@@ -124,6 +124,16 @@ The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/game
 - **Sound:** 19 effects (volume 0.2), a 24 s gothic stage loop (volume 0.12) and a 20 s boss loop (volume 0.18), all generated `.wav` files in `public/game-assets/marcy-vampire-hunter/`. The mute button under the CRT is the only toggle.
 - **HUD:** score, lives, level (hero level 1 to 63). The canvas also draws HP and MP bars, weapon name, room name and boss bar.
 
+### Wingshot
+
+- **Description:** Aim, click, shoot. Hit the flock before it escapes.
+- **Details:** An aim-and-shoot gallery with own art, names and sounds (no dog, no duck, no gun sprite). The only input is a click or tap on the canvas. A skin changes the whole scene and its companion: `retro` = lake (fish, fisherman), `gothic` = moors (moths, plague doctor), `neon` = orbit (alien pigeons, astronaut), `pastel` and `negative` = paper dusk (paper cranes, samurai; `negative` is the computed inverse of `pastel`), `golden-hour` = mine (rocks and gold nuggets, coal miner), `ink-wash` = 1920s cartoon (notes, star, gold note, tin can, rubber-hose deckhand). The last two add scenes beyond the original four by user decision on 2026-11-11.
+- **Rules:** 800x600 canvas. A round is 10 targets; 1 target per wave in rounds 1 and 2, 2 from round 3. 3 shots per wave, hit-scan at the pointer (radius 36 px, 44 px for touch and pen, one target per shot). Quota to clear a round: 6, 6, 7, 7, 8, 8, 9, 9, 10, 10... Below the quota the run ends. Points: common 100, quick 200 (round 3 on), rare 400 (round 2 on), decoy -200 (round 4 on, never below 0, not part of the 10). 10 of 10 hits adds 1000 x round. A target that outlives its flight or is alive when the shots run out flies off (a miss). At the end of every wave a companion rises for 1.8 s: `cheer` pose and happy tune if a real target was hit, `gag` pose and comic tune if not. The companion is decoration only.
+- **Controls:** mouse click, finger tap or pen tap on the canvas. No keyboard, no pad, no extra buttons.
+- **Touch (below 768px):** hint only (no pad). Haptics: `brick` (hit), `clear` (round cleared), `death` (game over).
+- **Sound:** 11 effects (`shot`, `hit`, `rare`, `escape`, `decoy`, `roundStart`, `roundClear`, `perfect`, `gameover`, `cheer`, `blooper`, volume 0.2), generated `.wav` in `public/game-assets/wingshot/`, no music.
+- **HUD:** score, hits in the round (label `Hits`), round (Level slot), no lives. The canvas draws the 10 quota ticks, ammo pips, the round banner and the result card.
+
 ## Touch controls and haptics
 
 Asteroids, Tetris, Arkanoid and Snake are playable on a phone (viewport below 768px). The touch hint shows only below 768px, and the pad is always on there; at 768px and wider the pad is off until the GamePad menu turns it on (Tetris, Asteroids, Glowmaw, Frogger, Pong, Space Invaders and Galactic DogFight and Robo Vault). Glowmaw is playable on a phone too (direction pad). Vibration uses `navigator.vibrate`, so iOS Safari gets no haptics. Details are in `CLAUDE.md` and `specs/10-mobile-touch-controls.md`.
