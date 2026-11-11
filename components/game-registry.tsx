@@ -3,6 +3,7 @@ import type { ComponentType } from "react";
 import { AsteroidsCanvas } from "@/components/asteroids-canvas";
 import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
 import { FroggerCanvas } from "@/components/frogger-canvas";
+import { GalacticDogfightCanvas } from "@/components/galactic-dogfight-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { PongCanvas } from "@/components/pong-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
@@ -370,6 +371,63 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     },
     touch: {
       // left / right move the cannon; A fires (hold = keeps firing as bullets clear).
+      pad: [
+        { code: "ArrowLeft", label: "◀", slot: "left", hold: true },
+        { code: "ArrowRight", label: "▶", slot: "right", hold: true },
+        { code: "Space", label: "FIRE", slot: "a", hold: true },
+      ],
+      hint: [
+        { keys: ["◀", "▶"], label: "MOVE" },
+        { keys: ["FIRE"], label: "SHOOT" },
+      ],
+    },
+  },
+  "galactic-dogfight": {
+    Canvas: GalacticDogfightCanvas,
+    controls: [
+      { keys: ["←", "→"], label: "MOVE" },
+      { keys: ["SPACE"], label: "FIRE" },
+    ],
+    stats: { lives: true, lines: false, level: true },
+    music: {
+      src: withBasePath("/game-assets/galactic-dogfight/music.wav"),
+      volume: 0.12,
+    },
+    sfx: {
+      sounds: {
+        shoot: withBasePath("/game-assets/galactic-dogfight/shoot.wav"),
+        hit: withBasePath("/game-assets/galactic-dogfight/hit.wav"),
+        bossHit: withBasePath("/game-assets/galactic-dogfight/boss-hit.wav"),
+        death: withBasePath("/game-assets/galactic-dogfight/death.wav"),
+        gameover: withBasePath("/game-assets/galactic-dogfight/gameover.wav"),
+        stageStart: withBasePath(
+          "/game-assets/galactic-dogfight/stage-start.wav",
+        ),
+        beam: withBasePath("/game-assets/galactic-dogfight/beam.wav"),
+        capture: withBasePath("/game-assets/galactic-dogfight/capture.wav"),
+        rescue: withBasePath("/game-assets/galactic-dogfight/rescue.wav"),
+        challenge: withBasePath("/game-assets/galactic-dogfight/challenge.wav"),
+        perfect: withBasePath("/game-assets/galactic-dogfight/perfect.wav"),
+        extraLife: withBasePath(
+          "/game-assets/galactic-dogfight/extra-life.wav",
+        ),
+      },
+      volume: 0.2,
+    },
+    appearance: {
+      skins: [
+        { id: "retro", label: "RETRO" },
+        { id: "neon", label: "NEON" },
+        { id: "pastel", label: "PASTEL" },
+        { id: "gothic", label: "GOTHIC" },
+        { id: "negative", label: "NEGATIVE" },
+        { id: "sunset-drive", label: "SUNSET DRIVE" },
+        { id: "chalkboard", label: "CHALKBOARD" },
+      ],
+      themes: false,
+    },
+    touch: {
+      // left / right move the fighter; A fires (hold = keeps firing).
       pad: [
         { code: "ArrowLeft", label: "◀", slot: "left", hold: true },
         { code: "ArrowRight", label: "▶", slot: "right", hold: true },

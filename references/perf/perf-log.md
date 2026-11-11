@@ -221,3 +221,48 @@ All skins within 10 percent of each other and under 16.7 ms.
 ### Not run
 
 No code changed, so canvas-hash, game-speed and walkthrough checks were skipped. No console errors other than 404s were seen in any run. Captures: `.pwScreencaps/perf-space-invaders-*.png`. The 60 Hz cap means the proxy shows "fits in a frame", not exact cost; confirm on real hardware.
+
+## galactic-dogfight (2026-11-10, game-perf-booster)
+
+Verdict: within target, no change. No code touched.
+
+### Environment
+
+- Installed Chrome via `playwright-core`, headless, production build (`npm run build`, `out/` on a Node static server), Windows 11, devicePixelRatio 1.
+- `chrome-software`: `--disable-gpu --disable-gpu-compositing` (vsync-paced at 60 Hz here, so `avgFrameMs` cannot read below 16.67; the headroom is `taskMs`). `headless`: default flags (fixed 10 ms rAF pacing).
+- 1280x1100 and 375x812 touch context, CPU x1 and x4 (CDP). Run: load `/games/galactic-dogfight/play/`, wait 1.5 s, hold `Space` and alternate `ArrowLeft` / `ArrowRight` (450 ms held, 50 ms release) for 10 s; first second dropped. Scripts live in the scratchpad.
+
+### Baseline = final table
+
+| Config          | Viewport | CPU | avgFrameMs | p95FrameMs | longFrames (of 540 / 940) | taskMs      | scriptMs    |
+| --------------- | -------- | --- | ---------- | ---------- | ------------------------- | ----------- | ----------- |
+| chrome-software | 1280     | x1  | 16.67 / 16.67 | 16.8 / 16.8 | 0 / 0                  | 1.26 / 1.32 | 0.25 / 0.27 |
+| chrome-software | 1280     | x4  | 16.67      | 16.8       | 0                         | 5.34        | 1.14        |
+| chrome-software | 375      | x1  | 16.67      | 16.7       | 0                         | 1.12        | 0.24        |
+| chrome-software | 375      | x4  | 16.67      | 16.8       | 0                         | 4.34        | 1.01        |
+| headless        | 1280     | x1  | 10.00      | 10.1       | 0                         | 0.56        | 0.23        |
+| headless        | 1280     | x4  | 10.00      | 10.1       | 0                         | 2.04        | 0.87        |
+
+### Diagnosis
+
+- Software rendering sits on the vsync cap with no long frames, so the shared CSS layers are not a problem for this game (nothing to report).
+- Engine cost is `scriptMs` about 0.25 ms per frame at x1 and about 1.1 at x4, far below 16.7 ms. No fix is justified by these numbers.
+- 1280: avg at the 16.67 cap, longFrames 0%. 375: longFrames 0%, p95 16.7 to 16.8.
+
+### Per-skin (chrome-software, 1280x1100, x1, skin cycled by clicking SKIN, 6 s each)
+
+| Skin         | avgFrameMs | longFrames | taskMs | scriptMs |
+| ------------ | ---------- | ---------- | ------ | -------- |
+| retro        | 16.67      | 0          | 1.36   | 0.31     |
+| neon         | 16.67      | 0          | 1.34   | 0.29     |
+| pastel       | 16.67      | 0          | 0.91   | 0.21     |
+| gothic       | 16.67      | 0          | 0.47   | 0.09     |
+| negative     | 16.67      | 0          | 1.16   | 0.21     |
+| sunset-drive | 16.67      | 0          | 1.30   | 0.24     |
+| chalkboard   | 16.67      | 0          | 0.86   | 0.20     |
+
+All skins sit on the frame cap. `taskMs` differences between skins partly reflect game state (a run can end mid-window, as in gothic), not skin cost; every value is under 1.4 ms.
+
+### Not run
+
+No code changed, so canvas-hash, game-speed and walkthrough checks were skipped. Only console error seen: the known 404 (prefetch). Capture: `.pwScreencaps/perf-galactic-dogfight-1280.png`. The 60 Hz cap means the proxy shows "fits in a frame", not exact cost; confirm on real hardware.

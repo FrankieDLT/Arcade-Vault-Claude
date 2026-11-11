@@ -51,3 +51,10 @@
 | 2026-11-10 | space-invaders | negative | NEGATIVE | mandatory | built | computed inverse of retro: #fff bg, black sprites |
 | 2026-11-10 | space-invaders | blueprint | BLUEPRINT | fresh | built | #0b2a5b bg; rows #ffd166 / #7fd0ff / #e8f1ff, cannon #fff, bomb #ff9f68, ground #e8f1ff 60% |
 | 2026-11-10 | space-invaders | newsprint | NEWSPRINT | fresh | built | #e9e1cf bg; rows #b3261e / #1f3f8a / #1b1a17, cannon #1b1a17, bomb #b3261e, ground #1b1a17 60% |
+| 2026-11-10 | galactic-dogfight | retro | RETRO | mandatory | built | #000 bg, all white sprites, #8a8a8a hit boss / captured ship |
+| 2026-11-10 | galactic-dogfight | neon | NEON | mandatory | built | #05020f bg; cyan bees, magenta butterflies, yellow boss, green fighter, 14px glow on fighter and shots |
+| 2026-11-10 | galactic-dogfight | pastel | PASTEL | mandatory | built | #f3ecf7 bg; teal #2f8f7a, rose #c4486a, violet #7c4fc0, plum ink #5a4a63 |
+| 2026-11-10 | galactic-dogfight | gothic | GOTHIC | mandatory | built | #0d0a0e bg; bone bees/fighter, violet butterflies, crimson #cf2442 boss, silver stars |
+| 2026-11-10 | galactic-dogfight | negative | NEGATIVE | mandatory | built | computed inverse of retro: #fff bg, black sprites, #757575 grays |
+| 2026-11-10 | galactic-dogfight | sunset-drive | SUNSET DRIVE | fresh | built | synthwave: #1a0b2e bg, bee #ffd23f, butterfly #ff4fa3, boss #ff7a1a, hit #ffe9a8, fighter #5ff2ff, captured #b794ff, stars #ff9de2 |
+| 2026-11-10 | galactic-dogfight | chalkboard | CHALKBOARD | fresh | built | #1f3a2e slate bg; chalk #f2f0e6 bees/text, pink #f2a7b8 butterflies, yellow #f4d35e boss, blue #9ad1f5 fighter |
