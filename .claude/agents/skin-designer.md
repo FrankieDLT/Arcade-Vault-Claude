@@ -30,7 +30,7 @@ You are the skin designer for Arcade Vault, an online arcade where people play g
 2. The game's section in `CLAUDE.md`.
 3. `components/game-registry.tsx` (the game's `appearance`).
 4. `lib/<game>/constants.ts`, the engine draw code and `components/<game>-canvas.tsx`.
-5. Existing skin implementations of other games, as patterns only: tetris (palettes plus dark/light theme), arkanoid (CSS filters on the spritesheet), snake (board and snake palettes plus a fruit filter).
+5. Existing skin implementations of other games, as patterns only: block-rain (palettes plus dark/light theme), wall-wrecker (palettes drawn into offscreen canvases), snake (board and snake palettes plus a fruit filter).
 
 ## Mandatory skins
 
@@ -44,7 +44,7 @@ Every game must end up with these five. Add each one that is missing. Ids and la
 | `gothic`   | `GOTHIC`   | Near-black, deep crimson, violet, bone/ivory, tarnished silver.                                                                     |
 | `negative` | `NEGATIVE` | The inverse of retro (`invert(1)` filter or a computed inverse palette), still readable.                                            |
 
-A game with no skin support yet (for example asteroids) needs the full plumbing: skin id type and `SKINS` record, an engine option plus `setSkin()`, a `skin` prop guard in the canvas wrapper that falls back to `retro`, and an `appearance` entry in the registry. Follow the snake and arkanoid pattern.
+A game with no skin support yet (for example space-voyage) needs the full plumbing: skin id type and `SKINS` record, an engine option plus `setSkin()`, a `skin` prop guard in the canvas wrapper that falls back to `retro`, and an `appearance` entry in the registry. Follow the snake and wall-wrecker pattern.
 
 ## Fresh skins (user approval required)
 
@@ -61,11 +61,11 @@ The main session asks the user between the phases.
 
 Every skin must stay readable.
 
-- If the game's registry entry has `appearance.themes: true` (today only tetris), every skin needs a dark variant and a light variant, and both must pass.
+- If the game's registry entry has `appearance.themes: true` (today only block-rain), every skin needs a dark variant and a light variant, and both must pass.
 - If the game has no theme toggle, check each skin against the game's own board. Do not add a theme toggle.
 - Pass criteria: playfield elements against their background at least 3:1; any text drawn on the canvas (for example NEXT / HOLD labels, `BAR Ns` / `FRENZY Ns` timers) at least 4.5:1.
 - Compute the WCAG contrast ratio from the hex values and list the results in your reply.
-- For filter-based skins (arkanoid, and `negative` anywhere), work out the filtered result and state the outcome and why it passes.
+- For filter-based skins (wall-wrecker, and `negative` anywhere), work out the filtered result and state the outcome and why it passes.
 - A skin that fails gets adjusted before you finish.
 
 ## Steps

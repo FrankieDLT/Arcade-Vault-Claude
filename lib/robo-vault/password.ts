@@ -94,3 +94,20 @@ export function filledLabels(grid: PasswordGrid): string[] {
   for (let i = 0; i < grid.length; i++) if (grid[i]) out.push(cellLabel(i));
   return out;
 }
+
+const TOKEN = /^([A-Ea-e])([1-5])$/;
+
+/** Parses pasted cell labels (`A2 b5, E1`). Returns null on any unknown token or when there is none. */
+export function parsePasswordText(text: string): PasswordGrid | null {
+  if (typeof text !== "string" || text.length > 2000) return null;
+  const tokens = text.split(/[\s,;]+/).filter((t) => t.length > 0);
+  if (tokens.length === 0) return null;
+  const grid: PasswordGrid = new Array<boolean>(GRID_SIZE * GRID_SIZE).fill(false);
+  for (const t of tokens) {
+    const m = TOKEN.exec(t);
+    if (!m) return null;
+    const row = m[1].toUpperCase().charCodeAt(0) - 65;
+    grid[row * GRID_SIZE + (parseInt(m[2], 10) - 1)] = true;
+  }
+  return grid;
+}

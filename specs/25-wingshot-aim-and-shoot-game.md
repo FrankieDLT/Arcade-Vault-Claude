@@ -1,6 +1,6 @@
 # SPEC 25 — Wingshot: a mouse and tap shooting gallery with a different scene per skin
 
-> **Status:** Approved
+> **Status:** Implemented
 > **Depends on:** SPEC 06, SPEC 10, SPEC 11, SPEC 13, SPEC 19
 > **Date:** 2026-11-11
 > **Objective:** Add Wingshot, an original aim-and-shoot gallery game played only by clicking or tapping flying targets on the canvas, with rounds of waves, 3 shots per wave and a hit quota per round, where each skin changes the whole scene and its companion (fisherman and fish, plague doctor and moths, astronaut and space pigeons, samurai and paper cranes) and the companion reacts to every wave with a happy or a comic tune.

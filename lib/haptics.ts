@@ -9,7 +9,7 @@ export type HapticKind =
   | "gameover"
   | "brick"
   | "clear"
-  | "tetris"
+  | "quad"
   | "split"
   | "fruit"
   | "bonus"
@@ -22,7 +22,7 @@ export const HAPTIC_PATTERNS: Record<HapticKind, number | number[]> = {
   gameover: [40, 60, 120],
   brick: 15,
   clear: 25,
-  tetris: [30, 40, 60],
+  quad: [30, 40, 60],
   split: 20,
   fruit: 15,
   bonus: [20, 30, 40],

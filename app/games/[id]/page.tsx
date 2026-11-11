@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Suspense } from "react";
 import { notFound } from "next/navigation";
 import { BestScore } from "@/components/best-score";
+import { LikeButton } from "@/components/like-button";
 import { Leaderboard } from "@/components/leaderboard";
 import { OriginEmoji } from "@/components/origin-emoji";
 import { GAMES, ORIGINS } from "@/lib/games";
@@ -56,10 +57,7 @@ async function GameDetail({
           <h2 className="neon-cyan">{game.title}</h2>
           <p>{game.long}</p>
           <div className="stat-strip">
-            <div>
-              <div className="l">Plays</div>
-              <div className="v">{game.plays}</div>
-            </div>
+            <LikeButton gameId={game.id} />
             <div>
               <div className="l">Global best</div>
               <div

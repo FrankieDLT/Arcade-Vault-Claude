@@ -1,6 +1,5 @@
-import { withBasePath } from "../base-path";
 // Snake has no source code: every game value below is a design value of SPEC 09.
-// Sprite crops are ported unchanged from references/source-assets/snake-assets/sprites.js.
+// Fruit art is original: 16x16 run tables in sprites.ts (SPEC 26).
 
 export const COLS = 20;
 export const ROWS = 15;
@@ -29,15 +28,6 @@ export const SPRITE_BOX = 36; // px; fruit sprites fit a square box centered in 
 
 export const MAX_SCORE = 10_000_000;
 
-export const SHEET_SRC = withBasePath("/game-assets/snake/fruits.png");
-
-export interface FruitSprite {
-  x: number;
-  y: number;
-  w: number;
-  h: number;
-}
-
 export type FruitName =
   | "banana"
   | "orange"
@@ -62,34 +52,13 @@ export type FruitName =
   | "pineapple"
   | "melon";
 
-// Pixel-art row of fruits.png (all y = 136, h = 160).
-export const FRUIT_SPRITES: Record<FruitName, FruitSprite> = {
-  banana: { x: 34, y: 136, w: 110, h: 160 },
-  orange: { x: 186, y: 136, w: 150, h: 160 },
-  grape: { x: 378, y: 136, w: 110, h: 160 },
-  garlic: { x: 540, y: 136, w: 130, h: 160 },
-  eggplant: { x: 712, y: 136, w: 130, h: 160 },
-  strawberry: { x: 894, y: 136, w: 110, h: 160 },
-  cherry: { x: 1066, y: 136, w: 110, h: 160 },
-  carrot: { x: 1228, y: 136, w: 130, h: 160 },
-  mushroom: { x: 1400, y: 136, w: 130, h: 160 },
-  broccoli: { x: 1582, y: 136, w: 110, h: 160 },
-  watermelon: { x: 1734, y: 136, w: 150, h: 160 },
-  pepper: { x: 1906, y: 136, w: 150, h: 160 },
-  kiwi: { x: 2068, y: 136, w: 170, h: 160 },
-  lemon: { x: 2250, y: 136, w: 140, h: 160 },
-  peach: { x: 2432, y: 136, w: 130, h: 160 },
-  peanut: { x: 2604, y: 136, w: 130, h: 160 },
-  apple: { x: 2786, y: 136, w: 110, h: 160 },
-  tomato: { x: 2948, y: 136, w: 130, h: 160 },
-  berries: { x: 3110, y: 136, w: 150, h: 160 },
-  grapes2: { x: 3302, y: 136, w: 110, h: 160 },
-  pineapple: { x: 3454, y: 136, w: 150, h: 160 },
-  melon: { x: 3637, y: 136, w: 130, h: 160 },
-};
-
-export const FRUIT_NAMES = Object.keys(FRUIT_SPRITES) as FruitName[];
-export const BONUS_FRUIT: FruitName = "pineapple";
+// The 22 regular fruits (see sprites.ts) and the golden bonus.
+export type SpriteName = FruitName | "golden";
+export const FRUIT_NAMES: readonly FruitName[] = [
+  "banana", "orange", "grape", "garlic", "eggplant", "strawberry", "cherry", "carrot", "mushroom", "broccoli", "watermelon",
+  "pepper", "kiwi", "lemon", "peach", "peanut", "apple", "tomato", "berries", "grapes2", "pineapple", "melon",
+];
+export const BONUS_FRUIT: SpriteName = "golden";
 
 export type SnakeSkin = "retro" | "neon" | "pastel" | "gothic" | "negative" | "lcd-brick" | "magma";
 
@@ -101,8 +70,7 @@ export interface SkinPalette {
   head: string;
   eye: string;
   glow: number; // shadowBlur for the snake, 0 = none
-  fruitFilter: string; // CSS filter for the sprites
-  fallbackFruit: string; // flat circle if the sheet fails to load
+  fruitFilter: string; // CSS filter applied when the sprites are pre-rendered
   bonusRing: string;
 }
 
@@ -116,7 +84,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#0d1f08",
     glow: 0,
     fruitFilter: "none",
-    fallbackFruit: "#ff4d4d",
     bonusRing: "#ffd400",
   },
   neon: {
@@ -128,7 +95,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#05060d",
     glow: 14,
     fruitFilter: "saturate(1.4) brightness(1.1)",
-    fallbackFruit: "#ff006e",
     bonusRing: "#f5ff00", // --yellow
   },
   pastel: {
@@ -140,7 +106,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#5a4a63",
     glow: 0,
     fruitFilter: "saturate(0.7) brightness(1.15)",
-    fallbackFruit: "#ff9aa8",
     bonusRing: "#f2b705",
   },
   gothic: {
@@ -152,7 +117,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#2a0610",
     glow: 0,
     fruitFilter: "saturate(0.6) contrast(1.1) brightness(0.95)",
-    fallbackFruit: "#9b4dca", // violet
     bonusRing: "#b9a4ff", // violet
   },
   // Computed inverse of retro, channel by channel (255 - c); fruits use invert(1).
@@ -165,7 +129,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#f2e0f7",
     glow: 0,
     fruitFilter: "invert(1)",
-    fallbackFruit: "#007a7a",
     bonusRing: "#002bff",
   },
   // 90s phone LCD: dark pixels on a green-gray screen.
@@ -178,7 +141,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#c7d6a0",
     glow: 0,
     fruitFilter: "grayscale(1) sepia(0.6) contrast(1.2)",
-    fallbackFruit: "#0f1a0a",
     bonusRing: "#0f1a0a",
   },
   // Molten rock: glowing orange snake on charred basalt.
@@ -191,7 +153,6 @@ export const SKINS: Record<SnakeSkin, SkinPalette> = {
     eye: "#1a0d0a",
     glow: 0,
     fruitFilter: "saturate(1.3) hue-rotate(-10deg)",
-    fallbackFruit: "#ff4d2e",
     bonusRing: "#7fe7ff",
   },
 };

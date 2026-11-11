@@ -9,7 +9,7 @@ import { useGamepad } from "@/components/gamepad-provider";
 import { useSession } from "@/components/session-provider";
 import { TouchPad } from "@/components/touch-pad";
 import { useTouchUi } from "@/components/use-touch-ui";
-import type { TetrisTheme } from "@/lib/tetris/constants";
+import type { BlockRainTheme } from "@/lib/block-rain/constants";
 import { useBackgroundMusic } from "@/components/use-background-music";
 import { useSoundEffects } from "@/components/use-sound-effects";
 import {
@@ -76,7 +76,7 @@ export function GamePlayer({
   const [skin, setSkin] = useState<string>(
     definition?.appearance?.skins[0]?.id ?? "retro",
   );
-  const [theme, setTheme] = useState<TetrisTheme>("dark");
+  const [theme, setTheme] = useState<BlockRainTheme>("dark");
   // Haptics: in memory only, independent of mute, kept by PLAY AGAIN, reset on reload.
   const [hapticsOn, setHapticsOn] = useState(true);
   const touchUi = useTouchUi();
@@ -392,7 +392,7 @@ export function GamePlayer({
                 definition.sfx
                   ? (sound) => {
                       playSound(sound);
-                      // Arkanoid: a broken brick also vibrates; bounces do not.
+                      // Wall Wrecker: a broken brick also vibrates; bounces do not.
                       if (sound === "brick") fireHaptic("brick");
                     }
                   : undefined

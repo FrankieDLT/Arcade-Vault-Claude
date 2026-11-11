@@ -6,9 +6,11 @@ import { useCredits } from "@/components/credits-provider";
 import { PinSprite } from "@/components/pin-sprite";
 import { rememberNextPath } from "@/lib/auth-redirect";
 import { PinsError, pullPin, type PullResult } from "@/lib/pins-db";
+import { playCrank, playCrankTick, playReveal, setPinSfxMuted } from "@/lib/pins/sfx";
 import {
   DUPLICATE_REFUND,
   PIN_BY_ID,
+  PULL_COSTS,
   RARITY_LABEL,
   RARITY_ODDS,
   RARITY_ORDER,
@@ -23,11 +25,11 @@ const CLEAR_MS = 3000;
 const wobble = (i: number, k: number) =>
   Math.round(Math.sin(i * 2.1 + k * 1.7) * 38);
 
-const BUTTONS: { cost: PullCost; hint: string }[] = [
-  { cost: 5, hint: "Standard odds" },
-  { cost: 10, hint: "Better odds, favors new pins" },
-  { cost: 100, hint: "Guaranteed new pin, lowest rarity first" },
-];
+const HINTS: Record<PullCost, string> = {
+  5: "Standard odds",
+  10: "Better odds, favors new pins",
+  100: "Guaranteed new pin, lowest rarity first",
+};
 
 const ERROR_TEXT: Record<PinsError["kind"], string> = {
   insufficient: "Not enough credits. Finish a game to earn more.",
@@ -67,11 +69,16 @@ export function PinMachine({
   total: number;
   onObtained: (pinId: string) => void;
 }) {
-  const { balance, setBalance } = useCredits();
+  const { balance, setBalance, status: creditsStatus } = useCredits();
   const [phase, setPhase] = useState<Phase>("idle");
   const [result, setResult] = useState<PullResult | null>(null);
   const [error, setError] = useState<PinsError["kind"] | null>(null);
   const [cleared, setCleared] = useState(false);
+  // Memory only (never stored): the cost the crank pulls and the sound toggle.
+  const [choice, setChoice] = useState<PullCost | null>(null);
+  const [soundOn, setSoundOn] = useState(true);
+  const [pulledOnce, setPulledOnce] = useState(false);
+  const radios = useRef<(HTMLButtonElement | null)[]>([]);
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const clearTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -86,11 +93,54 @@ export function PinMachine({
   const complete = signedIn && ownedCount >= total;
   const busy = phase === "dropping";
 
+  // An option is unavailable when it costs more than the balance, or 100 once the collection is complete.
+  const unaffordable = (cost: PullCost) =>
+    balance < cost || (cost === 100 && complete);
   const disabledFor = (cost: PullCost) =>
-    !signedIn || busy || balance < cost || (cost === 100 && complete);
+    !signedIn || busy || unaffordable(cost);
+
+  // The selection is derived: the player's pick while it is still affordable, else the default 5, and after
+  // a pull the highest option still affordable. Nothing when even 5 is out of reach or for a guest.
+  const open = PULL_COSTS.filter((c) => !unaffordable(c));
+  const selected: PullCost | null = !signedIn
+    ? null
+    : choice !== null && !unaffordable(choice)
+      ? choice
+      : open.length === 0
+        ? null
+        : !pulledOnce && open.includes(5)
+          ? 5
+          : open[open.length - 1];
+
+  const toggleSound = () => {
+    const next = !soundOn;
+    setSoundOn(next);
+    setPinSfxMuted(!next);
+  };
+
+  const onRadioKey = (e: React.KeyboardEvent, from: number) => {
+    const dir =
+      e.key === "ArrowRight" || e.key === "ArrowDown"
+        ? 1
+        : e.key === "ArrowLeft" || e.key === "ArrowUp"
+          ? -1
+          : 0;
+    if (dir === 0) return;
+    e.preventDefault();
+    for (let step = 1; step <= PULL_COSTS.length; step++) {
+      const i = (from + dir * step + PULL_COSTS.length * 2) % PULL_COSTS.length;
+      if (!disabledFor(PULL_COSTS[i])) {
+        setChoice(PULL_COSTS[i]);
+        radios.current[i]?.focus();
+        return;
+      }
+    }
+  };
 
   const pull = async (cost: PullCost) => {
     if (disabledFor(cost)) return;
+    playCrankTick();
+    setPulledOnce(true);
     if (clearTimer.current) clearTimeout(clearTimer.current);
     setError(null);
     setResult(null);
@@ -100,11 +150,13 @@ export function PinMachine({
       const r = await pullPin(cost);
       setBalance(r.balance);
       setResult(r);
+      playCrank(r.rarity);
       const reduced = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
       ).matches;
       const reveal = () => {
         setPhase("revealed");
+        playReveal(r.rarity);
         onObtained(r.pinId);
         clearTimer.current = setTimeout(() => setCleared(true), CLEAR_MS);
       };
@@ -148,11 +200,17 @@ export function PinMachine({
         </div>
         <div className="pm-coil" aria-hidden="true" />
         <div className="pm-base">
-          <div className="pm-lever" aria-hidden="true">
+          <button
+            type="button"
+            className="pm-lever"
+            aria-label="Pull the crank"
+            disabled={!signedIn || busy || selected === null}
+            onClick={() => selected !== null && pull(selected)}
+          >
             <span className="pm-lever-arm" />
             <span className="pm-lever-ball" />
             <span className="pm-lever-base" />
-          </div>
+          </button>
           <div className="pm-sign">
             <span className="pm-coin" aria-hidden="true" />
             <div className="pm-balance">
@@ -177,20 +235,48 @@ export function PinMachine({
       </div>
 
       <div className="pm-controls">
-        <div className="pm-buttons">
-          {BUTTONS.map(({ cost, hint }) => (
-            <button
-              key={cost}
-              type="button"
-              className="btn pm-btn"
-              disabled={disabledFor(cost)}
-              onClick={() => pull(cost)}
-            >
-              <span className="pm-btn-cost">{cost} CREDITS</span>
-              <span className="pm-btn-hint">{hint}</span>
-            </button>
-          ))}
+        <div
+          className="pm-dial"
+          role="radiogroup"
+          aria-label="Credits to spend on the next pull"
+        >
+          {PULL_COSTS.map((cost, i) => {
+            const on = selected === cost;
+            return (
+              <button
+                key={cost}
+                ref={(el) => {
+                  radios.current[i] = el;
+                }}
+                type="button"
+                role="radio"
+                aria-checked={on}
+                tabIndex={on || (selected === null && i === 0) ? 0 : -1}
+                disabled={disabledFor(cost)}
+                className={"pm-opt" + (on ? " is-on" : "")}
+                onClick={() => setChoice(cost)}
+                onKeyDown={(e) => onRadioKey(e, i)}
+              >
+                <span className="pm-opt-cost">{cost}</span>
+                <span className="pm-opt-unit">credits</span>
+              </button>
+            );
+          })}
         </div>
+        <p className="pm-opt-hint" aria-live="polite">
+          {selected !== null ? HINTS[selected] : "Pick an amount, then pull the crank."}
+        </p>
+        {signedIn && creditsStatus === "ready" && balance < 5 && (
+          <p className="pins-note">{ERROR_TEXT.insufficient}</p>
+        )}
+        <button
+          type="button"
+          className="btn ghost pm-sound"
+          aria-pressed={soundOn}
+          onClick={toggleSound}
+        >
+          SOUND {soundOn ? "ON" : "OFF"}
+        </button>
 
         {!signedIn && !sessionLoading && (
           <Link

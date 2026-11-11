@@ -17,8 +17,6 @@ export interface Game {
   cover: string;
   /** Accent for the card's play button */
   color: GameColor;
-  /** Formatted plays count, e.g. "12.4K" */
-  plays: string;
   /** Who made the game. Shown as a tag (detail) and an emoji (library card). */
   origin: Origin;
 }

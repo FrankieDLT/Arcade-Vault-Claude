@@ -1,18 +1,18 @@
 import { withBasePath } from "@/lib/base-path";
 import type { ComponentType } from "react";
-import { AsteroidsCanvas } from "@/components/asteroids-canvas";
-import { ArkanoidCanvas } from "@/components/arkanoid-canvas";
-import { FroggerCanvas } from "@/components/frogger-canvas";
+import { SpaceVoyageCanvas } from "@/components/space-voyage-canvas";
+import { WallWreckerCanvas } from "@/components/wall-wrecker-canvas";
+import { StreetJumperCanvas } from "@/components/street-jumper-canvas";
 import { GalacticDogfightCanvas } from "@/components/galactic-dogfight-canvas";
 import { GlowmawCanvas } from "@/components/glowmaw-canvas";
 import { RoboVaultCanvas } from "@/components/robo-vault-canvas";
 import { WingshotCanvas } from "@/components/wingshot-canvas";
 import { VampireHunterCanvas } from "@/components/vampire-hunter-canvas";
-import { PongCanvas } from "@/components/pong-canvas";
+import { SuperTennisCanvas } from "@/components/super-tennis-canvas";
 import { SnakeCanvas } from "@/components/snake-canvas";
-import { SpaceInvadersCanvas } from "@/components/space-invaders-canvas";
-import { TetrisCanvas } from "@/components/tetris-canvas";
-import type { TetrisTheme } from "@/lib/tetris/constants";
+import { AlienAttackCanvas } from "@/components/alien-attack-canvas";
+import { BlockRainCanvas } from "@/components/block-rain-canvas";
+import type { BlockRainTheme } from "@/lib/block-rain/constants";
 import type { PadSlot } from "@/lib/gamepad";
 
 /** Props every game canvas accepts; a canvas ignores the ones its engine does not have. */
@@ -27,7 +27,7 @@ export interface GameCanvasProps {
   onLines?: (lines: number) => void;
   /** Skin id from `appearance.skins`; each canvas narrows it with a guard and falls back to its default. */
   skin?: string;
-  theme?: TetrisTheme;
+  theme?: BlockRainTheme;
   /** Sound events from the engine; the platform plays them. */
   onSound?: (sound: string) => void;
   /** Robo Vault: a boss was defeated (`frostbyte`, `rematch:frostbyte`, `sam`, ...). Signed-in players earn 1 credit each. */
@@ -38,7 +38,7 @@ export interface GameCanvasProps {
   canDropCredit?: () => boolean;
   /** Track switch for entries whose `music` has an `alt` track: "boss" = alt, "stage" = main. */
   onMusic?: (track: "stage" | "boss") => void;
-  /** Haptic events from the engine ("clear", "tetris", "split", "fruit", "bonus"); the platform vibrates. */
+  /** Haptic events from the engine ("clear", "quad", "split", "fruit", "bonus"); the platform vibrates. */
   onHaptic?: (name: string) => void;
   /** A change of `id` asks the engine to jump to `level` (level select in the PAUSED overlay). */
   levelRequest?: { level: number; id: number };
@@ -103,8 +103,8 @@ export interface GameDefinition {
 
 // Games without an entry keep the fake simulation in GamePlayer.
 export const GAME_REGISTRY: Record<string, GameDefinition> = {
-  asteroids: {
-    Canvas: AsteroidsCanvas,
+  "space-voyage": {
+    Canvas: SpaceVoyageCanvas,
     controls: [
       { keys: ["←", "→"], label: "ROTATE" },
       { keys: ["↑"], label: "THRUST" },
@@ -138,8 +138,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       ],
     },
   },
-  tetris: {
-    Canvas: TetrisCanvas,
+  "block-rain": {
+    Canvas: BlockRainCanvas,
     controls: [
       { keys: ["←", "→"], label: "MOVE" },
       { keys: ["↑", "X"], label: "ROTATE" },
@@ -150,7 +150,7 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     ],
     stats: { lives: false, lines: true, level: true },
     music: {
-      src: withBasePath("/game-assets/tetris/korobeiniki.mp3"),
+      src: withBasePath("/game-assets/block-rain/korobeiniki.mp3"),
       volume: 0.2,
     },
     appearance: {
@@ -184,8 +184,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       ],
     },
   },
-  arkanoid: {
-    Canvas: ArkanoidCanvas,
+  "wall-wrecker": {
+    Canvas: WallWreckerCanvas,
     controls: [
       { keys: ["←", "→"], label: "MOVE" },
       { keys: ["MOUSE"], label: "PADDLE" },
@@ -202,8 +202,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     },
     sfx: {
       sounds: {
-        bounce: withBasePath("/game-assets/arkanoid/ball-bounce.mp3"),
-        brick: withBasePath("/game-assets/arkanoid/break-sound.mp3"),
+        bounce: withBasePath("/game-assets/wall-wrecker/ball-bounce.wav"),
+        brick: withBasePath("/game-assets/wall-wrecker/break-sound.wav"),
       },
       volume: 1,
     },
@@ -272,8 +272,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       hint: [{ keys: ["◀", "▲", "▼", "▶"], label: "STEER" }],
     },
   },
-  frogger: {
-    Canvas: FroggerCanvas,
+  "street-jumper": {
+    Canvas: StreetJumperCanvas,
     controls: [
       { keys: ["←", "↑", "→", "↓"], label: "HOP" },
       { keys: ["W", "A", "S", "D"], label: "HOP" },
@@ -301,8 +301,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       hint: [{ keys: ["◀", "▲", "▼", "▶"], label: "HOP" }],
     },
   },
-  pong: {
-    Canvas: PongCanvas,
+  "super-tennis": {
+    Canvas: SuperTennisCanvas,
     controls: [
       { keys: ["W", "S"], label: "PLAYER 1" },
       { keys: ["↑", "↓"], label: "PLAYER 2 / PVE" },
@@ -310,9 +310,9 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     stats: { lives: false, lines: false, level: false },
     sfx: {
       sounds: {
-        paddle: withBasePath("/game-assets/pong/paddle.wav"),
-        goal: withBasePath("/game-assets/pong/goal.wav"),
-        gameover: withBasePath("/game-assets/pong/gameover.wav"),
+        paddle: withBasePath("/game-assets/super-tennis/paddle.wav"),
+        goal: withBasePath("/game-assets/super-tennis/goal.wav"),
+        gameover: withBasePath("/game-assets/super-tennis/gameover.wav"),
       },
       volume: 0.2,
       pauseToggle: true,
@@ -356,8 +356,8 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
       ],
     },
   },
-  "space-invaders": {
-    Canvas: SpaceInvadersCanvas,
+  "alien-attack": {
+    Canvas: AlienAttackCanvas,
     controls: [
       { keys: ["←", "→"], label: "MOVE" },
       { keys: ["SPACE"], label: "FIRE" },
@@ -366,10 +366,10 @@ export const GAME_REGISTRY: Record<string, GameDefinition> = {
     levelSelect: { min: 1, max: 99 },
     sfx: {
       sounds: {
-        shoot: withBasePath("/game-assets/space-invaders/shoot.wav"),
-        hit: withBasePath("/game-assets/space-invaders/hit.wav"),
-        boom: withBasePath("/game-assets/space-invaders/boom.wav"),
-        gameover: withBasePath("/game-assets/space-invaders/gameover.wav"),
+        shoot: withBasePath("/game-assets/alien-attack/shoot.wav"),
+        hit: withBasePath("/game-assets/alien-attack/hit.wav"),
+        boom: withBasePath("/game-assets/alien-attack/boom.wav"),
+        gameover: withBasePath("/game-assets/alien-attack/gameover.wav"),
       },
       volume: 0.2,
     },

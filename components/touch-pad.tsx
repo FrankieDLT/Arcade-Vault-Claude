@@ -39,7 +39,7 @@ function sendKey(type: "keydown" | "keyup", code: string, repeat = false) {
   );
 }
 
-/** Held direction repeat, Tetris Guideline timing at 60 Hz: DAS 10 frames, ARR 2 frames. */
+/** Held direction repeat, Block Rain Guideline timing at 60 Hz: DAS 10 frames, ARR 2 frames. */
 const REPEAT_DELAY_MS = 167;
 const REPEAT_INTERVAL_MS = 33;
 

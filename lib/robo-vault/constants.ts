@@ -90,7 +90,7 @@ export const WEAPON_ORDER: readonly WeaponId[] = [
   "tide",
 ];
 
-// Skins are CSS filters on the finished canvas (same idea as the Arkanoid sheet).
+// Skins are CSS filters on the finished canvas (same idea as the Wall Wrecker sheet).
 export type RoboVaultSkinId =
   | "retro"
   | "neon"
