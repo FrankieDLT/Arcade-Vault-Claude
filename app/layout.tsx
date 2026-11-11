@@ -5,6 +5,7 @@ import {
   Courier_Prime,
 } from "next/font/google";
 import "./globals.css";
+import { CreditsProvider } from "@/components/credits-provider";
 import { Footer } from "@/components/footer";
 import { GamepadProvider } from "@/components/gamepad-provider";
 import { Nav } from "@/components/nav";
@@ -45,11 +46,13 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <div className="av-noise" />
         <div className="av-app">
           <SessionProvider>
-            <GamepadProvider>
-              <Nav />
-              <main className="av-main">{children}</main>
-              <Footer />
-            </GamepadProvider>
+            <CreditsProvider>
+              <GamepadProvider>
+                <Nav />
+                <main className="av-main">{children}</main>
+                <Footer />
+              </GamepadProvider>
+            </CreditsProvider>
           </SessionProvider>
         </div>
       </body>

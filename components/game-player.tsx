@@ -2,7 +2,8 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useEffect, useState, useSyncExternalStore } from "react";
+import { useEffect, useRef, useState, useSyncExternalStore } from "react";
+import { useCredits } from "@/components/credits-provider";
 import { getGameDefinition } from "@/components/game-registry";
 import { useGamepad } from "@/components/gamepad-provider";
 import { useSession } from "@/components/session-provider";
@@ -18,6 +19,7 @@ import {
   type HapticKind,
 } from "@/lib/haptics";
 import { rememberNextPath } from "@/lib/auth-redirect";
+import { awardCredit } from "@/lib/pins-db";
 import {
   insertScore,
   ScoreSaveError,
@@ -43,6 +45,7 @@ export function GamePlayer({
   title: string;
 }) {
   const { user, status } = useSession();
+  const { setBalance } = useCredits();
   const pathname = usePathname();
   // Games with a real engine are in the registry; every other game keeps the fake simulation.
   const definition = getGameDefinition(gameId);
@@ -98,6 +101,13 @@ export function GamePlayer({
   const [saved, setSaved] = useState(false);
   const [saving, setSaving] = useState(false);
   const [saveFailure, setSaveFailure] = useState<ScoreSaveFailure | null>(null);
+  // SPEC 18: +1 credit at Game Over, asked once per run. The server decides (score > 0, ban, cooldown).
+  const [creditsEarned, setCreditsEarned] = useState(0);
+  const awardedRun = useRef<number | null>(null);
+  // Active play time of the run in ms: not while paused, over, hidden or on the mode picker.
+  const playedMs = useRef(0);
+  const runActive = !paused && !over && (!definition?.modes || mode !== null);
+  const signedIn = user !== null;
 
   // scores.name holds at most 10 chars, a username up to 20.
   const name = editedName ?? user?.name.slice(0, 10) ?? "GUEST";
@@ -136,6 +146,38 @@ export function GamePlayer({
     return () => clearInterval(t);
   }, [definition, over, paused]);
 
+  // Counts play time. Its cleanup runs before the award effect below in the same commit, so the
+  // last slice is already added when the run ends.
+  useEffect(() => {
+    if (!runActive) return;
+    let last = performance.now();
+    const tick = () => {
+      const now = performance.now();
+      if (document.visibilityState === "visible")
+        playedMs.current += now - last;
+      last = now;
+    };
+    const id = setInterval(tick, 250);
+    return () => {
+      tick();
+      clearInterval(id);
+    };
+  }, [runActive, runId]);
+
+  useEffect(() => {
+    if (!over || !signedIn || score <= 0 || awardedRun.current === runId)
+      return;
+    awardedRun.current = runId;
+    awardCredit(gameId, score, Math.floor(playedMs.current / 1000))
+      .then((result) => {
+        setBalance(result.balance);
+        if (result.awarded) setCreditsEarned(result.credits);
+      })
+      .catch(() => {
+        // A failed award shows nothing and never blocks SAVE SCORE or PLAY AGAIN.
+      });
+  }, [over, signedIn, score, runId, gameId, setBalance]);
+
   const endRun = () => {
     if (definition) setEndSignal((n) => n + 1);
     else setOver(true);
@@ -154,6 +196,8 @@ export function GamePlayer({
     setSaved(false);
     setSaving(false);
     setSaveFailure(null);
+    setCreditsEarned(0);
+    playedMs.current = 0;
   };
 
   const pickMode = (id: string) => {
@@ -509,6 +553,11 @@ export function GamePlayer({
             <h2>GAME OVER</h2>
             <div className="final-label">FINAL SCORE</div>
             <div className="final">{score.toLocaleString("en-US")}</div>
+            {creditsEarned > 0 && (
+              <div className="credit-earned" role="status">
+                +{creditsEarned} {creditsEarned === 1 ? "CREDIT" : "CREDITS"}
+              </div>
+            )}
             {saved ? (
               <div className="toast-saved">▸ SCORE SAVED_</div>
             ) : status === "loading" ? null : !user ? (
