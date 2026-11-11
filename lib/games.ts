@@ -125,6 +125,17 @@ export const GAMES: Game[] = [
     plays: "0",
     origin: "ai",
   },
+  {
+    id: "marcy-vampire-hunter",
+    title: "MARCY THE VAMPIRE HUNTER",
+    short: "Explore Count Faust's castle with a whip or a sword.",
+    long: "Pick Marcy Delrre and her whip or Frankford Delrre and his sword, then explore a huge gothic castle. Defeat bosses to win relics that open new paths, level up and find better gear. Write down your password at every altar and paste it back later to continue with your hero, relics and score.",
+    cat: "ARCADE",
+    cover: "cover-vampire-hunter",
+    color: "magenta",
+    plays: "0",
+    origin: "ai",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [

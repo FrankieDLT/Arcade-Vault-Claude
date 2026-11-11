@@ -1,6 +1,6 @@
 # Arcade Vault: Games
 
-The `games` table in Supabase holds 10 rows, one per entry of `GAMES` (`lib/games.ts`). All ten are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
+The `games` table in Supabase holds 11 rows, one per entry of `GAMES` (`lib/games.ts`). All eleven are real, playable games with their own engine. There are no catalog-only or fake games. Every game declares an `origin` (`ai`, `human` or `assisted`), stored in `GAMES.origin` and in the `games.origin` column.
 
 ## Implemented games
 
@@ -16,6 +16,7 @@ The `games` table in Supabase holds 10 rows, one per entry of `GAMES` (`lib/game
 | Space Invaders | `space-invaders` | ai     | SHOOTER | cyan | `lib/space-invaders/` | Retro, Neon, Pastel, Gothic, Negative, Blueprint, Newsprint | Endless waves, level select while paused, sound effects |
 | Galactic DogFight | `galactic-dogfight` | ai     | SHOOTER | yellow | `lib/galactic-dogfight/` | Retro, Neon, Pastel, Gothic, Negative, Sunset Drive, Chalkboard | Boss tractor beam, capture and rescue, dual fighter, Challenging Stages, music and sound effects |
 | Robo Vault | `robo-vault` | ai     | ARCADE  | green  | `lib/robo-vault/` | `retro neon pastel gothic negative lcd-handheld sepia-reel` (CSS filters on the canvas; one palette per stage underneath) | Platformer, 4 Robot Masters with a weakness cycle, Sam's castle, dot-grid password save, music and sound effects |
+| Marcy the Vampire Hunter | `marcy-vampire-hunter` | ai | ARCADE | magenta | `lib/vampire-hunter/` | None by decision (SPEC 24): one palette per zone | Castle platformer with a map, relics, RPG levels and gear, two heroes, Turned Castle, 12x12 dot-grid password, Credit Coin, music and sound effects |
 
 ### Asteroids
 
@@ -111,6 +112,17 @@ The `games` table in Supabase holds 10 rows, one per entry of `GAMES` (`lib/game
 - **Touch (below 768px):** pad under the CRT: ◀ ▶ (hold), ▲ (hold, with SHOOT fires up; menu cursor) ▼ (menu cursor), `A` = JUMP (hold), `B` = SHOOT (hold), `X` / `Y` = previous / next weapon. Haptics: `death` (life lost), `clear` (Master, room or Sam cleared). The pad's ▼ button is a hold button (crouch).
 - **Sound:** 13 effects (`shoot`, `jump`, `hit`, `enemyDie`, `bossHit`, `bossDie`, `pickup`, `weapon`, `death`, `gameover`, `select`, `victory`, `bossTick` (one per segment while a boss health bar fills), volume 0.2), a 16 s stage music loop (volume 0.12) and a 22 s heavy-metal inspired boss-fight loop (`music-boss.wav`, volume 0.18, replaces the stage music in every boss room and restarts at each one), all generated `.wav` files in `public/game-assets/robo-vault/`. The mute button under the CRT is the only toggle.
 - **HUD:** score, lives, level (stages cleared + 1, 1 to 9). The canvas also draws hero, weapon and boss energy bars.
+
+### Marcy the Vampire Hunter
+
+- **Description:** Explore Count Faust's castle with a whip or a sword.
+- **Details:** A gothic exploration platformer with our own art, names and audio (nothing from the original series). Pick Marcy Delrre (whip, long reach, hits up) or Frankford Delrre (sword, fast 3-hit combo, ducks). Explore 10 zones (about 97 rooms), defeat bosses to win 6 relics that open new routes, level up (1 to 50) and find better gear (10 tiers in 5 slots). Defeat Count Faust and the castle turns over: the Turned Castle has 8 new zones, a harder bestiary, 8 more bosses, gear tiers 11 to 15, level cap 63 and the Hollow King.
+- **Rules:** 768x576 canvas, rooms of 1 to 4 screens. Stats HP, MP, STR, DEF, INT, LCK; Vitality Crests (one hidden per zone, 18 in all) raise max HP. Relics: `dash` (passes low gaps), `leap` (double jump), `lantern` (lights dark rooms, hidden doors), `mist` (Down + dash, passes grates), `glide` (hold Space while falling), `sigil` (attacks break sigil walls). Each boss is weak to one damage type (fire, holy, slash, whip, crush) for x1.5. 3 lives, extra life every 20,000 points (max 5). Save Altars restore HP and MP and show the password. A signed-in player can find a Credit Coin (0.1% per enemy, breakable, chest or boss kill) that gives 1 Pin Collection credit.
+- **Password:** the only save. A 12x12 dot grid (cells `A1` to `L12`, 144 bits with CRC-12) holding hero, relics, bosses, level, gear, crests, map bits, Turned data and score (at most 40,950 points). `COPY` copies the filled cells; the entry screen takes pasted text (`PASTE` or `Ctrl+V`). `DELETE PROGRESS` (NO by default) clears everything. Nothing is stored in the browser or the database.
+- **Controls:** `←` `→` or `A` `D` move, `SPACE` jumps, `X` / `J` attacks, `↑` with attack hits up, `↑` alone interacts, `↓` crouches, `C` / `K` special art, `Z` / Shift dash, `ENTER` menu (also the `MENU` tag by tap). Menus: arrows move, `SPACE` confirms, `X` goes back.
+- **Touch (below 768px):** pad under the CRT: ◀ ▶ ▲ ▼ (hold), `A` = JUMP (hold), `B` = ATTACK (hold), `X` = SPECIAL, `Y` = DASH. Haptics: `death` (life lost), `clear` (boss defeated).
+- **Sound:** 19 effects (volume 0.2), a 24 s gothic stage loop (volume 0.12) and a 20 s boss loop (volume 0.18), all generated `.wav` files in `public/game-assets/marcy-vampire-hunter/`. The mute button under the CRT is the only toggle.
+- **HUD:** score, lives, level (hero level 1 to 63). The canvas also draws HP and MP bars, weapon name, room name and boss bar.
 
 ## Touch controls and haptics
 

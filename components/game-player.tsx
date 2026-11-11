@@ -19,7 +19,7 @@ import {
   type HapticKind,
 } from "@/lib/haptics";
 import { rememberNextPath } from "@/lib/auth-redirect";
-import { awardBossCredit, awardCredit } from "@/lib/pins-db";
+import { awardBossCredit, awardCredit, awardDropCredit } from "@/lib/pins-db";
 import {
   insertScore,
   ScoreSaveError,
@@ -108,12 +108,18 @@ export function GamePlayer({
   // Robo Vault: +1 credit per boss defeated. Total for the run, and a short on-screen notice.
   const [bossCredits, setBossCredits] = useState(0);
   const [bossToast, setBossToast] = useState(false);
+  const [creditNotice, setCreditNotice] = useState("BOSS DEFEATED +1 CREDIT");
   const bossToastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const awardedRun = useRef<number | null>(null);
   // Active play time of the run in ms: not while paused, over, hidden or on the mode picker.
   const playedMs = useRef(0);
   const runActive = !paused && !over && (!definition?.modes || mode !== null);
   const signedIn = user !== null;
+  // Marcy the Vampire Hunter reads the session at every Credit Coin roll, not only at mount.
+  const signedInRef = useRef(signedIn);
+  useEffect(() => {
+    signedInRef.current = signedIn;
+  }, [signedIn]);
 
   // scores.name holds at most 10 chars, a username up to 20.
   const name = editedName ?? user?.name.slice(0, 10) ?? "GUEST";
@@ -178,13 +184,16 @@ export function GamePlayer({
   }, [over, signedIn, score, runId, gameId, setBalance]);
 
   // Signed-in players earn 1 credit per boss defeated; the server rate-limits and decides.
-  const onBossDefeated = (boss: string) => {
-    if (!signedIn) return;
-    awardBossCredit(gameId, boss)
+  const awardCreditEvent = (
+    request: Promise<{ awarded: boolean; credits: number; balance: number }>,
+    notice: string,
+  ) => {
+    request
       .then((result) => {
         setBalance(result.balance);
         if (!result.awarded) return;
         setBossCredits((n) => n + result.credits);
+        setCreditNotice(notice);
         setBossToast(true);
         if (bossToastTimer.current) clearTimeout(bossToastTimer.current);
         bossToastTimer.current = setTimeout(() => setBossToast(false), 2500);
@@ -193,6 +202,18 @@ export function GamePlayer({
         // A failed award shows nothing.
       });
   };
+
+  const onBossDefeated = (boss: string) => {
+    if (!signedIn) return;
+    awardCreditEvent(awardBossCredit(gameId, boss), "BOSS DEFEATED +1 CREDIT");
+  };
+
+  // Marcy the Vampire Hunter: the award is sent when the Credit Coin is collected.
+  const onCreditDrop = () => {
+    if (!signedInRef.current) return;
+    awardCreditEvent(awardDropCredit(gameId), "CREDIT COIN +1 CREDIT");
+  };
+  const canDropCredit = () => signedInRef.current;
 
   useEffect(
     () => () => {
@@ -360,6 +381,8 @@ export function GamePlayer({
               skin={appearance ? skin : undefined}
               theme={appearance?.themes ? theme : undefined}
               onBossDefeated={onBossDefeated}
+              onCreditDrop={onCreditDrop}
+              canDropCredit={canDropCredit}
               onMusic={
                 definition.music?.alt
                   ? (t) => setAltRun(t === "boss" ? runId : null)
@@ -388,7 +411,7 @@ export function GamePlayer({
           ) : null}
           {bossToast && (
             <div className="boss-credit" role="status">
-              BOSS DEFEATED +1 CREDIT
+              {creditNotice}
             </div>
           )}
           {paused && (

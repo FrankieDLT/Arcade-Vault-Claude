@@ -104,6 +104,11 @@ export async function awardBossCredit(
   return data as unknown as BossAwardResult;
 }
 
+/** Marcy the Vampire Hunter Credit Coin: same RPC as boss credits, with p_boss = "drop". */
+export async function awardDropCredit(gameId: string): Promise<BossAwardResult> {
+  return awardBossCredit(gameId, "drop");
+}
+
 export interface PullResult {
   pinId: string;
   rarity: PinRarity;
