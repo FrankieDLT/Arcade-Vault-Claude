@@ -266,3 +266,87 @@ All skins sit on the frame cap. `taskMs` differences between skins partly reflec
 ### Not run
 
 No code changed, so canvas-hash, game-speed and walkthrough checks were skipped. Only console error seen: the known 404 (prefetch). Capture: `.pwScreencaps/perf-galactic-dogfight-1280.png`. The 60 Hz cap means the proxy shows "fits in a frame", not exact cost; confirm on real hardware.
+
+## robo-vault (2026-11-10, game-perf-booster)
+
+Verdict: fixed. The six filter skins missed the target under software rendering; moving the skin filter from the canvas element into the 2D context brought every skin to the 16.67 ms cap. Retro was already within target.
+
+### Environment
+
+- Installed Chrome via `playwright-core`, headless, production build (`npm run build`, `out/` on a Node static server), Windows 11, devicePixelRatio 1.
+- `chrome-software`: `--disable-gpu --disable-gpu-compositing` (vsync-paced at 60 Hz here, so `avgFrameMs` cannot read below 16.67; headroom is `taskMs`). `headless`: default flags (fixed 10 ms rAF pacing).
+- 1280x1100 and 375x812 touch context, CPU x1 and x4 (CDP). Run: load `/games/robo-vault/play/`, `Space` twice (title, first Master stage), 1.5 s, then 8 to 10 s recorded with `X` held (auto-fire), `ArrowRight` / `ArrowLeft` alternating every 500 ms and `Space` jumps every 100 ms; PLAY AGAIN clicked if a run ended. First second dropped. Scripts live in the scratchpad.
+
+### Baseline (retro, no filter)
+
+| Config          | Viewport | CPU | avgFrameMs | p95FrameMs | longFrames (of ~600) | taskMs | scriptMs |
+| --------------- | -------- | --- | ---------- | ---------- | -------------------- | ------ | -------- |
+| chrome-software | 1280     | x1  | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0             | 2.17 / 2.11 | 0.20 / 0.19 |
+| chrome-software | 1280     | x4  | 16.69      | 16.7       | 1 (0.2%)             | 10.73  | 0.83     |
+| chrome-software | 375      | x1  | 16.67 / 16.67 | 16.7 / 16.7 | 0 / 0             | 2.07 / 2.17 | 0.17 / 0.19 |
+| chrome-software | 375      | x4  | 16.67      | 16.7       | 0                    | 9.32   | 0.78     |
+| headless        | 1280     | x1  | 10.00      | 10.1       | 0                    | 0.54   | 0.14     |
+| headless        | 1280     | x4  | 10.00      | 10.1       | 0                    | 2.27   | 0.68     |
+
+Retro meets the target at 1280 and 375. The baseline problem was in the skins.
+
+### Per-skin before (chrome-software, 1280x1100, x1, 8 s, skin cycled by clicking SKIN, scroll reset to top)
+
+| Skin          | avgFrameMs | p95FrameMs | longFrames (of ~400) | taskMs | scriptMs |
+| ------------- | ---------- | ---------- | -------------------- | ------ | -------- |
+| retro (again) | 16.67      | 16.7       | 0                    | 2.15   | 0.22     |
+| neon          | 22.08      | 33.4       | 112 (31%)            | 2.47   | 0.21     |
+| pastel        | 19.47      | 33.4       | 69 (17%)             | 2.47   | 0.18     |
+| gothic        | 21.55      | 33.4       | 109 (29%)            | 2.66   | 0.18     |
+| negative      | 20.15      | 33.4       | 83 (21%)             | 2.39   | 0.17     |
+| lcd-handheld  | 20.05      | 33.4       | 81 (20%)             | 2.35   | 0.17     |
+| sepia-reel    | 17.89      | 33.3       | 32 (7%)              | 2.29   | 0.17     |
+
+A repeat of neon gave 17.98 ms (34 long) and 19.95 ms (77 long).
+
+### Diagnosis
+
+- Main-thread cost is the same in every skin (`taskMs` about 2.4, `scriptMs` about 0.2), so the cost is raster/compositor, not engine `update` / `draw`.
+- A/B with `canvas { filter: none !important }` injected under the same skin: neon 17.98 and 19.95 ms with the filter, 16.67 and 16.67 ms and 0 long frames without; sepia-reel 20.37 ms (86 long) with, 16.74 ms (2 long) without. The skin is a CSS `filter` on the `<canvas>` element (`canvas.style.filter` in `setSkin`). The canvas changes every frame, so the filtered layer is re-rasterized every frame on the CPU.
+- Not the shared layers: hiding `.av-bg`, `.av-noise` and the CRT overlays on neon only moved 17.98 to 17.46 ms (22 long), far less than the filter. Nothing to report in CSS.
+
+### Fix 1 (kept): apply the skin filter in the 2D context
+
+In `lib/robo-vault/engine.ts` only. For a filter skin the scene is drawn (same `drawScene` code as before) into an 800x600 offscreen canvas, then copied to the visible canvas with `ctx.filter = <skin filter>` and `drawImage`. Retro (`none`) draws straight to the visible canvas as before. `setSkin()` no longer sets `canvas.style.filter`; it redraws at once when the engine has started (also paused or after game over). No change to `update`, rules, speeds, palettes or the filter strings in `SKINS`.
+
+Gain (chrome-software, 1280x1100, x1):
+
+| Skin         | avgFrameMs before | after | longFrames before | after | taskMs after | scriptMs after |
+| ------------ | ----------------- | ----- | ----------------- | ----- | ------------ | -------------- |
+| retro        | 16.67             | 16.67 | 0                 | 0     | 1.55         | 0.09           |
+| neon         | 22.08             | 16.67 | 112               | 0     | 4.51         | 1.20           |
+| pastel       | 19.47             | 16.67 | 69                | 0     | 4.55         | 1.23           |
+| gothic       | 21.55             | 16.67 | 109               | 0     | 5.43         | 1.26           |
+| negative     | 20.15             | 16.67 | 83                | 0     | 5.90         | 1.23           |
+| lcd-handheld | 20.05             | 16.67 | 81                | 0     | 4.98         | 1.25           |
+| sepia-reel   | 17.89             | 16.67 | 32                | 0     | 4.50         | 1.20           |
+
+An earlier pass right after the fix showed 0 to 17 long frames per skin and 8 on retro: the first run after a browser launch is warm-up noise (it also appeared before the fix), and repeats of pastel and neon gave 0 long frames. All skins sit on the frame cap, within 10 percent of each other.
+
+Other rows after the fix, neon:
+
+| Config          | Viewport | CPU | avgFrameMs | p95FrameMs | longFrames | taskMs | scriptMs |
+| --------------- | -------- | --- | ---------- | ---------- | ---------- | ------ | -------- |
+| chrome-software | 1280     | x1  | 16.67      | 16.7       | 0          | 5.35   | 1.43     |
+| chrome-software | 375      | x1  | 16.67      | 16.7       | 0          | 4.53   | 1.24     |
+| chrome-software | 1280     | x4  | 22.86      | 33.4       | 130 (37%)  | 19.65  | 5.37     |
+| chrome-software | 375      | x4  | 20.57      | 33.4       | 91 (23%)   | 18.09  | 4.39     |
+| headless        | 1280     | x1  | 10.00      | 10.1       | 0          | 0.36   | 0.13     |
+| headless        | 1280     | x4  | 10.00      | 10.1       | 0          | 1.73   | 0.74     |
+
+Trade-off: the filter now costs about 3 to 4 ms of main-thread time per frame instead of compositor time. At x1 it fits easily; at x4 CPU throttle with software raster a filter skin goes over 16.7 ms (the old CSS filter already failed at x1, so it would have been worse; x4 is outside the SPEC 12 target, which is x1). A later option is baking the color matrix into the palettes (about 200 color sites), not done because it changes canvas pixels.
+
+### Verification
+
+- Canvas hash, frozen `requestAnimationFrame`, fixed 16.667 ms step, `Math.random` seeded (cosmetic particles use it, which made unseeded hashes unstable): retro hash identical before and after at 4 checkpoints (title, stage start + 90 frames, after inputs, after 120 more frames).
+- Filter skins: the visible canvas is now post-filter, so a raw hash cannot match the old one (the filter used to live on the element). Instead, in the new build the retro canvas was captured, filtered with the same `ctx.filter` string in the page, and compared with each filter skin canvas: 263 to 400 channel values of 1,769,472 differ (about 0.02%, all in a thin band of ground-edge rows 529 to 536), the rest are identical. Drawing code and the pre-filter scene are unchanged; the residual is filter evaluation on that edge.
+- Game speed: 4 s of game time does not give one identical canvas across 16, 20, 32 and 40 ms per frame (the four hashes differ from each other, pre-existing: `update` is not pixel-level frame-rate independent). Each of the four hashes is identical before and after the change, so speed behavior is unchanged.
+- Walkthrough (1280 and 375, real timers): game starts from the title, PAUSE freezes the canvas, a skin click while paused redraws at once, RESUME, END opens GAME OVER, PLAY AGAIN resets the HUD to score 0 level 01; at 375 the pad is shown (8 controls) and holding the on-screen JUMP changes the canvas. No console error or warning other than the known 404s. Scoring was not seen: within 9 s and within 37 s of the scripted key pattern the score stayed 0 (the pattern does not reach an enemy); `update` is untouched by the fix.
+- Contract: no react / next imports, no module-level state, callbacks unchanged. `npm run lint` and `npm run build` clean.
+
+Captures: `.pwScreencaps/perf-robo-vault-*.png`. The 60 Hz cap means the proxy shows "fits in a frame", not exact cost; confirm on real hardware, in particular a filter skin (NEON, GOTHIC, NEGATIVE) on a weak GPU.

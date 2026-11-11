@@ -58,3 +58,10 @@
 | 2026-11-10 | galactic-dogfight | negative | NEGATIVE | mandatory | built | computed inverse of retro: #fff bg, black sprites, #757575 grays |
 | 2026-11-10 | galactic-dogfight | sunset-drive | SUNSET DRIVE | fresh | built | synthwave: #1a0b2e bg, bee #ffd23f, butterfly #ff4fa3, boss #ff7a1a, hit #ffe9a8, fighter #5ff2ff, captured #b794ff, stars #ff9de2 |
 | 2026-11-10 | galactic-dogfight | chalkboard | CHALKBOARD | fresh | built | #1f3a2e slate bg; chalk #f2f0e6 bees/text, pink #f2a7b8 butterflies, yellow #f4d35e boss, blue #9ad1f5 fighter |
+| 2026-11-10 | robo-vault | retro | RETRO | mandatory | built | original art, filter none |
+| 2026-11-10 | robo-vault | neon | NEON | mandatory | built | canvas filter saturate(1.8) contrast(1.15) brightness(1.05) |
+| 2026-11-10 | robo-vault | pastel | PASTEL | mandatory | built | canvas filter saturate(.55) brightness(1.2) contrast(.85) |
+| 2026-11-10 | robo-vault | gothic | GOTHIC | mandatory | built | canvas filter sepia(.5) hue-rotate(310deg) saturate(1.1) contrast(1.2) brightness(.9): bone text, crimson/violet shift |
+| 2026-11-10 | robo-vault | negative | NEGATIVE | mandatory | built | canvas filter invert(1) hue-rotate(200deg) contrast(1.4) saturate(1.2) brightness(.85) |
+| 2026-11-10 | robo-vault | lcd-handheld | LCD HANDHELD | fresh | built | filter grayscale(1) sepia(1) hue-rotate(40deg) saturate(1.6) contrast(1.1): green handheld LCD |
+| 2026-11-10 | robo-vault | sepia-reel | SEPIA REEL | fresh | built | filter sepia(1) contrast(1.1) brightness(.95): old film tint |

@@ -114,6 +114,17 @@ export const GAMES: Game[] = [
     plays: "0",
     origin: "ai",
   },
+  {
+    id: "robo-vault",
+    title: "ROBO VAULT",
+    short: "Beat four bosses, steal their weapons, storm Sam's castle.",
+    long: "Pick a stage, defeat the Robot Master and take its weapon. Every boss is weak to another boss's weapon. Write down your password after each victory and use it later to continue from the same place, with your weapons and score. Four masters down, Sam's castle awaits.",
+    cat: "ARCADE",
+    cover: "cover-robo-vault",
+    color: "green",
+    plays: "0",
+    origin: "ai",
+  },
 ];
 
 export const CATEGORIES: ("ALL" | Category)[] = [
