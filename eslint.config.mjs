@@ -14,6 +14,8 @@ const eslintConfig = defineConfig([
     "next-env.d.ts",
     // Design prototype (browser-only JSX), not app code.
     "references/**",
+    // Compiled Java games (TeaVM output, minified).
+    "public/game-assets/**/*.js",
   ]),
 ]);
 

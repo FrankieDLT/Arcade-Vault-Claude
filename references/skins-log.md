@@ -72,3 +72,10 @@
 | 2026-11-11 | wingshot | negative | NEGATIVE | mandatory | built | scene origami, computed inverse of PASTEL (dark panels by default) |
 | 2026-11-11 | wingshot | golden-hour | GOLDEN HOUR | fresh | built | new scene mine + coal-miner companion (beyond the original four scenes by user decision 2026-11-11); cavern plums and browns, gold ffd23f, ember ff9a3c, cream ink fff4e0; rocks lightened to hold 3:1 on the wall |
 | 2026-11-11 | wingshot | ink-wash | INK WASH | fresh | built | new scene cartoon + original rubber-hose deckhand companion (beyond the original four scenes by user decision 2026-11-11); black, white, grey, gold note the only tint; dark opaque HUD panels, outlines carry sprite contrast |
+| 2026-11-11 | dot-catcher | retro | RETRO | mandatory | built | bg 0a0a12, floor 3a3a55, paddle f5ff00, dot 00f5ff (existing default) |
+| 2026-11-11 | dot-catcher | neon | NEON | mandatory | built | bg 050014, floor ff006e, paddle 00ff88, dot ff006e (existing) |
+| 2026-11-11 | dot-catcher | pastel | PASTEL | mandatory | built | bg fbf4ec, floor cfc3d6, paddle 6f86c8, dot c4527a |
+| 2026-11-11 | dot-catcher | gothic | GOTHIC | mandatory | built | bg 0b0710, floor 8a8d94 silver, paddle e8e0cc bone, dot d41f3f crimson |
+| 2026-11-11 | dot-catcher | negative | NEGATIVE | mandatory | built | computed inverse of retro: bg f5f5ed, floor c5c5aa, paddle 0a00ff, dot e00a00 (nudged) |
+| 2026-11-11 | dot-catcher | amber-crt | AMBER CRT | fresh | built | bg 120a00, floor 5a3a00, paddle ffb000, dot ff6a00 |
+| 2026-11-11 | dot-catcher | blueprint | BLUEPRINT | fresh | built | bg 0b2a55, floor 4f7bc0, paddle ffffff, dot ffd23f |

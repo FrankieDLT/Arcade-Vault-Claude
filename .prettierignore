@@ -2,3 +2,6 @@
 node_modules
 references
 resources
+
+public/game-assets/**/*.js
+java/**/target

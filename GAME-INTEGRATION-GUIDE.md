@@ -58,6 +58,8 @@ To keep the guide concrete, every step builds the same tiny example game:
 
 It is small enough to fit in this document, but it touches every part of the integration: score, lives, level, keyboard input, skins, sound events, haptics and a touch pad. **It is a teaching example.** When you build your own game, replace the id, the names, the rules and the drawing code, and keep the structure.
 
+> **Note: `dot-catcher` is taken.** The catalog now ships a Dot Catcher written in Java (see [`JAVA-GAME-INTEGRATION-GUIDE.md`](JAVA-GAME-INTEGRATION-GUIDE.md)). If you follow this guide and want to build and register your own copy, pick another id, for example `dot-catcher-lab`, in every place the guide says `dot-catcher` (folder, files, registry key, catalog entry, cover class, migration).
+
 ---
 
 ## 1. The big picture: how a game plugs into Arcade Vault
@@ -1193,6 +1195,7 @@ Other useful places:
 - `references/GAMES.md`: the catalog of real games with controls and touch layouts.
 - `references/StarterGames/`: the original vanilla-JavaScript sources of Space Voyage, Block Rain and Wall Wrecker, useful if you want to port a plain JavaScript game.
 - `references/perf/measure-fps.md`: how to measure a game's frame time.
+- `JAVA-GAME-INTEGRATION-GUIDE.md`: the same walkthrough for a game written in **Java** (compiled to JavaScript with TeaVM), with the shipped Java Dot Catcher as the example.
 - `CLAUDE.md`: the most detailed technical notes about the whole project, kept up to date.
 
 Good luck, and have fun building.
