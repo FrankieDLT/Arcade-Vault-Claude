@@ -301,7 +301,14 @@ export function buildRoom(spec: RoomSpec): Room {
     }
   }
   if (spec.breakables) {
-    for (let i = 0; i < spec.screens + 1; i++) placeAt("breakable", takeCol(3), { key: `${spec.id}:b${i}` });
+    // Candles: screens + 1, spread at least 4 tiles apart, never next to a gate obstacle.
+    const nearGate = (c: number) => gate !== null && Math.abs(c - gate.col) <= 2;
+    const free = standCols.filter((c) => !nearGate(c));
+    for (let i = 0; i < spec.screens + 1; i++) {
+      let c = takeCol(4);
+      if (nearGate(c) && free.length > 0) c = free[Math.floor(rnd() * free.length)];
+      placeAt("breakable", c, { key: `${spec.id}:b${i}` });
+    }
   }
   if (spec.chest) {
     if (kind === "gside") {
@@ -441,7 +448,7 @@ export function buildZone(opts: {
       enemies: opts.enemies,
       density: opts.density,
       dark: p.flags.includes("d") || (kind === "gate" && opts.entryGate === "lantern"),
-      breakables: p.flags.includes("b") || kind === "altar",
+      breakables: kind !== "boss",
       chest: hasChest ? { key: `${id}:chest`, tier: opts.tierOf(chestN++) } : undefined,
       gate: kind === "gate" ? (opts.entryGate ?? "dash") : undefined,
       boss: kind === "boss" ? (opts.boss ?? undefined) : undefined,
@@ -466,7 +473,7 @@ export function buildZone(opts: {
         const kid = `${id}k`;
         specs.push({
           id: kid, name: `${opts.name} Vault`, castle: opts.castle, zone: opts.zone, kind: "gside", screens: 2,
-          left: null, right: null, enemies: opts.enemies, density: 1, gate: relic, dark: relic === "lantern",
+          left: null, right: null, enemies: opts.enemies, density: 1, gate: relic, dark: relic === "lantern", breakables: true,
           crest: { key: `${opts.crestKeyPrefix}`, }, mapX: mapX - screens, mapY: opts.mapY + 1,
           doors: [{ col: 2, to: id, toCol: Math.min(screens * VIEW_COLS - 4, 10) }],
         });
