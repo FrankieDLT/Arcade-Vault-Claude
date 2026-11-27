@@ -504,7 +504,16 @@ export interface BossDef {
   speed: number;
   score: number;
   xp: number;
+  /** Attack frequency multiplier (default 1; 0.6 = 40% fewer attacks). */
+  attackRate?: number;
+  /** Multiplier on the damage the boss receives (default 1). */
+  damageTaken?: number;
+  /** Extra seconds a floater stays on the ground after a dive (default 0). */
+  groundLinger?: number;
 }
+
+/** Easier tuning shared by every floater boss (flying bosses that dive). */
+const FLOATER_TUNING: Partial<BossDef> = { attackRate: 0.6, damageTaken: 1.25, groundLinger: 2 };
 
 const B = (
   id: string,
@@ -523,7 +532,9 @@ const B = (
   extra: Partial<BossDef> = {},
 ): BossDef => ({
   id, name, plan, turned, index, hp, dmg, weak, patterns,
-  phases: 1, a: colors[0], b: colors[1], k: colors[2], speed, score, xp, ...extra,
+  phases: 1, a: colors[0], b: colors[1], k: colors[2], speed, score, xp,
+  ...(plan === "floater" ? FLOATER_TUNING : {}),
+  ...extra,
 });
 
 export const BOSSES: Record<string, BossDef> = {};
