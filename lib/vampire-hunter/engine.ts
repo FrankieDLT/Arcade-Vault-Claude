@@ -276,6 +276,10 @@ interface Boss {
   fireT: number;
   volley: number;
   flash: number;
+  /** Seconds spent in the current attack cycle (tel + act + recover), used to space attacks. */
+  cycleT: number;
+  /** Seconds a floater still rests on the ground after a dive. */
+  lingerT: number;
 }
 
 interface FloatText {
@@ -2073,7 +2077,7 @@ export class VampireHunterEngine {
     return {
       def, x: px - w / 2, y: homeY, w, h: hgt, vx: 0, vy: 0, hp: def.hp, maxHp: def.hp, shown: 0, face: -1,
       state: "idle", pat: null, lastPat: null, t: 0, actT: 0, phase: 1, hitFlash: 0, onGround: !floater, homeY,
-      tickT: 0, fireT: 0, volley: 0, flash: 0,
+      tickT: 0, fireT: 0, volley: 0, flash: 0, cycleT: 0, lingerT: 0,
     };
   }
 
@@ -2123,7 +2127,7 @@ export class VampireHunterEngine {
         b.shown = Math.min(b.maxHp, b.shown + (b.maxHp * dt) / 1.3);
         if (b.tickT <= 0) { b.tickT = 0.1; this.sound("bossTick"); }
       }
-      if (b.t >= 1.5) { b.state = "idle"; b.t = 0.5; b.shown = b.maxHp; }
+      if (b.t >= 1.5) { b.state = "idle"; b.t = 0.5 / (b.def.attackRate ?? 1); b.shown = b.maxHp; }
       return;
     }
 
@@ -2132,6 +2136,11 @@ export class VampireHunterEngine {
       b.vy = Math.min(MAX_FALL, b.vy + GRAVITY * dt);
       const res = this.moveY(b, b.vy * dt);
       if (res === "down") { b.vy = 0; b.onGround = true; } else b.onGround = false;
+    } else if (b.lingerT > 0) {
+      // After a dive the floater rests on the ground, open to ground attacks.
+      b.lingerT = Math.max(0, b.lingerT - dt);
+      const floorY = FLOOR_ROW * TILE - b.h;
+      b.y += (floorY - b.y) * Math.min(1, dt * 6);
     } else if (b.state !== "act" || b.pat !== "dive") {
       const ty = b.homeY + Math.sin(this.time * 1.8) * 14;
       b.y += (ty - b.y) * Math.min(1, dt * 3);
@@ -2149,20 +2158,30 @@ export class VampireHunterEngine {
           b.state = "tel";
           b.t = b.pat === "charge" ? 0.6 : 0.45;
           b.flash = b.t;
+          b.cycleT = 0;
         }
         break;
       }
       case "tel": {
         b.t -= dt;
+        b.cycleT += dt;
         b.vx = 0;
         if (b.t <= 0) this.beginAct(b, dx, floater);
         break;
       }
-      case "act": this.runAct(b, dt, dx, sp, floater); break;
+      case "act": b.cycleT += dt; this.runAct(b, dt, dx, sp, floater); break;
       case "recover": {
-        b.t -= dt;
         b.vx = 0;
-        if (b.t <= 0) { b.state = "idle"; b.t = Math.max(0.25, 0.7 - b.phase * 0.12); }
+        if (b.lingerT > 0) break; // resting on the ground after a dive
+        b.t -= dt;
+        b.cycleT += dt;
+        if (b.t <= 0) {
+          const base = Math.max(0.25, 0.7 - b.phase * 0.12);
+          const rate = b.def.attackRate ?? 1;
+          // Stretch the whole attack cycle by 1 / rate so attacks start `rate` times as often.
+          b.state = "idle";
+          b.t = base + (b.cycleT + base) * (1 / rate - 1);
+        }
         break;
       }
     }
@@ -2298,6 +2317,7 @@ export class VampireHunterEngine {
       b.state = "recover";
       b.t = 0.45;
       b.vx = 0;
+      if (floater && b.pat === "dive") b.lingerT = b.def.groundLinger ?? 0;
       if (floater) b.pat = null;
     }
   }
@@ -2307,7 +2327,7 @@ export class VampireHunterEngine {
     const weak = def.weak === type || (element !== "none" && def.weak === element);
     const defense = (def.index + 1) * 2 + (def.turned ? 20 : 0);
     const { dmg: base, crit } = direct !== undefined ? { dmg: direct, crit: false } : this.heroDamage(mult, defense);
-    const dmg = Math.max(1, Math.round(base * (weak ? 1.5 : 1)));
+    const dmg = Math.max(1, Math.round(base * (weak ? 1.5 : 1) * (def.damageTaken ?? 1)));
     b.hp -= dmg;
     b.hitFlash = 0.1;
     this.floatText(weak ? `${dmg} WEAK` : crit ? `${dmg}!` : String(dmg), b.x + b.w / 2, b.y - 6, weak ? "#7affb0" : crit ? "#ffd36a" : "#ffffff");
